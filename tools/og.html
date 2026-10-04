@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --page: #1d1b21;
+        --card: #26242b;
+        --ink: #111014;
+        --edge-strong: #4a4652;
+        --text: #e8e4de;
+        --muted: #a49faf;
+        --agent: #c08ab5;
+        --you: #d9a441;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: var(--page);
+        color: var(--text);
+        font-family: "Instrument Sans", sans-serif;
+      }
+      .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 1200px;
+        height: 630px;
+        padding: 54px 68px 56px;
+      }
+      /* The dot ground of the hero, fading toward the edges. */
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle, rgb(232 228 222 / 0.13) 1px, transparent 1.6px);
+        background-size: 20px 20px;
+        mask-image: radial-gradient(ellipse 75% 80% at 50% 50%, #000 35%, transparent 100%);
+      }
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 34% 60% at 0% 55%, rgb(192 138 181 / 0.2), transparent),
+          radial-gradient(ellipse 34% 60% at 100% 55%, rgb(217 164 65 / 0.18), transparent);
+      }
+      .card > * {
+        position: relative;
+        z-index: 1;
+      }
+      .bottom {
+        display: grid;
+        grid-template-columns: 1fr 500px;
+        gap: 48px;
+        align-items: end;
+        margin-top: auto;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font: 700 28px/1 "Bricolage Grotesque", sans-serif;
+        letter-spacing: -0.012em;
+      }
+      .brand img {
+        width: 40px;
+        height: 40px;
+        image-rendering: pixelated;
+      }
+      h1 {
+        margin-top: 34px;
+        font: 700 64px/1.05 "Bricolage Grotesque", sans-serif;
+        letter-spacing: -0.03em;
+      }
+      h1 span {
+        display: block;
+      }
+      .agent {
+        color: var(--agent);
+      }
+      .you {
+        color: var(--you);
+      }
+      p {
+        max-width: 17em;
+        padding-bottom: 6px;
+        color: var(--muted);
+        font-size: 28px;
+        line-height: 1.4;
+      }
+      .pic {
+        border: 1px solid var(--edge-strong);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--card);
+        box-shadow: 8px 8px 0 var(--ink);
+      }
+      .pic img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1280 / 714;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+        <div class="brand"><img src="../assets/demo/app-icon-256.png" alt="" />Asset Prompter</div>
+        <h1>
+          <span><b class="agent">Your agent</b> writes the prompt.</span>
+          <span><b class="you">You</b> make the picture.</span>
+        </h1>
+        <div class="bottom">
+          <p>A small local app between your coding agent and the generator you use by hand.</p>
+          <div class="pic"><img src="../assets/art/loop-relay.webp" alt="" /></div>
+        </div>
+    </div>
+  </body>
+</html>

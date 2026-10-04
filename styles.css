@@ -1,0 +1,3584 @@
+/*
+  Asset Prompter landing page, the "material, light and touch" version.
+
+  The page wears the app's chrome: dark surfaces, thin edges, hard offset shadows, pixel glyphs and status tones.
+  One rule runs through it: violet is the agent, mustard is you.
+  On top of that sits one idea: light is a material. Surfaces have a lit inner edge, pictures are framed like objects,
+  cards and pictures catch a soft light under the pointer, and the hero's marks sit in glass cubes.
+
+  Contents
+    1. Tokens            5. Light under the pointer     9. Compared with MCP     13. Install
+    2. Base and type     6. Entrances                  10. The courier           14. Questions
+    3. Buttons, tags     7. Hero and the hub           11. For the agent         15. Closing, footer
+    4. Bar, grounds,     8. The loop                   12. Uses, trade-offs      16. Narrower screens
+       frames                                                                    17. Reduced motion
+
+  Motion animates transform and opacity only. Everything that hides something first sits under .motion,
+  which main.js sets only when the reader has not asked for less motion, or in the load sequence of the hero,
+  which is plain CSS and ends visible.
+*/
+
+/* ================= 1. Tokens ================= */
+
+:root {
+  color-scheme: dark;
+
+  /* surfaces */
+  --page: #1d1b21;
+  --bar: #19171d;
+  --card: #26242b;
+  --card-hover: #2c2a32;
+  --well: #1a181e;
+  --ink: #111014;
+
+  /* edges */
+  --edge: #37343e;
+  --edge-strong: #4a4652;
+  --line: 1px solid var(--edge);
+  --shadow: 4px 4px 0 var(--ink);
+  --shadow-small: 2px 2px 0 var(--ink);
+  --shadow-big: 8px 8px 0 var(--ink);
+  --radius: 6px;
+
+  /* text */
+  --text: #e8e4de;
+  --muted: #a49faf;
+  --faint: #7d7887;
+
+  /* status tones, as in the app */
+  --generate: #d9a441;
+  --review: #74a9d8;
+  --agent: #c08ab5;
+  --approved: #82bc7c;
+  --image: #6cc4b8;
+
+  --primary: #d9a441;
+  --primary-hover: #e4b458;
+  --on-primary: #1a1408;
+
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Spline Sans Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --wrap: 1180px;
+  --bar-h: 52px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.45, 0.64, 1);
+
+  /* light: the lit inner edge of a surface, and the soft shadow that sits under the hard one */
+  --hi: rgb(255 255 255 / 0.06);
+  --hi-strong: rgb(255 255 255 / 0.13);
+  --shadow-soft: 0 30px 44px -30px rgb(0 0 0 / 0.75);
+
+  /* a fine grain for the grounds, drawn by the browser */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .6 0 0 0 -.22'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.1'/%3E%3C/svg%3E");
+}
+
+/* ================= 2. Base and type ================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font: 17px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+dl,
+dt,
+dd,
+figure,
+pre {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+code,
+pre {
+  font-family: var(--mono);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--generate) 42%, transparent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+/* The scrollbar in the page's colours: a quiet thumb that turns mustard when it is held. */
+html {
+  scrollbar-color: var(--edge-strong) var(--bar);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bar);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--edge-strong);
+  border: 3px solid var(--bar);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--faint);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--primary);
+}
+
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Pixel glyphs: crisp, never smoothed. */
+.icon {
+  flex: none;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+
+.logo {
+  flex: none;
+  shape-rendering: crispEdges;
+}
+
+.px {
+  image-rendering: pixelated;
+}
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  padding: 8px 12px;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--radius);
+  font-weight: 600;
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+.wrap {
+  width: min(var(--wrap), 100% - 48px);
+  margin-inline: auto;
+}
+
+/* The two voices, and the app writing on its own. */
+.who-agent,
+.by-agent {
+  --tone: var(--agent);
+}
+
+.who-you,
+.by-you {
+  --tone: var(--generate);
+}
+
+.by-app {
+  --tone: var(--muted);
+}
+
+.who-agent,
+.who-you {
+  color: var(--tone);
+}
+
+/* In the headline and in a lead, a voice is underlined in its colour. With motion the line is drawn once. */
+h1 .who-agent,
+h1 .who-you,
+.lead .who-agent,
+.lead .who-you {
+  position: relative;
+  display: inline-block;
+}
+
+h1 .who-agent::after,
+h1 .who-you::after,
+.lead .who-agent::after,
+.lead .who-you::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -0.07em;
+  height: max(2px, 0.05em);
+  background: var(--tone);
+  opacity: 0.65;
+  transform-origin: left;
+  transition: transform 0.8s var(--ease-out) 0.55s;
+}
+
+.motion [data-reveal-group]:not(.is-in) .lead .who-agent::after,
+.motion [data-reveal-group]:not(.is-in) .lead .who-you::after {
+  transform: scaleX(0);
+}
+
+.motion [data-reveal-group].is-in .lead .who-you::after {
+  transition-delay: 0.8s;
+}
+
+/* Tones for tags, cards and notes. */
+.t-generate {
+  --tone: var(--generate);
+}
+.t-agent {
+  --tone: var(--agent);
+}
+.t-review {
+  --tone: var(--review);
+}
+.t-approved {
+  --tone: var(--approved);
+}
+
+/* Display type: tight at large sizes, where Bricolage opens its counters, and looser as it gets small. */
+h1,
+h2,
+.h-sub {
+  font-family: var(--display);
+  font-weight: 700;
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.2rem, 5.5vw, 4.5rem);
+  font-weight: 740;
+  line-height: 1.06;
+  letter-spacing: -0.028em;
+}
+
+h1 .line {
+  display: block;
+}
+
+h2 {
+  font-size: clamp(1.9rem, 3.7vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+}
+
+.h-sub {
+  font-size: clamp(1.5rem, 2.5vw, 2.05rem);
+  line-height: 1.16;
+  letter-spacing: -0.016em;
+}
+
+h3 {
+  font: 700 19px/1.25 var(--display);
+  letter-spacing: -0.008em;
+}
+
+.lead {
+  max-width: 50ch;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: clamp(17.5px, 1.5vw, 20.5px);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* A centred section heading with its one or two sentences. */
+.head {
+  max-width: 900px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.head .lead {
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.pane-label {
+  margin-bottom: 12px;
+  color: var(--text);
+  font: 500 12px/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fine {
+  max-width: 60ch;
+  margin-top: 26px;
+  color: var(--faint);
+  font-size: 13px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.plain-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  color: var(--text);
+}
+
+.plain-list li {
+  position: relative;
+  padding-left: 24px;
+}
+
+.plain-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.62em;
+  width: 8px;
+  height: 2px;
+  background: var(--edge-strong);
+}
+
+/* ================= 3. Buttons, tags ================= */
+
+/* As in the app: a hard shadow the button is pressed into. Here it also rises a pixel toward the pointer first. */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  background: var(--card-hover);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--radius);
+  box-shadow:
+    var(--shadow-small),
+    inset 0 1px 0 var(--hi);
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    transform 0.16s var(--ease-out),
+    box-shadow 0.16s var(--ease-out),
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: #35323c;
+    border-color: #5c5764;
+    transform: translate(-1px, -1px);
+    box-shadow:
+      3px 3px 0 var(--ink),
+      inset 0 1px 0 var(--hi-strong);
+  }
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow:
+    0 0 0 var(--ink),
+    inset 0 1px 0 transparent;
+  transition-duration: 0.05s;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #e2b351, var(--primary) 62%);
+  border-color: var(--primary);
+  color: var(--on-primary);
+  box-shadow:
+    var(--shadow-small),
+    inset 0 1px 0 rgb(255 255 255 / 0.42);
+}
+
+/* A band of light that crosses the primary button once when the pointer arrives. */
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: -2px -40%;
+  background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / 0.5) 50%, transparent 60%);
+  transform: translateX(-75%);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: linear-gradient(180deg, #eabd5f, var(--primary-hover) 62%);
+    border-color: var(--primary-hover);
+    box-shadow:
+      3px 3px 0 var(--ink),
+      inset 0 1px 0 rgb(255 255 255 / 0.5);
+  }
+
+  .btn-primary:hover::after {
+    transform: translateX(75%);
+    transition: transform 0.75s var(--ease-out);
+  }
+}
+
+.btn-lg {
+  padding: 12px 20px;
+  font-size: 16px;
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 var(--hi);
+}
+
+.btn-primary.btn-lg {
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 rgb(255 255 255 / 0.42);
+}
+
+@media (hover: hover) {
+  .btn-lg:hover {
+    box-shadow:
+      5px 5px 0 var(--ink),
+      inset 0 1px 0 var(--hi-strong);
+  }
+
+  .btn-primary.btn-lg:hover {
+    box-shadow:
+      5px 5px 0 var(--ink),
+      inset 0 1px 0 rgb(255 255 255 / 0.5);
+  }
+}
+
+.btn-lg:active {
+  transform: translate(4px, 4px);
+}
+
+.btn-sm {
+  padding: 4px 9px;
+  font-size: 12.5px;
+  gap: 6px;
+}
+
+/* status tag and version chip */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  color: var(--tone);
+  border-radius: 999px;
+  padding: 0 10px 0 8px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 22px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+/* ================= 4. Bar, grounds, frames ================= */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--bar-h);
+  padding: 9px 20px;
+  background: var(--bar);
+  border-bottom: var(--line);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* With the script it is clear glass over the hero and frosted once the page has moved under it. */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .js .bar {
+    background: color-mix(in srgb, var(--bar) 82%, transparent);
+    -webkit-backdrop-filter: blur(12px) saturate(1.3);
+    backdrop-filter: blur(12px) saturate(1.3);
+  }
+}
+
+.js .bar:not(.is-stuck) {
+  background: transparent;
+  border-bottom-color: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* The light on the bar's lower edge. */
+.bar::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hi-strong) 30%, var(--hi-strong) 70%, transparent);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.js .bar:not(.is-stuck)::after {
+  opacity: 0;
+}
+
+/* How far down the page the reader is: a thread along the lower edge of the window, violet at its tail
+   and mustard at its head, as in the hero. main.js writes --read (0 to 1) on <html>; without it the thread
+   stays out of sight. It is outside the bar, whose backdrop-filter would hold a fixed child inside it. */
+.read-progress {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 40;
+  height: 3px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.read-progress::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--agent),
+    var(--primary) 78%,
+    color-mix(in srgb, var(--primary) 45%, white) 100%
+  );
+  transform: translateX(calc((var(--read, 0) - 1) * 100%));
+  will-change: transform;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font: 700 17px/1 var(--display);
+  letter-spacing: -0.012em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bar-links {
+  display: flex;
+  gap: 2px;
+  margin-left: 20px;
+}
+
+.bar-links a {
+  position: relative;
+  padding: 6px 11px;
+  border-radius: 5px;
+  color: var(--muted);
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* The mark under the link of the section in view. */
+.bar-links a::after {
+  content: "";
+  position: absolute;
+  left: 11px;
+  right: 11px;
+  bottom: 1px;
+  height: 2px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-out);
+}
+
+@media (hover: hover) {
+  .bar-links a:hover {
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+    color: var(--text);
+  }
+}
+
+.bar-links a[aria-current] {
+  color: var(--text);
+}
+
+.bar-links a[aria-current]::after {
+  transform: none;
+}
+
+.bar-right {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+/* The link to the repository asks for a star: the star is mustard and grows a little under the pointer. */
+.bar-github .icon {
+  color: var(--primary);
+  transition: transform 0.35s var(--ease-out);
+}
+
+@media (hover: hover) {
+  .bar-github:hover .icon {
+    transform: scale(1.18);
+  }
+}
+
+/* Beside the section links there is room for "Star" only; on the smallest phones the button gives way to Install. */
+@media (max-width: 1140px) and (min-width: 1021px) {
+  .bar-github-on {
+    display: none;
+  }
+}
+
+@media (max-width: 350px) {
+  .bar-github {
+    display: none;
+  }
+}
+
+/* Sections: generous, even vertical space. Every ground has a fine grain. */
+.hero,
+.section {
+  position: relative;
+  background-image: var(--grain);
+}
+
+.section {
+  padding-block: clamp(84px, 10.5vw, 152px);
+}
+
+/* The band is lit from above: a bright line along its top edge and a faint wash under it. */
+.band {
+  background-color: var(--bar);
+  border-block: var(--line);
+}
+
+.band::before {
+  content: "";
+  position: absolute;
+  inset: -1px 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 6%, rgb(255 255 255 / 0.16) 50%, transparent 94%);
+  pointer-events: none;
+}
+
+.band::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: min(440px, 70%);
+  background: radial-gradient(ellipse 48% 100% at 50% 0, rgb(255 255 255 / 0.045), transparent 72%);
+  pointer-events: none;
+}
+
+.section > .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* A picture is an object: an outer edge, a lit inner one, the app's hard shadow and a soft one under it. */
+.art,
+.appshot,
+.row-pic,
+.pipe-pic,
+.use-pic {
+  position: relative;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--edge-strong);
+  border-radius: 8px;
+  box-shadow:
+    var(--shadow),
+    var(--shadow-soft);
+}
+
+.art::after,
+.appshot::after,
+.row-pic::after,
+.pipe-pic::after,
+.use-pic::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 7px;
+  box-shadow:
+    inset 0 0 0 1px var(--hi),
+    inset 0 1px 0 var(--hi-strong);
+  pointer-events: none;
+}
+
+/* A generated picture in its frame, or the slot it is still waiting in. */
+.art {
+  aspect-ratio: 1280 / 714;
+}
+
+.art.is-4x3 {
+  aspect-ratio: 960 / 716;
+}
+
+.art img,
+.art video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.art.is-missing {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: color-mix(in srgb, var(--generate) 3%, var(--well));
+  border: 1px dashed color-mix(in srgb, var(--generate) 55%, var(--edge));
+  box-shadow: none;
+  text-align: center;
+}
+
+.art.is-missing::after {
+  content: none;
+}
+
+.art.is-missing img,
+.art.is-missing video {
+  display: none;
+}
+
+.art-slot {
+  font: 700 17px/1.2 var(--display);
+}
+
+.art-hint {
+  max-width: 34ch;
+  color: var(--faint);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* ================= 5. Light under the pointer ================= */
+
+/* main.js writes --mx and --my, the pointer's place over the surface. Without them the light falls from the top edge. */
+
+/* On an illustration (.art): a soft glare, as on a print under a lamp. Screenshots and results are left alone,
+   with no glare and no leaning, so what they show stays readable under the pointer. */
+.art:not(.is-missing)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(460px circle at var(--mx, 50%) var(--my, 0%), rgb(255 255 255 / 0.11), transparent 62%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+/* The clip in the pipeline of three pictures is there to be read, like the two beside it. */
+.pipe .art::before {
+  content: none;
+}
+
+/* On a surface marked data-lit: only its edge catches the light (::before). The ground stays as it is, since it holds text. */
+[data-lit] {
+  --lit: #fff;
+  position: relative;
+  isolation: isolate;
+}
+
+[data-lit]::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  padding: 1px;
+  border-radius: inherit;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--lit) 80%, #fff), transparent 72%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+@media (hover: hover) {
+  .art:hover::before,
+  [data-lit]:hover::before {
+    opacity: 1;
+  }
+}
+
+/* ================= 6. Entrances ================= */
+
+/* Each plays once. The end state is the element's own, so nothing here has to be undone. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.motion [data-reveal]:not(.is-in),
+.motion [data-reveal-group]:not(.is-in) > * {
+  opacity: 0;
+}
+
+.motion [data-reveal].is-in {
+  animation: rise 0.9s var(--ease-out) backwards;
+}
+
+/* A group brings its children in one after another. */
+.motion [data-reveal-group].is-in > * {
+  animation: rise 0.85s var(--ease-out) backwards;
+  animation-delay: calc(var(--n, 0) * 90ms);
+}
+
+[data-reveal-group] > :nth-child(2) {
+  --n: 1;
+}
+[data-reveal-group] > :nth-child(3) {
+  --n: 2;
+}
+[data-reveal-group] > :nth-child(4) {
+  --n: 3;
+}
+[data-reveal-group] > :nth-child(5) {
+  --n: 4;
+}
+[data-reveal-group] > :nth-child(6) {
+  --n: 5;
+}
+[data-reveal-group] > :nth-child(7) {
+  --n: 6;
+}
+[data-reveal-group] > :nth-child(n + 8) {
+  --n: 7;
+}
+
+/* ================= 7. Hero and the hub ================= */
+
+.hero {
+  /* The dot field behind the hub is wider than the column; it must not widen the page. */
+  overflow-x: clip;
+  padding-block: clamp(48px, 6.2vw, 88px) clamp(76px, 9.5vw, 136px);
+  text-align: center;
+}
+
+/* The two coloured voices in the headline give off a little of their colour. */
+.hero h1 .who-agent,
+.hero h1 .who-you {
+  text-shadow: 0 0 42px color-mix(in srgb, var(--tone) 38%, transparent);
+}
+
+.hero-sub {
+  max-width: 50ch;
+  margin: clamp(18px, 2vw, 26px) auto 0;
+  color: var(--muted);
+  font-size: clamp(17.5px, 1.6vw, 21px);
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+.cta,
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.cta {
+  margin-top: clamp(26px, 3vw, 36px);
+}
+
+.hero-facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 22px;
+  margin-top: 24px;
+  color: var(--faint);
+  font-size: 14px;
+}
+
+.hero-facts li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.hero-facts li::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  background: var(--edge-strong);
+}
+
+/* ---- the message for an agent, in a small window with a Copy button ---- */
+
+.ask {
+  --lit: var(--agent);
+  background: color-mix(in srgb, var(--well) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--agent) 45%, var(--edge-strong));
+  border-radius: 8px;
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 var(--hi);
+  text-align: left;
+  transition: border-color 0.3s ease;
+}
+
+.ask-bar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 8px 7px 14px;
+  border-bottom: var(--line);
+  color: var(--agent);
+  font: 600 13.5px/1.3 var(--body);
+}
+
+.ask-bar .btn {
+  margin-left: auto;
+  color: var(--text);
+}
+
+.copy-btn {
+  min-width: 86px;
+  justify-content: center;
+}
+
+/* Copied looks as it does in the app: green, with a check. */
+.ask-bar .copy-btn.is-copied {
+  background: color-mix(in srgb, var(--approved) 14%, var(--card));
+  border-color: color-mix(in srgb, var(--approved) 70%, var(--edge));
+  color: var(--approved);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.4);
+  }
+}
+
+.copy-btn.is-copied .icon {
+  animation: pop 0.4s var(--ease-spring);
+}
+
+.ask-text {
+  position: relative;
+  padding: 12px 14px 14px;
+  color: var(--text);
+  font: 13.5px/1.6 var(--mono);
+  overflow-wrap: anywhere;
+  /* One click takes the whole message. */
+  -webkit-user-select: all;
+  user-select: all;
+}
+
+.ask-text::before {
+  content: "> ";
+  color: var(--agent);
+}
+
+/* What was copied lights up for a moment, from the first letter to the last. */
+.ask-text::after {
+  content: "";
+  position: absolute;
+  inset: 7px 8px 9px;
+  z-index: -1;
+  background: color-mix(in srgb, var(--approved) 16%, transparent);
+  border-radius: 4px;
+  opacity: 0;
+  transform-origin: left;
+  pointer-events: none;
+}
+
+@keyframes ask-taken {
+  0% {
+    opacity: 1;
+    transform: scaleX(0);
+  }
+  30%,
+  70% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+.ask.is-copied {
+  border-color: color-mix(in srgb, var(--approved) 60%, var(--edge-strong));
+}
+
+.ask.is-copied .ask-text::after {
+  animation: ask-taken 1.6s var(--ease-out);
+}
+
+/* In the hero it sits between the first sentence and the buttons. */
+.hub .ask {
+  order: 2;
+  width: 100%;
+  max-width: 620px;
+  margin: clamp(22px, 2.6vw, 32px) auto 0;
+}
+
+/* ---- the hub: agents on one side, generators on the other, the folder in the middle ---- */
+
+.hub {
+  --s: 52px; /* the edge of a cube */
+  --p: 640px; /* how far the eye is from it */
+  position: relative;
+  /* Keeps the dots lit by the pointer (z-index -1) behind everything in the hub, and above the hero's ground. */
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+/* A field of dots behind everything, fading out toward the edges. --dx and --dy are how far it reaches past the hub. */
+.hub::before,
+.hub::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--dy, 30px)) calc(-1 * var(--dx, 20px));
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.hub::before {
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--text) 12%, transparent) 1px, transparent 1.6px);
+  -webkit-mask-image: radial-gradient(ellipse 70% 62% at 50% 62%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 62% at 50% 62%, #000 30%, transparent 100%);
+}
+
+/* The same dots, brighter, seen only in a circle around the pointer. main.js writes --px and --py and sets is-pointed.
+   They lie under the hub's content, so they never show over the paste window, the buttons or the picture. */
+.hub::after {
+  z-index: -1;
+  --at: calc(var(--px, -999px) + var(--dx, 20px)) calc(var(--py, -999px) + var(--dy, 30px));
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--primary) 55%, var(--text)) 1px, transparent 1.7px);
+  -webkit-mask-image: radial-gradient(circle 170px at var(--at), #000, rgb(0 0 0 / 0.35) 45%, transparent 100%);
+  mask-image: radial-gradient(circle 170px at var(--at), #000, rgb(0 0 0 / 0.35) 45%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.hub.is-pointed::after {
+  opacity: 0.75;
+}
+
+/* The ground under the cubes: main.js draws their shadows, the wires and the thread on it. */
+.hub-wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hub-wires .cube-shadow {
+  fill: var(--ink);
+}
+
+.hub-wires .wire {
+  fill: none;
+  stroke: var(--edge-strong);
+  stroke-width: 2;
+  shape-rendering: crispEdges;
+}
+
+.hub-wires .wire.is-any {
+  stroke-dasharray: 4 5;
+}
+
+/* The route of the current round, lit faintly from one cube to the other. */
+.hub-wires .thread-route {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 2;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.hub-wires .thread-route.is-on {
+  opacity: 0.22;
+}
+
+/* The thread itself: one line drawn three times, so it has a bright head and a tail that thins out. */
+.hub-wires .thread {
+  --tone: var(--agent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hub-wires .thread.is-on {
+  opacity: 1;
+}
+
+.hub-wires .thread polyline {
+  fill: none;
+  stroke: var(--tone);
+  stroke-linejoin: round;
+  transition: stroke 0.35s ease;
+}
+
+.hub-wires .thread-tail {
+  stroke-width: 2;
+  opacity: 0.28;
+}
+
+.hub-wires .thread-mid {
+  stroke-width: 2.5;
+  opacity: 0.7;
+}
+
+.hub-wires .thread-head {
+  stroke: color-mix(in srgb, var(--tone) 40%, #fff);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+/* The glow at the head of the thread. It lies under the cubes, so it shows through their glass. */
+.hub-spark {
+  --tone: var(--agent);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--tone) 30%, #fff) 0%,
+    color-mix(in srgb, var(--tone) 80%, transparent) 14%,
+    color-mix(in srgb, var(--tone) 34%, transparent) 38%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  will-change: transform;
+}
+
+.hub-spark.is-on {
+  opacity: 1;
+}
+
+/* A small tile on the head of the thread shows what it carries: a sheet on the way out, a picture on the way back. */
+.hub-load {
+  --tone: var(--agent);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  background: var(--card);
+  border: 1px solid color-mix(in srgb, var(--tone) 75%, var(--edge-strong));
+  border-radius: 5px;
+  box-shadow: 2px 2px 0 var(--ink);
+  color: color-mix(in srgb, var(--tone) 80%, #fff);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+  will-change: transform;
+}
+
+.hub-load.is-on {
+  opacity: 1;
+}
+
+.hub-load svg {
+  grid-area: 1 / 1;
+}
+
+.hub-load .load-picture,
+.hub-load.is-picture .load-sheet {
+  display: none;
+}
+
+.hub-load.is-picture .load-picture {
+  display: block;
+}
+
+/* What the thread carries: the agent's prompt, then yours to generate, then the picture on its way back. */
+.hub .tone-agent {
+  --tone: var(--agent);
+}
+
+.hub .tone-you {
+  --tone: var(--generate);
+}
+
+.hub .tone-image {
+  --tone: var(--image);
+}
+
+/* Narrow screens: the hero's own parts and the two rows of cubes share one column, in reading order. */
+.hub-center {
+  display: contents;
+}
+
+.hub h1 {
+  order: 1;
+}
+
+.hub .hero-sub {
+  order: 2;
+}
+
+.hub .cta {
+  order: 3;
+}
+
+.hub .hero-facts {
+  order: 4;
+}
+
+.hub-agents {
+  order: 5;
+  margin-top: clamp(44px, 6vw, 64px);
+}
+
+.hub-gens {
+  order: 7;
+  display: flex;
+  flex-direction: column-reverse;
+  margin-top: 52px;
+}
+
+.hub-col {
+  position: relative;
+}
+
+.hub-label {
+  margin-bottom: 22px;
+  color: var(--tone);
+  font: 500 12.5px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Below the folder the label follows the cubes, so the wires meet the cubes first. */
+.hub-gens .hub-label {
+  margin: 24px 0 0;
+}
+
+.hub-col ul {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* In a row the cubes are turned a little toward the folder's middle line, the two rows in opposite ways. */
+.hub-agents .cube-body {
+  --ry: 14deg;
+}
+
+.hub-gens .cube-body {
+  --ry: -14deg;
+}
+
+.hub-col li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* On narrow screens the names go to the screen reader only. */
+.hub-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- a glass cube: six faces, a glow inside, and the product's own mark on a white plate in the middle ---- */
+
+.cube {
+  --h: calc(var(--s) / 2);
+  /* how brightly each kind of edge catches the light */
+  --e1: rgb(255 255 255 / 0.44);
+  --e2: rgb(255 255 255 / 0.26);
+  --e3: rgb(255 255 255 / 0.12);
+  /* the colour of the glass: the side's tone, a little purer so thin layers of it stay clear */
+  --glass: var(--tone);
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  width: var(--s);
+  height: var(--s);
+  transition: transform 0.4s var(--ease-spring);
+}
+
+/* The app's hard shadow. With the script it is drawn on the ground instead, under the wires. */
+html:not(.js) .cube::before {
+  content: "";
+  position: absolute;
+  inset: -6%;
+  z-index: -2;
+  background: var(--ink);
+  border-radius: 6px;
+  transform: translate(13%, 20%);
+}
+
+/* With the script the same element is the patch of coloured light that glass throws into its own shadow. */
+.js .cube::before {
+  content: "";
+  position: absolute;
+  inset: 62% -34% -38% 30%;
+  z-index: -1;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--glass) 62%, transparent), transparent);
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+/* The colour the glass spills on the ground around it. */
+.cube::after {
+  content: "";
+  position: absolute;
+  inset: -75%;
+  z-index: -1;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--glass) 20%, transparent), transparent);
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+/* Seen from a little above. In the wide layout each side is also turned toward the middle; main.js then turns them further. */
+.cube-body {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: perspective(var(--p)) rotateX(var(--rx, -20deg)) rotateY(var(--ry, 0deg));
+}
+
+.cube .f {
+  position: absolute;
+  inset: 0;
+  border: 1px solid;
+  border-color: var(--e1) var(--e3) var(--e3) var(--e2);
+  border-radius: 5px;
+  transition: border-color 0.5s ease;
+}
+
+/* The near face is clear, with a highlight in its upper corner and the cube's colour gathering in the lower one. */
+.cube .f-front {
+  overflow: hidden;
+  transform: translateZ(var(--h));
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 0.3) 0%, rgb(255 255 255 / 0.07) 26%, transparent 48%),
+    linear-gradient(315deg, color-mix(in srgb, var(--glass) 26%, transparent) 0%, transparent 50%);
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.16);
+}
+
+.cube .f-back {
+  transform: rotateY(180deg) translateZ(var(--h));
+  background: color-mix(in srgb, var(--glass) 7%, transparent);
+  border-color: var(--e3);
+}
+
+.cube .f-left {
+  transform: rotateY(-90deg) translateZ(var(--h));
+}
+
+.cube .f-right {
+  transform: rotateY(90deg) translateZ(var(--h));
+}
+
+.cube .f-left,
+.cube .f-right {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--glass) 26%, transparent), color-mix(in srgb, var(--glass) 7%, transparent));
+}
+
+/* The top catches the most light, brightest along its near edge. */
+.cube .f-top {
+  transform: rotateX(90deg) translateZ(var(--h));
+  background: linear-gradient(0deg, rgb(255 255 255 / 0.32), color-mix(in srgb, var(--glass) 22%, rgb(255 255 255 / 0.04)));
+  border-color: var(--e2) var(--e2) var(--e1) var(--e2);
+}
+
+.cube .f-bottom {
+  transform: rotateX(-90deg) translateZ(var(--h));
+  background: color-mix(in srgb, var(--glass) 12%, transparent);
+  border-color: var(--e3);
+}
+
+.cube-glow {
+  position: absolute;
+  inset: -12%;
+  border-radius: 50%;
+  transform: translateZ(calc(var(--h) * -0.35));
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--glass) 60%, #fff) 0%,
+    color-mix(in srgb, var(--glass) 70%, transparent) 45%,
+    transparent 100%
+  );
+  opacity: 0.2;
+  transition: opacity 0.6s ease;
+}
+
+/* A product's own mark on a white plate: marks drawn in black, in colour or on their own white ground all read. */
+.cube-core {
+  position: absolute;
+  inset: 13%;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border-radius: 24%;
+  box-shadow:
+    0 0 0 1px rgb(17 16 20 / 0.6),
+    2px 2px 0 rgb(17 16 20 / 0.4);
+  color: var(--ink);
+  font: 800 clamp(10px, 3vw, 16px) / 1 var(--display);
+}
+
+.cube-core img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+/* If the file of a mark is missing from assets/logos, the plate shows two letters. */
+.cube-core.is-letters::after {
+  content: attr(data-letters);
+}
+
+/* A band of light that crosses the near face when the pointer arrives, or a thread does. */
+.cube .f-front::after {
+  content: "";
+  position: absolute;
+  inset: -20% -60%;
+  background: linear-gradient(105deg, transparent 42%, rgb(255 255 255 / 0.6) 50%, transparent 58%);
+  opacity: 0;
+  transform: translateX(-70%);
+}
+
+@keyframes cube-sheen {
+  0% {
+    opacity: 0;
+    transform: translateX(-70%);
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(70%);
+  }
+}
+
+@keyframes cube-flare {
+  0% {
+    opacity: 0.5;
+  }
+  24% {
+    opacity: 1;
+  }
+}
+
+/* "Any agent", "any tool": the outline of a cube that is not there yet. */
+.is-any .cube .f {
+  background: none;
+  border: 1px dashed var(--edge-strong);
+}
+
+.is-any .cube-glow,
+.is-any .cube::before,
+.is-any .cube::after {
+  display: none;
+}
+
+.by-agent .cube {
+  --glass: color-mix(in srgb, var(--agent) 72%, #a070ff);
+}
+
+.by-you .cube {
+  --glass: color-mix(in srgb, var(--generate) 84%, #ffb52e);
+}
+
+.is-any .cube-core {
+  background: none;
+  box-shadow: none;
+  color: var(--faint);
+  font-weight: 600;
+}
+
+/* While a cube's round lasts it glows from inside and its edges brighten. */
+li.is-lit .cube {
+  --e1: rgb(255 255 255 / 0.72);
+  --e2: color-mix(in srgb, var(--glass) 55%, #fff);
+  --e3: color-mix(in srgb, var(--glass) 75%, transparent);
+}
+
+li.is-lit .cube::before {
+  opacity: 1;
+}
+
+li.is-lit .cube-glow {
+  opacity: 0.75;
+}
+
+li.is-lit .cube::after {
+  opacity: 1;
+}
+
+li.is-pulse .cube-glow {
+  animation: cube-flare 1s ease-out;
+}
+
+li.is-pulse .f-front::after {
+  animation: cube-sheen 0.9s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hub-col li:hover .cube {
+    transform: scale(1.07);
+  }
+
+  .hub-col li:hover .f-front::after {
+    animation: cube-sheen 0.9s var(--ease-out);
+  }
+
+  .hub-col li:not(.is-any):hover .cube-glow {
+    opacity: 0.6;
+  }
+}
+
+/* ---- the folder in the middle: the picture, two ports for the wires, and a light that answers a passing thread ---- */
+
+.hero-stage {
+  position: relative;
+  isolation: isolate;
+  order: 6;
+  width: 100%;
+  max-width: 640px;
+  margin: 46px 0 0;
+}
+
+/* Violet light comes in from the agents' side, mustard from the generators'. */
+.hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: -30% -6%;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 46% 18% at 50% 18.75%, color-mix(in srgb, var(--agent) 16%, transparent), transparent),
+    radial-gradient(ellipse 46% 18% at 50% 81.25%, color-mix(in srgb, var(--generate) 13%, transparent), transparent);
+  pointer-events: none;
+}
+
+/* The ring that flashes once as a thread goes through the folder. */
+.hero-stage::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 2px solid var(--tone, var(--agent));
+  border-radius: 13px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes stage-pass {
+  0% {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+  20% {
+    opacity: 0.9;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.012);
+  }
+}
+
+.hero-stage.is-passing::after {
+  animation: stage-pass 1.1s var(--ease-out);
+}
+
+.hero-art {
+  border-radius: 8px;
+  box-shadow:
+    var(--shadow-big),
+    var(--shadow-soft);
+}
+
+.port {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  width: 16px;
+  height: 6px;
+  margin-left: -8px;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.port-agent {
+  top: -3px;
+  background: var(--agent);
+}
+
+.port-you {
+  bottom: -3px;
+  background: var(--generate);
+}
+
+.hub-fine {
+  max-width: none;
+  margin: clamp(34px, 3.6vw, 48px) auto 0;
+  text-align: center;
+  text-wrap: balance;
+}
+
+@media (max-width: 1099px) {
+  .hub {
+    --s: clamp(44px, calc((100vw - 40px - 140px) / 8), 56px);
+  }
+}
+
+/* A phone: the eight agents stand in two rows of four, the lower one moved half a step along,
+   so the wires of the upper row run down between the cubes of the lower one. */
+@media (max-width: 599px) {
+  .hub {
+    --step: calc(var(--s) + 26px);
+    --s: clamp(36px, calc((100vw - 32px - 117px) / 4.5), 54px);
+  }
+
+  .hub-agents ul {
+    display: grid;
+    grid-template-columns: repeat(9, calc(var(--step) / 2));
+    gap: 30px 0;
+  }
+
+  .hub-agents li {
+    grid-column: span 2;
+  }
+
+  .hub-agents li:nth-child(5) {
+    grid-column: 2 / span 2;
+  }
+
+  .hub-gens {
+    --s: clamp(32px, calc((100vw - 32px - 117px) / 4.9), 50px);
+  }
+
+  .hub-gens ul {
+    gap: 22px;
+  }
+}
+
+/* Wide screens: the cubes float beside the whole hero, each at its own place, and main.js makes them bob. */
+@media (min-width: 1100px) {
+  .hub {
+    grid-template-columns: minmax(0, 1fr) minmax(0, min(960px, 62vw)) minmax(0, 1fr);
+    justify-items: stretch;
+    /* Out to the window's edges, less a gutter. */
+    margin-inline: calc((100% - 100vw) / 2 + 24px);
+  }
+
+  .hub {
+    --dx: 0px;
+    --dy: 40px;
+  }
+
+  .hub-center {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    position: relative;
+  }
+
+  /* Room for the cubes: the headline is a little smaller than on its own. */
+  .hub h1 {
+    font-size: clamp(2.1rem, 4.6vw, 4.5rem);
+  }
+
+  .hero-stage {
+    max-width: 700px;
+    margin: clamp(46px, 4.8vw, 70px) auto 0;
+  }
+
+  .hero-stage::before {
+    inset: -12% -30%;
+    background:
+      radial-gradient(ellipse 18% 58% at 18.75% 50%, color-mix(in srgb, var(--agent) 17%, transparent), transparent),
+      radial-gradient(ellipse 18% 58% at 81.25% 50%, color-mix(in srgb, var(--generate) 14%, transparent), transparent);
+  }
+
+  .port {
+    top: 50%;
+    bottom: auto;
+    width: 6px;
+    height: 16px;
+    margin: -8px 0 0;
+  }
+
+  .port-agent {
+    left: -3px;
+  }
+
+  .port-you {
+    left: auto;
+    right: -3px;
+  }
+
+  .hub-col {
+    grid-row: 1;
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin: 0;
+  }
+
+  /* Each side stands in a faint pool of its own colour. */
+  .hub-col::before {
+    content: "";
+    position: absolute;
+    inset: 4% -30% 10%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--tone) 8%, transparent), transparent);
+    pointer-events: none;
+  }
+
+  .hub-agents {
+    --s: clamp(54px, 4.4vw, 64px);
+    grid-column: 1;
+    justify-self: end;
+  }
+
+  .hub-gens {
+    --s: clamp(62px, 5vw, 76px);
+    grid-column: 3;
+    justify-self: start;
+  }
+
+  .hub-agents .cube-body {
+    --rx: -16deg;
+    --ry: 24deg;
+  }
+
+  .hub-gens .cube-body {
+    --rx: -16deg;
+    --ry: -24deg;
+  }
+
+  .hub-label,
+  .hub-gens .hub-label {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    right: 0;
+    margin: 0;
+  }
+
+  .hub-col ul {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  /* --x runs from 0 at the outer side of the column to 1 at the side next to the hero. */
+  .hub-col li {
+    position: absolute;
+    top: var(--y);
+    left: calc(var(--x) * (100% - 112px));
+    width: 112px;
+    gap: 25px;
+    will-change: transform;
+  }
+
+  .hub-gens li {
+    left: calc((1 - var(--x)) * (100% - 112px));
+  }
+
+  .hub-col li.is-any {
+    display: none;
+  }
+
+  .hub-name {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    color: var(--muted);
+    font: 600 13px/1.2 var(--display);
+    text-align: center;
+    transition: color 0.5s ease;
+  }
+
+  li.is-lit .hub-name,
+  .hub-col li:hover .hub-name {
+    color: var(--text);
+  }
+}
+
+/* The hero arrives in order when the page loads: the sentence, the message, the buttons, then the cubes one by one. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes cube-in {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+  }
+
+  .hero h1 .line {
+    animation: rise 1s var(--ease-out) backwards;
+  }
+
+  .hero h1 .line:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+
+  @keyframes underline-in {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  .hero h1 .who-agent::after {
+    animation: underline-in 0.9s var(--ease-out) 0.9s backwards;
+  }
+
+  .hero h1 .who-you::after {
+    animation: underline-in 0.9s var(--ease-out) 1.15s backwards;
+  }
+
+  .hero-sub {
+    animation: rise 1s var(--ease-out) 0.2s backwards;
+  }
+
+  .hub .ask {
+    animation: rise 1s var(--ease-out) 0.3s backwards;
+  }
+
+  .hub .cta {
+    animation: rise 1s var(--ease-out) 0.4s backwards;
+  }
+
+  .hero-facts {
+    animation: fade 1s ease 0.6s backwards;
+  }
+
+  .hero-stage {
+    animation: rise 1.1s var(--ease-out) 0.5s backwards;
+  }
+
+  .hub-label {
+    animation: fade 0.9s ease 0.5s backwards;
+  }
+
+  .hub-col li > .cube {
+    animation: cube-in 0.7s var(--ease-spring) backwards;
+    animation-delay: calc(0.55s + var(--k, 0) * 70ms);
+  }
+
+  .hub-col li > .hub-name {
+    animation: fade 0.7s ease backwards;
+    animation-delay: calc(0.75s + var(--k, 0) * 70ms);
+  }
+
+  .hub-col li:nth-child(2) {
+    --k: 1;
+  }
+  .hub-col li:nth-child(3) {
+    --k: 2;
+  }
+  .hub-col li:nth-child(4) {
+    --k: 3;
+  }
+  .hub-col li:nth-child(5) {
+    --k: 4;
+  }
+  .hub-col li:nth-child(6) {
+    --k: 5;
+  }
+  .hub-col li:nth-child(7) {
+    --k: 6;
+  }
+  .hub-col li:nth-child(8) {
+    --k: 7;
+  }
+
+  .hub-wires {
+    animation: fade 0.9s ease 1.1s backwards;
+  }
+
+  .hub-fine {
+    animation: fade 1s ease 1.2s backwards;
+  }
+}
+
+/* ================= 8. The loop: the folder on the left, six turns on the right ================= */
+
+.story-grid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: clamp(36px, 5vw, 76px);
+  align-items: start;
+  margin-top: clamp(56px, 7vw, 96px);
+}
+
+.rail {
+  position: sticky;
+  top: calc(var(--bar-h) + 28px);
+}
+
+.rail-box {
+  padding: 16px 16px 14px;
+  background: var(--page);
+  border: 1px solid var(--edge-strong);
+  border-radius: 8px;
+  box-shadow:
+    var(--shadow),
+    var(--shadow-soft),
+    inset 0 1px 0 var(--hi);
+}
+
+.rail-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: var(--line);
+}
+
+/* One square per step, in the colour of whose step it was. */
+.pips {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.pips i {
+  width: 8px;
+  height: 8px;
+  border: 1px solid color-mix(in srgb, var(--tone) 60%, var(--edge));
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.pips i.is-done {
+  background: var(--tone);
+  border-color: var(--tone);
+}
+
+.tree {
+  font: 13px/1 var(--mono);
+}
+
+.tree li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 0 6px 18px;
+  white-space: nowrap;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s var(--ease-out);
+}
+
+/* The files the current step has just added stand on a faint bar of their maker's colour. */
+.tree li::after {
+  content: "";
+  position: absolute;
+  inset: 1px -8px;
+  z-index: -1;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 13%, transparent), transparent 85%);
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.tree .tree-root {
+  align-items: center;
+  gap: 8px;
+  padding-left: 0;
+  color: var(--muted);
+}
+
+.tree li[data-by="agent"] {
+  --tone: var(--agent);
+}
+
+.tree li[data-by="you"] {
+  --tone: var(--generate);
+}
+
+.tree li[data-by="app"] {
+  --tone: var(--muted);
+}
+
+.f-name {
+  position: relative;
+  color: color-mix(in srgb, var(--tone) 60%, var(--muted));
+  transition: color 0.3s ease;
+}
+
+.f-note {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--faint);
+  font: 12.5px/1 var(--body);
+}
+
+.tree li.is-new .f-name {
+  color: var(--tone);
+}
+
+.tree li.is-new .f-name::before {
+  content: "+";
+  position: absolute;
+  left: -14px;
+  font-weight: 500;
+}
+
+.tree li.is-new .f-note {
+  color: var(--muted);
+}
+
+.tree-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: var(--line);
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.key::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--tone);
+}
+
+/* A turn. The line down its left side is in the colour of whose turn it is, so the page alternates as the work did. */
+.turn {
+  position: relative;
+  padding: 0 0 clamp(84px, 10vw, 136px) clamp(22px, 3vw, 40px);
+  border-left: 3px solid color-mix(in srgb, var(--tone) 60%, var(--edge));
+}
+
+.turn:last-child {
+  padding-bottom: 6px;
+}
+
+/* The square that marks where the turn starts. The one being read is ringed with its colour. */
+.turn::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  top: 0;
+  width: 15px;
+  height: 15px;
+  background: var(--tone);
+  box-shadow:
+    3px 3px 0 var(--ink),
+    0 0 0 0 color-mix(in srgb, var(--tone) 30%, transparent);
+  transition: box-shadow 0.45s var(--ease-out);
+}
+
+.turn.is-current::before {
+  box-shadow:
+    3px 3px 0 var(--ink),
+    0 0 0 6px color-mix(in srgb, var(--tone) 26%, transparent);
+}
+
+.turn-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  min-height: 15px;
+}
+
+.turn-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tone);
+  font: 500 12.5px/1.2 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.turn-who span {
+  color: var(--faint);
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* The files this turn adds to the folder. */
+.turn-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-left: auto;
+  font: 13px/1.2 var(--mono);
+}
+
+.turn-files span {
+  color: var(--tone);
+  white-space: nowrap;
+}
+
+.turn-files span::before {
+  content: "+ ";
+  opacity: 0.7;
+}
+
+.turn h3 {
+  margin-top: 18px;
+  font: 700 clamp(1.6rem, 2.8vw, 2.25rem) / 1.12 var(--display);
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.turn-text {
+  max-width: 54ch;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: clamp(17px, 1.35vw, 18.5px);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* A step you can skip: a dashed line on the way past it, and a quiet label. */
+.turn.is-optional {
+  border-left-style: dashed;
+}
+
+.turn-opt {
+  padding: 0 9px;
+  border: 1px dashed var(--edge-strong);
+  border-radius: 999px;
+  color: var(--muted);
+  font: 500 12px/20px var(--body);
+  white-space: nowrap;
+}
+
+/* The app's own card, captured from the running app (assets/app).
+   The picture carries a little of the app's page around the card, so the frame takes the same colour. */
+.appshot {
+  max-width: 800px;
+  margin-top: clamp(26px, 3vw, 36px);
+  background: var(--page);
+}
+
+/* A single piece of the card, shown at the size it has in the app. */
+.appshot.is-part {
+  max-width: 523px;
+}
+
+.appshot.is-part:has(img[src*="notify"]) {
+  max-width: 440px;
+}
+
+.appshot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The folder follows the turns only where it stays in view. */
+@media (min-width: 1021px) {
+  .js .tree li.is-future {
+    opacity: 0.2;
+    transform: translateX(-4px);
+  }
+
+  .js .tree li.is-future .f-note {
+    visibility: hidden;
+  }
+
+  .js .tree li.is-new::after {
+    opacity: 1;
+  }
+}
+
+/* ================= 9. Compared with MCP: one agent, one path, two far ends ================= */
+
+.lanes {
+  --wire: color-mix(in srgb, var(--agent) 55%, var(--edge));
+  --server: color-mix(in srgb, var(--muted) 70%, var(--well));
+  --end: 68px;
+  --gap: 16px;
+  --stub: 30px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  max-width: 1040px;
+  margin: clamp(44px, 5.5vw, 72px) auto 0;
+  padding: clamp(34px, 4.4vw, 60px) clamp(22px, 3.6vw, 48px);
+  background-color: var(--well);
+  /* The dot field of the hero, faint, thinning toward the edges. */
+  background-image:
+    radial-gradient(ellipse 62% 100% at 50% 50%, transparent 30%, var(--well) 100%),
+    radial-gradient(circle, color-mix(in srgb, var(--text) 11%, transparent) 1px, transparent 1.6px);
+  background-size:
+    auto,
+    20px 20px;
+  background-position:
+    0 0,
+    10px 10px;
+  border: 1px solid var(--edge-strong);
+  border-radius: 10px;
+  box-shadow:
+    var(--shadow-big),
+    var(--shadow-soft),
+    inset 0 1px 0 var(--hi);
+}
+
+.lane-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 8px 20px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--agent) 15%, var(--card)), color-mix(in srgb, var(--agent) 6%, var(--card)));
+  border: 1px solid color-mix(in srgb, var(--agent) 60%, var(--edge));
+  border-radius: var(--radius);
+  box-shadow:
+    var(--shadow-small),
+    inset 0 1px 0 rgb(255 255 255 / 0.12);
+  color: var(--agent);
+  font: 700 18px/1.2 var(--display);
+}
+
+/* The path: a wire with four numbered stops. Each stop's name hangs under it. */
+.lane-track {
+  position: relative;
+}
+
+.lane-wire {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--wire);
+  transform-origin: left;
+  /* The light is cut off at the two ends of the wire, and nowhere else. */
+  clip-path: inset(-14px 0);
+}
+
+/* The light: a bright core on the wire and a soft glow around its head. */
+.lane-wire i {
+  position: absolute;
+  left: 0;
+  top: -7px;
+  width: 30%;
+  height: 16px;
+  background:
+    linear-gradient(90deg, transparent, var(--agent) 72%, color-mix(in srgb, var(--agent) 35%, #fff)) center / 100% 4px no-repeat,
+    radial-gradient(ellipse 46px 8px at calc(100% - 12px) 50%, color-mix(in srgb, var(--agent) 60%, transparent), transparent);
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.lane-steps {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+}
+
+.lane-steps li {
+  position: relative;
+}
+
+.lane-node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: var(--well);
+  border: 2px solid var(--wire);
+  border-radius: 5px;
+  box-shadow: 3px 3px 0 var(--ink);
+  color: var(--agent);
+  font: 500 13px/1 var(--mono);
+}
+
+/* The same stop, filled: shown while the light is on it. */
+.lane-node::after {
+  content: attr(data-n);
+  position: absolute;
+  inset: -2px;
+  display: grid;
+  place-items: center;
+  background: var(--agent);
+  border-radius: 5px;
+  color: var(--ink);
+  opacity: 0;
+}
+
+.lane-step {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 13px);
+  transform: translateX(-50%);
+  color: var(--text);
+  font: 600 15px/1.2 var(--display);
+  white-space: nowrap;
+}
+
+/* The far end: the wire splits with two round corners, up to a server and down to you. */
+.lane-fork {
+  position: relative;
+  display: grid;
+  gap: var(--gap);
+  width: min(308px, 31vw);
+  padding-left: calc(var(--stub) * 2);
+}
+
+.lane-fork::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: calc(var(--stub) + 2px);
+  height: 2px;
+  margin-top: -1px;
+  background: var(--wire);
+}
+
+.lane-end {
+  --tone: var(--server);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  height: var(--end);
+  padding: 0 18px;
+  background: var(--card);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--radius);
+  box-shadow:
+    var(--shadow-small),
+    inset 0 1px 0 var(--hi);
+}
+
+/* The branch: from the fork to the middle of this end. */
+.lane-end::before {
+  content: "";
+  position: absolute;
+  right: calc(100% + 1px);
+  width: var(--stub);
+  height: calc(50% + var(--gap) / 2 + 1px);
+  border: 0 solid var(--tone);
+  border-left-width: 2px;
+}
+
+.lane-end.is-server::before {
+  top: calc(50% - 1px);
+  border-top-width: 2px;
+  border-top-left-radius: 10px;
+}
+
+.lane-end.is-you::before {
+  bottom: calc(50% - 1px);
+  border-bottom-width: 2px;
+  border-bottom-left-radius: 10px;
+}
+
+/* An arrowhead where the branch meets the end. */
+.lane-end::after {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  margin-top: -5px;
+  border: 5px solid transparent;
+  border-right-width: 0;
+  border-left: 7px solid var(--tone);
+}
+
+/* The ring that opens around an end when the light reaches it. */
+.lane-ping {
+  position: absolute;
+  inset: -5px;
+  border: 2px solid var(--tone);
+  border-radius: 10px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lane-end .icon {
+  color: var(--muted);
+}
+
+.lane-end strong {
+  display: block;
+  font: 700 18px/1.2 var(--display);
+}
+
+.lane-end span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.lane-end.is-you {
+  --tone: var(--generate);
+  background: linear-gradient(180deg, #e2b351, var(--generate) 62%);
+  border-color: var(--generate);
+  color: var(--on-primary);
+  box-shadow:
+    var(--shadow-small),
+    inset 0 1px 0 rgb(255 255 255 / 0.42);
+}
+
+.lane-end.is-you .icon {
+  color: var(--on-primary);
+}
+
+.lane-end.is-you span {
+  color: color-mix(in srgb, var(--on-primary) 72%, var(--generate));
+}
+
+/* The figure draws itself once: the wire, the stops in order, then the fork and its two ends. */
+@keyframes lane-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes lane-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes lane-slide {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+.motion .lanes.is-in .lane-wire {
+  animation: lane-draw 0.9s var(--ease-out) 0.25s backwards;
+}
+
+.motion .lanes.is-in .lane-node {
+  animation: lane-pop 0.5s var(--ease-spring) backwards;
+  animation-delay: calc(0.4s + var(--i) * 0.13s);
+}
+
+.motion .lanes.is-in .lane-step {
+  animation: fade 0.6s ease backwards;
+  animation-delay: calc(0.55s + var(--i) * 0.13s);
+}
+
+.motion .lanes.is-in .lane-fork::before {
+  animation: fade 0.4s ease 0.95s backwards;
+}
+
+.motion .lanes.is-in .lane-end {
+  animation: lane-slide 0.7s var(--ease-out) 1s backwards;
+}
+
+.motion .lanes.is-in .lane-end.is-you {
+  animation-delay: 1.12s;
+}
+
+/* Then a light runs the path every five seconds. It reaches the server on one run and you on the next. */
+@keyframes lane-run {
+  0% {
+    opacity: 1;
+    transform: translateX(-100%);
+  }
+  56% {
+    opacity: 1;
+    transform: translateX(334%);
+  }
+  57%,
+  100% {
+    opacity: 0;
+    transform: translateX(334%);
+  }
+}
+
+/* A stop fills as the light passes it, then lets go. */
+@keyframes lane-stop {
+  0%,
+  40%,
+  100% {
+    opacity: 0;
+  }
+  4%,
+  24% {
+    opacity: 1;
+  }
+}
+
+@keyframes lane-arrive {
+  0%,
+  22%,
+  42%,
+  100% {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  26% {
+    opacity: 1;
+    transform: none;
+  }
+  41% {
+    opacity: 0;
+    transform: scale(1.05, 1.16);
+  }
+}
+
+.motion .lanes.is-in .lane-wire i {
+  animation: lane-run 5s linear 2s infinite;
+}
+
+/* The delay is when the head of the light reaches each stop. */
+.motion .lanes.is-in .lane-node::after {
+  animation: lane-stop 5s ease-in-out infinite;
+  animation-delay: calc(2s + var(--i) * 0.54s + 0.27s);
+}
+
+.motion .lanes.is-in .lane-ping {
+  animation: lane-arrive 10s ease-out 2s infinite;
+}
+
+.motion .lanes.is-in .is-you .lane-ping {
+  animation-delay: 7s;
+}
+
+/* Off screen the light waits. */
+.lanes:not(.is-live) .lane-wire i,
+.lanes:not(.is-live) .lane-node::after,
+.lanes:not(.is-live) .lane-ping {
+  animation-play-state: paused;
+}
+
+/* ---- a picture beside a heading and a few lines ---- */
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+  gap: clamp(32px, 5.5vw, 84px);
+  align-items: center;
+}
+
+.for {
+  margin-top: clamp(84px, 10.5vw, 152px);
+}
+
+/* Names as plain text: no logos, one style for all. */
+.names {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.names dt {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font: 500 12px/1.4 var(--mono);
+  letter-spacing: 0.04em;
+}
+
+.name-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.name-chips li {
+  display: inline-flex;
+  align-items: center;
+  min-height: 33px;
+  padding: 4px 13px;
+  background: var(--card);
+  border: 1px solid var(--edge-strong);
+  border-left: 3px solid var(--tone);
+  border-radius: 4px;
+  box-shadow:
+    var(--shadow-small),
+    inset 0 1px 0 var(--hi);
+  font: 500 14.5px/1.3 var(--body);
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out),
+    background-color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .name-chips li:hover {
+    background: var(--card-hover);
+    transform: translate(-1px, -1px);
+    box-shadow:
+      3px 3px 0 var(--ink),
+      inset 0 1px 0 var(--hi-strong);
+  }
+
+  .names .is-quiet li:hover {
+    background: none;
+    border-color: var(--muted);
+    color: var(--text);
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.names .is-quiet dt {
+  color: var(--faint);
+}
+
+.names .is-quiet li {
+  background: none;
+  border: 1px dashed var(--edge-strong);
+  box-shadow: none;
+  color: var(--muted);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* ================= 10. The courier: the problem, in one picture ================= */
+
+.courier {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+
+.courier .plain-list {
+  margin-top: 28px;
+  color: var(--text);
+  font-size: clamp(16.5px, 1.3vw, 18px);
+}
+
+/* ================= 11. For the agent: rows of a picture and a short text, on alternating sides ================= */
+
+.rows {
+  display: grid;
+  gap: clamp(72px, 9vw, 128px);
+  margin-top: clamp(56px, 7vw, 96px);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(32px, 5.5vw, 88px);
+  align-items: center;
+}
+
+.row.is-flip .row-pic {
+  order: 2;
+}
+
+.row-text h3 {
+  font: 700 clamp(1.5rem, 2.5vw, 2.05rem) / 1.14 var(--display);
+  letter-spacing: -0.016em;
+  text-wrap: balance;
+}
+
+.row-text p {
+  max-width: 42ch;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: clamp(17px, 1.35vw, 18.5px);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.row-text p + p {
+  margin-top: 10px;
+}
+
+.row-pic {
+  background: var(--page);
+}
+
+.row-pic img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* A row whose text sits above a strip of pictures. */
+.row.is-stack {
+  display: block;
+}
+
+.row.is-stack .row-text p {
+  max-width: 56ch;
+}
+
+/* The strip: a clip, then the two things the app makes from it, with an arrow between each. */
+.pipe {
+  --gap: clamp(32px, 4vw, 56px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  margin-top: clamp(28px, 3.4vw, 44px);
+}
+
+.pipe-step {
+  position: relative;
+}
+
+.pipe-pic {
+  aspect-ratio: 16 / 9;
+}
+
+.pipe-pic > img,
+.pipe-pic .art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The clip inside the strip wears the strip's frame, not one of its own. */
+.pipe-pic .art {
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.pipe-pic .art::before,
+.pipe-pic .art::after {
+  content: none;
+}
+
+/* The arrow, in the gap before the second and third picture: a line and a head of five pixels.
+   The box is as tall as the picture and starts one gap to its left, so the arrow sits at the picture's middle. */
+.pipe-step + .pipe-step::before {
+  --c: color-mix(in srgb, var(--muted) 75%, var(--edge-strong));
+  content: "";
+  position: absolute;
+  left: calc(var(--gap) * -1);
+  top: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background:
+    linear-gradient(var(--c), var(--c)) 10px 50% / calc(var(--gap) - 20px) 2px no-repeat,
+    linear-gradient(var(--c), var(--c)) calc(var(--gap) - 14px) calc(50% - 2px) / 2px 2px no-repeat,
+    linear-gradient(var(--c), var(--c)) calc(var(--gap) - 16px) calc(50% - 4px) / 2px 2px no-repeat,
+    linear-gradient(var(--c), var(--c)) calc(var(--gap) - 14px) calc(50% + 2px) / 2px 2px no-repeat,
+    linear-gradient(var(--c), var(--c)) calc(var(--gap) - 16px) calc(50% + 4px) / 2px 2px no-repeat;
+  pointer-events: none;
+}
+
+.pipe-step figcaption {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.pipe-step strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--text);
+  font: 700 17px/1.3 var(--display);
+}
+
+/* ================= 12. Uses, trade-offs ================= */
+
+.uses {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(18px, 2.2vw, 30px);
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+.use-pic {
+  aspect-ratio: 16 / 10;
+}
+
+.use-pic:not(.use-icons-art) > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.use-icons-art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 12px 11%;
+  background-color: var(--page);
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--text) 8%, transparent) 1px, transparent 1.6px);
+  background-size: 16px 16px;
+}
+
+.use h3 {
+  margin-top: 22px;
+  text-wrap: balance;
+}
+
+.use p {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* Trade-offs: the picture, then two quiet lists. */
+.fit {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+  margin-top: clamp(48px, 6vw, 80px);
+}
+
+.fit-col h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid color-mix(in srgb, var(--tone) 55%, var(--edge));
+  color: var(--tone);
+  font: 700 17px/1.2 var(--display);
+}
+
+.fit-col li {
+  position: relative;
+  padding: 14px 0 14px 20px;
+  border-bottom: var(--line);
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.fit-col li::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: calc(14px + 0.75em - 3px);
+  width: 6px;
+  height: 6px;
+  background: color-mix(in srgb, var(--tone) 70%, var(--edge));
+}
+
+/* ================= 13. Install: two ways, side by side ================= */
+
+.ways {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(20px, 2.6vw, 32px);
+  margin-top: clamp(44px, 5.5vw, 72px);
+}
+
+/* A card with its maker's colour along the top edge. It stays where it is under the pointer; only its edge catches the light. */
+.way {
+  --lit: var(--tone);
+  padding: clamp(24px, 2.8vw, 36px);
+  background: var(--card);
+  border: 1px solid var(--edge-strong);
+  border-radius: 8px;
+  box-shadow:
+    var(--shadow),
+    var(--shadow-soft),
+    inset 0 3px 0 var(--tone);
+}
+
+.way.by-agent {
+  background: color-mix(in srgb, var(--agent) 5%, var(--card));
+}
+
+.way-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tone);
+  font: 500 12.5px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.way h3 {
+  margin-top: 14px;
+  font: 700 clamp(1.4rem, 2.2vw, 1.8rem) / 1.15 var(--display);
+  letter-spacing: -0.014em;
+}
+
+.way-text {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 16.5px;
+}
+
+.way .ask {
+  margin-top: 20px;
+  background: var(--well);
+}
+
+.way-does {
+  display: grid;
+  gap: 9px;
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.way-does li {
+  position: relative;
+  padding-left: 22px;
+}
+
+.way-does li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.6em;
+  width: 7px;
+  height: 7px;
+  background: var(--agent);
+}
+
+.way-steps {
+  counter-reset: way;
+  display: grid;
+  gap: 22px;
+  margin-top: 20px;
+}
+
+.way-steps li {
+  counter-increment: way;
+  position: relative;
+  padding-left: 46px;
+}
+
+.way-steps li::before {
+  content: counter(way);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(180deg, #e2b351, var(--primary) 62%);
+  border-radius: 4px;
+  box-shadow:
+    var(--shadow-small),
+    inset 0 1px 0 rgb(255 255 255 / 0.42);
+  color: var(--on-primary);
+  font: 700 16px/1 var(--display);
+}
+
+.way-steps strong {
+  display: block;
+  padding-top: 3px;
+  font: 700 18px/1.3 var(--display);
+}
+
+.way-steps p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.way-steps .btn {
+  margin-top: 12px;
+}
+
+.way-steps code {
+  padding: 1px 6px;
+  background: var(--well);
+  border: var(--line);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 13.5px;
+}
+
+/* What comes after either way. */
+.ways-next {
+  max-width: 68ch;
+  margin: clamp(30px, 3.6vw, 48px) auto 0;
+  color: var(--muted);
+  font-size: 16.5px;
+  text-align: center;
+  text-wrap: pretty;
+}
+
+.ways-next strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ================= 14. Questions ================= */
+
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+
+.faq-list {
+  border-top: var(--line);
+}
+
+.faq-list details {
+  border-bottom: var(--line);
+}
+
+.faq-list summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 19px 2px;
+  cursor: pointer;
+  list-style: none;
+  font: 700 19px/1.3 var(--display);
+  letter-spacing: -0.008em;
+  transition: color 0.2s ease;
+}
+
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+/* The row under the pointer is lit from behind. */
+.faq-list summary::before {
+  content: "";
+  position: absolute;
+  inset: 5px -14px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--text) 6%, transparent), color-mix(in srgb, var(--text) 3%, transparent));
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* The plus that becomes a minus: its upright bar lies down when the answer opens. */
+.faq-x {
+  position: relative;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-left: auto;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.faq-x::before,
+.faq-x::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.faq-x::after {
+  transform: rotate(90deg);
+}
+
+.faq-list details[open]:not(.is-closing) .faq-x {
+  color: var(--primary);
+}
+
+.faq-list details[open]:not(.is-closing) .faq-x::after {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) {
+  .faq-list summary:hover {
+    color: var(--primary-hover);
+  }
+
+  .faq-list summary:hover::before {
+    opacity: 1;
+  }
+
+  .faq-list summary:hover .faq-x {
+    color: var(--primary-hover);
+  }
+}
+
+.faq-a {
+  overflow: hidden;
+}
+
+.faq-a p {
+  max-width: 68ch;
+  padding: 0 2px 22px;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+/* ================= 15. Closing, footer ================= */
+
+.closing {
+  text-align: center;
+}
+
+.closing .wrap {
+  display: grid;
+  justify-items: center;
+}
+
+/* The gallery wall is lit from both sides: violet from the agent's, mustard from yours. */
+.closing-art {
+  width: min(760px, 100%);
+  margin-bottom: clamp(40px, 5vw, 60px);
+  box-shadow:
+    var(--shadow-big),
+    -70px 50px 90px -70px color-mix(in srgb, var(--agent) 45%, transparent),
+    70px 50px 90px -70px color-mix(in srgb, var(--generate) 40%, transparent),
+    var(--shadow-soft);
+}
+
+.closing h2 {
+  max-width: 18ch;
+  margin-inline: auto;
+}
+
+.closing .hero-cta {
+  margin-top: 32px;
+}
+
+/* The footer takes the colour the last section does not have. */
+.foot {
+  position: relative;
+  padding: 26px 0 32px;
+  border-top: var(--line);
+  color: var(--faint);
+  font-size: 14px;
+}
+
+.foot.is-band {
+  background: var(--bar);
+}
+
+.foot-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 28px;
+}
+
+.foot .brand {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.foot a {
+  margin-left: auto;
+  color: var(--muted);
+  text-decoration-color: var(--edge-strong);
+  text-underline-offset: 4px;
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+}
+
+.foot a:hover {
+  color: var(--text);
+  text-decoration-color: var(--primary);
+}
+
+/* ================= 16. Narrower screens ================= */
+
+@media (min-width: 1041px) {
+  /* Four tiles in a row: every heading takes two lines, so the texts under them start level. */
+  .use h3 {
+    min-height: 2.5em;
+  }
+}
+
+@media (min-width: 901px) {
+  /* The heading keeps the questions company while they scroll past. */
+  .faq > :first-child {
+    position: sticky;
+    top: calc(var(--bar-h) + 40px);
+  }
+}
+
+@media (max-width: 1040px) {
+  .uses {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 36px 22px;
+  }
+}
+
+@media (max-width: 1020px) {
+  .bar-links {
+    display: none;
+  }
+
+  /* The folder moves to the end of the loop and shows everything the six turns left in it. */
+  .story-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rail {
+    position: static;
+    order: 2;
+    max-width: 420px;
+  }
+
+  .rail-state {
+    display: none;
+  }
+
+  .tree li.is-new .f-name::before {
+    content: none;
+  }
+
+  .turn:last-child {
+    padding-bottom: 24px;
+  }
+}
+
+/* Between a phone and a laptop the MCP figure keeps its one line, with everything a size smaller. */
+@media (max-width: 980px) {
+  .lanes {
+    --stub: 22px;
+    padding-inline: 18px;
+  }
+
+  .lane-box {
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 16px;
+  }
+
+  .lane-step {
+    font-size: 13.5px;
+  }
+
+  .lane-fork {
+    width: min(250px, 30vw);
+  }
+
+  .lane-end {
+    gap: 10px;
+    padding: 0 12px;
+  }
+
+  .lane-end strong {
+    font-size: 16.5px;
+  }
+
+  .lane-end span {
+    font-size: 12.5px;
+  }
+}
+
+@media (max-width: 900px) {
+  .courier,
+  .row,
+  .ways,
+  .faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .row {
+    gap: 26px;
+  }
+
+  .row.is-flip .row-pic {
+    order: 0;
+  }
+
+  .fit {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .fit-art {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 360px;
+    margin-inline: auto;
+  }
+
+  /* The clip and what the app makes from it, one under the other. */
+  .pipe {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 520px;
+  }
+
+  .pipe-step + .pipe-step::before {
+    content: none;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    font-size: 16px;
+  }
+
+  .bar {
+    padding-inline: 14px;
+  }
+
+  /* On a phone only the star is left. */
+  .bar-github-text {
+    display: none;
+  }
+
+  .bar-github {
+    padding-inline: 10px;
+  }
+
+  .wrap {
+    width: min(var(--wrap), 100% - 32px);
+  }
+
+  .hero-art,
+  .lanes {
+    box-shadow:
+      var(--shadow),
+      var(--shadow-soft);
+  }
+
+  .closing-art {
+    box-shadow:
+      var(--shadow),
+      -40px 40px 60px -50px color-mix(in srgb, var(--agent) 45%, transparent),
+      40px 40px 60px -50px color-mix(in srgb, var(--generate) 40%, transparent),
+      var(--shadow-soft);
+  }
+
+  .hero-facts {
+    gap: 4px 16px;
+  }
+
+  .turn-files {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .split .art {
+    max-width: 420px;
+  }
+
+  /* The path runs down: the agent, its four steps, then the two far ends. */
+  .lanes {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--text) 9%, transparent) 1px, transparent 1.6px);
+    background-size: 20px 20px;
+  }
+
+  .lane-box {
+    min-height: 46px;
+  }
+
+  .lane-track {
+    width: 100%;
+  }
+
+  .lane-wire {
+    display: none;
+  }
+
+  .lane-steps {
+    flex-direction: column;
+    gap: 14px;
+    margin-left: 24px;
+    padding: 18px 0;
+    border-left: 2px solid var(--wire);
+  }
+
+  .lane-steps li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: -16px;
+  }
+
+  .lane-step {
+    position: static;
+    transform: none;
+  }
+
+  .lane-step {
+    font-size: 15px;
+  }
+
+  .lane-fork {
+    width: 100%;
+    padding-left: 0;
+    gap: 10px;
+  }
+
+  .lane-end {
+    gap: 13px;
+    padding: 0 18px;
+  }
+
+  .lane-fork::before,
+  .lane-end::before,
+  .lane-end::after {
+    content: none;
+  }
+
+  .foot a {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .uses {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .appshot {
+    max-width: 440px;
+  }
+
+  .appshot.is-part {
+    max-width: 418px;
+  }
+
+  .fit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fit-art {
+    max-width: 300px;
+  }
+}
+
+/* ================= 17. Reduced motion ================= */
+
+/* Everything stands still and fully visible. main.js does not set .motion either, so nothing waits to be revealed. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
