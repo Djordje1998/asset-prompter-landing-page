@@ -16,7 +16,7 @@ python -m http.server 4790 --bind 127.0.0.1
 
 ## Hosting
 
-GitHub Pages serves the root of the `main` branch (Settings, Pages, Deploy from a branch). The empty `.nojekyll` file tells it to publish the files as they are. The page is then at `https://djordje1998.github.io/asset-prompter-landing-page/`.
+GitHub Pages serves the root of the `main` branch (Settings, Pages, Deploy from a branch) at `https://assetprompter.com/`: `CNAME` names the domain, and at the registrar the apex has A records for GitHub Pages and `www` a CNAME to `djordje1998.github.io`. The empty `.nojekyll` file tells Pages to publish the files as they are.
 
 ## Sections, in order
 
@@ -132,4 +132,4 @@ A generator is named as hand-only only with its fact: no public API (Google Flow
 - `styles.css` and `main.js` are linked with a `?v=` stamp in `index.html`. Change it when either file changes, or a browser may keep the old one.
 - Product names and logos belong to their owners. The lines saying the project is not affiliated with them, and "as checked on 2 October 2026", must stay; check the claims again when the page changes.
 - The download buttons point at the `master` branch ZIP of `github.com/Djordje1998/asset-prompter`. Links to the repository's pages open in a new tab (`target="_blank" rel="noopener"`); the ZIP links are downloads and do not.
-- The picture for link previews is `assets/og.png` (1200 by 630). `og:image` and `og:url` in `index.html` hold the page's full address, `https://djordje1998.github.io/asset-prompter-landing-page/`, because sites that show previews do not follow relative paths. Change both when the page moves to its own domain. To remake the picture, open `tools/og.html` in a browser window of 1200 by 630 and save a screenshot of it.
+- The picture for link previews is `assets/og.png` (1200 by 630). `og:image` and `og:url` in `index.html` hold the page's full address, `https://assetprompter.com/`, because sites that show previews do not follow relative paths. Change both when the page moves to its own domain. To remake the picture, open `tools/og.html` in a browser window of 1200 by 630 and save a screenshot of it.
