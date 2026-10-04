@@ -1,12 +1,16 @@
 // Small behaviours only; the page reads fine without any of it.
 // In order: the top bar, the folder beside the six steps, entrances, the MCP figure, art and clips,
 // the Copy buttons, light under the pointer, the questions, and the hub in the hero.
+// The language menu and the Serbian text are in i18n.js, which runs before this file.
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
 const hasObserver = "IntersectionObserver" in window;
 const root = document.documentElement;
 root.classList.add("js");
+
+/** A text this script writes itself, in the page's language: i18n.js has the Serbian, the English is given here. */
+const say = (key, english) => window.i18n?.t(key) ?? english;
 
 /** Runs fn at most once per frame, however often it is asked for. */
 const oncePerFrame = (fn) => {
@@ -150,7 +154,7 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
       "beforeend",
       `<span class="tag t-generate"><svg class="icon" width="12" height="12"><use href="#i-spark"/></svg>Needs generating</span>
        <span class="art-slot">${art.dataset.slot}</span>
-       <span class="art-hint">${img.alt.replace(/^Pixel art: /, "")}</span>`,
+       <span class="art-hint">${img.alt.replace(/^(Pixel art|Piksel-art): /, "")}</span>`,
     );
   };
 
@@ -159,11 +163,13 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
     if (!src || reducedMotion) return;
     const video = document.createElement("video");
     Object.assign(video, { muted: true, loop: true, autoplay: true, playsInline: true, poster: img.currentSrc || img.src });
-    video.setAttribute("aria-label", img.alt);
     // The still stays until the clip can really play; with no clip, it stays for good.
     video.addEventListener(
       "canplay",
       () => {
+        // The clip takes over the picture's description, and its mark, so i18n.js keeps it in the page's language.
+        video.setAttribute("aria-label", img.alt);
+        if (img.dataset.i18nAlt) video.setAttribute("data-i18n-aria-label", img.dataset.i18nAlt);
         img.replaceWith(video);
         if (onScreen) onScreen.observe(video);
       },
@@ -196,13 +202,13 @@ for (const button of document.querySelectorAll("[data-copy]")) {
     } catch {
       copied = false;
     }
-    label.textContent = copied ? "Copied" : "Select and copy";
+    label.textContent = copied ? say("copied", "Copied") : say("copy.byHand", "Select and copy");
     button.classList.toggle("is-copied", copied);
     box?.classList.toggle("is-copied", copied);
     icon?.setAttribute("href", copied ? "#i-check" : "#i-clipboard");
     clearTimeout(timer);
     timer = setTimeout(() => {
-      label.textContent = "Copy";
+      label.textContent = say("copy", "Copy");
       button.classList.remove("is-copied");
       box?.classList.remove("is-copied");
       icon?.setAttribute("href", "#i-clipboard");
@@ -407,6 +413,8 @@ if (hub) {
   new ResizeObserver(layout).observe(hub);
   if (document.fonts) document.fonts.ready.then(layout);
   addEventListener("load", layout);
+  // Another language moves the folder without always changing the hub's size.
+  document.addEventListener("langchange", layout);
 
   if (!reducedMotion) {
     const SPEED = 760; // px per second, before easing

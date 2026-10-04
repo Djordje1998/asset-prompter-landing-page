@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Asset Prompter: your agent writes the prompt, you make the picture</title>
+    <title data-i18n="title">Asset Prompter: your agent writes the prompt, you make the picture</title>
     <meta
       name="description"
+      data-i18n-content="description"
       content="A small local app that carries prompts and results between your coding agent and the image or video generator you use by hand."
     />
     <meta name="theme-color" content="#19171d" />
@@ -26,7 +27,8 @@
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=w2-023" />
+    <link rel="stylesheet" href="./styles.css?v=w2-024" />
+    <script src="./i18n.js?v=w2-024"></script>
   </head>
   <body id="top">
     <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
@@ -46,29 +48,50 @@
       <symbol id="logo" viewBox="0 0 16 16"><rect x="12" y="1" width="1" height="1" fill="#c08ab5"/><rect x="11" y="2" width="3" height="1" fill="#c08ab5"/><rect x="1" y="3" width="9" height="1" fill="#4a4652"/><rect x="12" y="3" width="1" height="1" fill="#c08ab5"/><rect x="1" y="4" width="1" height="1" fill="#4a4652"/><rect x="9" y="4" width="1" height="1" fill="#4a4652"/><rect x="1" y="5" width="1" height="1" fill="#4a4652"/><rect x="4" y="5" width="11" height="1" fill="#6e6878"/><rect x="1" y="6" width="1" height="1" fill="#4a4652"/><rect x="4" y="6" width="1" height="1" fill="#6e6878"/><rect x="14" y="6" width="1" height="1" fill="#6e6878"/><rect x="1" y="7" width="1" height="1" fill="#4a4652"/><rect x="4" y="7" width="1" height="1" fill="#6e6878"/><rect x="6" y="7" width="2" height="1" fill="#d9a441"/><rect x="14" y="7" width="1" height="1" fill="#6e6878"/><rect x="1" y="8" width="1" height="1" fill="#4a4652"/><rect x="4" y="8" width="1" height="1" fill="#6e6878"/><rect x="6" y="8" width="2" height="1" fill="#d9a441"/><rect x="14" y="8" width="1" height="1" fill="#6e6878"/><rect x="1" y="9" width="3" height="1" fill="#4a4652"/><rect x="4" y="9" width="1" height="1" fill="#6e6878"/><rect x="12" y="9" width="1" height="1" fill="#6cc4b8"/><rect x="14" y="9" width="1" height="1" fill="#6e6878"/><rect x="4" y="10" width="1" height="1" fill="#6e6878"/><rect x="11" y="10" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="10" width="1" height="1" fill="#6e6878"/><rect x="4" y="11" width="1" height="1" fill="#6e6878"/><rect x="7" y="11" width="1" height="1" fill="#6cc4b8"/><rect x="10" y="11" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="11" width="1" height="1" fill="#6e6878"/><rect x="4" y="12" width="1" height="1" fill="#6e6878"/><rect x="6" y="12" width="3" height="1" fill="#6cc4b8"/><rect x="9" y="12" width="1" height="1" fill="#4f9e94"/><rect x="10" y="12" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="12" width="1" height="1" fill="#6e6878"/><rect x="4" y="13" width="1" height="1" fill="#6e6878"/><rect x="5" y="13" width="4" height="1" fill="#6cc4b8"/><rect x="9" y="13" width="3" height="1" fill="#4f9e94"/><rect x="12" y="13" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="13" width="1" height="1" fill="#6e6878"/><rect x="4" y="14" width="11" height="1" fill="#6e6878"/></symbol>
       <symbol id="i-lock" viewBox="0 0 12 12"><path d="M4 0h4v1h-4zM3 1h1v1h-1zM8 1h1v1h-1zM3 2h1v1h-1zM8 2h1v1h-1zM3 3h1v1h-1zM8 3h1v1h-1zM1 4h10v1h-10zM1 5h1v1h-1zM10 5h1v1h-1zM1 6h1v1h-1zM5 6h2v1h-2zM10 6h1v1h-1zM1 7h1v1h-1zM5 7h2v1h-2zM10 7h1v1h-1zM1 8h1v1h-1zM6 8h1v1h-1zM10 8h1v1h-1zM1 9h1v1h-1zM10 9h1v1h-1zM1 10h10v1h-10z"/></symbol>
       <symbol id="i-undo" viewBox="0 0 12 12"><path d="M3 1h1v1h-1zM2 2h2v1h-2zM1 3h9v1h-9zM2 4h2v1h-2zM9 4h2v1h-2zM3 5h1v1h-1zM10 5h1v1h-1zM10 6h1v1h-1zM10 7h1v1h-1zM9 8h2v1h-2zM2 9h6v1h-6z"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 12 12"><path d="M3 0h5v1h-5zM2 1h1v1h-1zM4 1h1v1h-1zM6 1h1v1h-1zM8 1h1v1h-1zM1 2h1v1h-1zM3 2h1v1h-1zM7 2h1v1h-1zM9 2h1v1h-1zM0 3h1v1h-1zM3 3h1v1h-1zM7 3h1v1h-1zM10 3h1v1h-1zM0 4h1v1h-1zM3 4h1v1h-1zM7 4h1v1h-1zM10 4h1v1h-1zM0 5h11v1h-11zM0 6h1v1h-1zM3 6h1v1h-1zM7 6h1v1h-1zM10 6h1v1h-1zM0 7h1v1h-1zM3 7h1v1h-1zM7 7h1v1h-1zM10 7h1v1h-1zM1 8h1v1h-1zM3 8h1v1h-1zM7 8h1v1h-1zM9 8h1v1h-1zM2 9h1v1h-1zM4 9h1v1h-1zM6 9h1v1h-1zM8 9h1v1h-1zM3 10h5v1h-5z"/></symbol>
       <symbol id="i-info" viewBox="0 0 12 12"><path d="M3 0h6v1h-6zM2 1h1v1h-1zM9 1h1v1h-1zM1 2h1v1h-1zM5 2h2v1h-2zM10 2h1v1h-1zM1 3h1v1h-1zM10 3h1v1h-1zM1 4h1v1h-1zM5 4h2v1h-2zM10 4h1v1h-1zM1 5h1v1h-1zM5 5h2v1h-2zM10 5h1v1h-1zM1 6h1v1h-1zM5 6h2v1h-2zM10 6h1v1h-1zM1 7h1v1h-1zM5 7h2v1h-2zM10 7h1v1h-1zM2 8h1v1h-1zM9 8h1v1h-1zM3 9h6v1h-6z"/></symbol>
     </svg>
 
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
 
     <header class="bar">
       <a class="brand" href="#top">
         <svg class="logo" width="24" height="24" aria-hidden="true"><use href="#logo" /></svg>
         Asset Prompter
       </a>
-      <nav class="bar-links" aria-label="Sections">
-        <a href="#loop">The loop</a>
-        <a href="#mcp">Compared with MCP</a>
-        <a href="#agent">For the agent</a>
-        <a href="#tradeoffs">Trade-offs</a>
-        <a href="#questions">Questions</a>
+      <nav class="bar-links" aria-label="Sections" data-i18n-aria-label="nav.label">
+        <a href="#loop" data-i18n="nav.loop">The loop</a>
+        <a href="#mcp" data-i18n="nav.mcp">Compared with MCP</a>
+        <a href="#agent" data-i18n="nav.agent">For the agent</a>
+        <a href="#tradeoffs" data-i18n="nav.tradeoffs">Trade-offs</a>
+        <a href="#questions" data-i18n="nav.questions">Questions</a>
       </nav>
       <div class="bar-right">
-        <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star Asset Prompter on GitHub">
+        <!-- The language menu. i18n.js switches the page; without the script the menu is not shown. -->
+        <div class="lang">
+          <button type="button" class="btn lang-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu" aria-label="Language" data-i18n-aria-label="lang.label">
+            <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
+            <span class="lang-code">EN</span>
+            <svg class="icon lang-caret" width="10" height="10" aria-hidden="true"><use href="#i-chevron" /></svg>
+          </button>
+          <ul class="lang-menu" id="lang-menu" role="menu" hidden>
+            <li role="none">
+              <button type="button" role="menuitemradio" aria-checked="true" data-lang="en" lang="en">
+                English<svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>
+              </button>
+            </li>
+            <li role="none">
+              <button type="button" role="menuitemradio" aria-checked="false" data-lang="sr" lang="sr-Latn">
+                Srpski<svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star Asset Prompter on GitHub" data-i18n-aria-label="star.label">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-star" /></svg>
-          <span class="bar-github-text">Star<span class="bar-github-on"> on GitHub</span></span>
+          <span class="bar-github-text" data-i18n="star">Star<span class="bar-github-on"> on GitHub</span></span>
         </a>
-        <a class="btn btn-primary" href="#install">
+        <a class="btn btn-primary" href="#install" data-i18n-text="install">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-download" /></svg>
           Install
         </a>
@@ -88,8 +111,8 @@
             <svg class="hub-wires" aria-hidden="true"></svg>
 
             <div class="hub-col hub-agents by-agent">
-              <p class="hub-label">Your agent</p>
-              <ul aria-label="Agents that work with files on your computer">
+              <p class="hub-label" data-i18n="hero.agent">Your agent</p>
+              <ul aria-label="Agents that work with files on your computer" data-i18n-aria-label="hero.agents">
                 <li style="--x: 0.78; --y: 5%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Ag"><img src="assets/logos/antigravity.svg" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Antigravity</span></li>
                 <li style="--x: 0.14; --y: 16.5%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Cl"><img src="assets/logos/claude.svg" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Claude Code</span></li>
                 <li style="--x: 0.86; --y: 29%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Cx"><img src="assets/logos/codex.svg" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Codex</span></li>
@@ -97,41 +120,41 @@
                 <li style="--x: 0.9; --y: 54%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Ge"><img src="assets/logos/gemini.svg" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Gemini CLI</span></li>
                 <li style="--x: 0.1; --y: 66.5%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Gh"><img src="assets/logos/github-copilot.svg" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">GitHub Copilot</span></li>
                 <li style="--x: 0.72; --y: 79%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Oc"><img src="assets/logos/opencode.svg" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">OpenCode</span></li>
-                <li class="is-any"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" aria-hidden="true">+</span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">any agent that works with files</span></li>
+                <li class="is-any"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" aria-hidden="true">+</span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name" data-i18n="hero.anyAgent">any agent that works with files</span></li>
               </ul>
             </div>
 
             <div class="hub-center">
-              <h1>
+              <h1 data-i18n="hero.h1">
                 <span class="line"><span class="who-agent">Your agent</span> writes the prompt.</span>
                 <span class="line"><span class="who-you">You</span> make the picture.</span>
               </h1>
-              <p class="hero-sub">
+              <p class="hero-sub" data-i18n="hero.sub">
                 Asset Prompter is a small local app that carries prompts and results between your coding agent and the image or video
                 generator you use by hand.
               </p>
               <div class="ask" data-lit>
-                <p class="ask-bar">
+                <p class="ask-bar" data-i18n-text="ask.hero">
                   <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-robot" /></svg>
                   Paste this into your agent to install it
                   <button type="button" class="btn btn-sm copy-btn" data-copy="#ask-hero">
-                    <svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-clipboard" /></svg><span class="copy-label">Copy</span>
+                    <svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-clipboard" /></svg><span class="copy-label" data-i18n="copy">Copy</span>
                   </button>
                 </p>
                 <p class="ask-text" id="ask-hero">Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md</p>
               </div>
               <div class="cta">
-                <a class="btn btn-primary btn-lg" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip">
+                <a class="btn btn-primary btn-lg" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip" data-i18n-text="download">
                   <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#i-download" /></svg>
                   Download ZIP
                 </a>
-                <a class="btn btn-lg" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener">View on GitHub</a>
+                <a class="btn btn-lg" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" data-i18n="github">View on GitHub</a>
               </div>
               <ul class="hero-facts">
-                <li>Free</li>
-                <li>Runs on your machine</li>
-                <li>Windows and Linux</li>
-                <li>No account, no API key</li>
+                <li data-i18n="fact.free">Free</li>
+                <li data-i18n="fact.local">Runs on your machine</li>
+                <li data-i18n="fact.os">Windows and Linux</li>
+                <li data-i18n="fact.account">No account, no API key</li>
               </ul>
 
               <!-- The stage holds the picture, the two ports the wires plug into and the light that answers a passing thread. -->
@@ -142,6 +165,7 @@
                   <img
                     src="assets/art/loop-relay.webp"
                     alt="Pixel art: a robot puts a prompt sheet into a shared folder from one side, and a person puts a finished picture in from the other."
+                    data-i18n-alt="hero.alt"
                     width="1280"
                     height="714"
                   />
@@ -150,17 +174,17 @@
             </div>
 
             <div class="hub-col hub-gens by-you">
-              <p class="hub-label">Your generator</p>
-              <ul aria-label="Generators you use by hand">
+              <p class="hub-label" data-i18n="hero.gen">Your generator</p>
+              <ul aria-label="Generators you use by hand" data-i18n-aria-label="hero.gens">
                 <li style="--x: 0.3; --y: 9%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Fl"><img src="assets/logos/google-flow.png" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Google Flow</span></li>
                 <li style="--x: 0.88; --y: 30%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Le"><img src="assets/logos/leonardo.png" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Leonardo.Ai</span></li>
                 <li style="--x: 0.22; --y: 52%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Lu"><img src="assets/logos/luma.svg" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Luma AI</span></li>
                 <li style="--x: 0.8; --y: 74%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Mj"><img src="assets/logos/midjourney.png" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Midjourney</span></li>
-                <li class="is-any"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" aria-hidden="true">+</span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">any tool you paste a prompt into</span></li>
+                <li class="is-any"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" aria-hidden="true">+</span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name" data-i18n="hero.anyGen">any tool you paste a prompt into</span></li>
               </ul>
             </div>
           </div>
-          <p class="fine hub-fine">Logos and names belong to their owners. Asset Prompter is an independent project, not affiliated with or endorsed by any of them.</p>
+          <p class="fine hub-fine" data-i18n="hero.fine">Logos and names belong to their owners. Asset Prompter is an independent project, not affiliated with or endorsed by any of them.</p>
         </div>
       </section>
 
@@ -168,8 +192,8 @@
       <section class="section band" id="loop">
         <div class="wrap">
           <div class="head" data-reveal-group>
-            <h2>One picture, six steps</h2>
-            <p class="lead">
+            <h2 data-i18n="loop.h2">One picture, six steps</h2>
+            <p class="lead" data-i18n="loop.lead">
               The agent's steps are <span class="who-agent">violet</span>, yours are <span class="who-you">mustard</span>. Steps 4 and 5
               are optional: approve after step 3 and the picture is done.
             </p>
@@ -177,9 +201,9 @@
 
           <div class="story-grid">
             <!-- The folder. On wide screens it stays in view and main.js shows only what exists at the current step. -->
-            <aside class="rail" aria-label="The slot folder" data-reveal>
+            <aside class="rail" aria-label="The slot folder" data-i18n-aria-label="rail.label" data-reveal>
               <div class="rail-box" data-lit>
-                <p class="pane-label">The slot folder</p>
+                <p class="pane-label" data-i18n="rail.label">The slot folder</p>
                 <div class="rail-state" aria-hidden="true">
                   <span class="tag t-approved rail-tag"><svg class="icon" width="12" height="12"><use href="#i-check" /></svg><span>Approved</span></span>
                   <span class="chip rail-chip">v2</span>
@@ -191,21 +215,21 @@
                   <li class="tree-root">
                     <svg class="icon" width="13" height="13" aria-hidden="true"><use href="#i-folder" /></svg><span class="f-name">observation-dining-room/</span>
                   </li>
-                  <li data-from="1" data-by="agent"><span class="f-name">slot.md</span><span class="f-note">what the picture is for</span></li>
-                  <li data-from="1" data-by="agent"><span class="f-name">v1.md</span><span class="f-note">prompt and settings</span></li>
-                  <li data-from="3" data-by="you"><span class="f-name">v1/1.png</span><span class="f-note">your result</span></li>
-                  <li data-from="5" data-by="you"><span class="f-name">v1.feedback.md</span><span class="f-note">your change request</span></li>
-                  <li data-from="5" data-by="agent"><span class="f-name">v1.review.md</span><span class="f-note">the agent's reply</span></li>
-                  <li data-from="5" data-by="agent"><span class="f-name">v2.md</span><span class="f-note">the next prompt</span></li>
-                  <li data-from="5" data-by="you"><span class="f-name">v2/1.png 2.png 3.png</span><span class="f-note">three results</span></li>
-                  <li data-from="5" data-by="agent"><span class="f-name">v2.review.md</span><span class="f-note">picks 2.png</span></li>
-                  <li data-from="6" data-by="you"><span class="f-name">APPROVED</span><span class="f-note">your approval</span></li>
-                  <li data-from="6" data-by="app"><span class="f-name">final.png</span><span class="f-note">what the agent uses</span></li>
+                  <li data-from="1" data-by="agent"><span class="f-name">slot.md</span><span class="f-note" data-i18n="file.slot">what the picture is for</span></li>
+                  <li data-from="1" data-by="agent"><span class="f-name">v1.md</span><span class="f-note" data-i18n="file.prompt">prompt and settings</span></li>
+                  <li data-from="3" data-by="you"><span class="f-name">v1/1.png</span><span class="f-note" data-i18n="file.result">your result</span></li>
+                  <li data-from="5" data-by="you"><span class="f-name">v1.feedback.md</span><span class="f-note" data-i18n="file.feedback">your change request</span></li>
+                  <li data-from="5" data-by="agent"><span class="f-name">v1.review.md</span><span class="f-note" data-i18n="file.review">the agent's reply</span></li>
+                  <li data-from="5" data-by="agent"><span class="f-name">v2.md</span><span class="f-note" data-i18n="file.next">the next prompt</span></li>
+                  <li data-from="5" data-by="you"><span class="f-name">v2/1.png 2.png 3.png</span><span class="f-note" data-i18n="file.results">three results</span></li>
+                  <li data-from="5" data-by="agent"><span class="f-name">v2.review.md</span><span class="f-note" data-i18n="file.pick">picks 2.png</span></li>
+                  <li data-from="6" data-by="you"><span class="f-name">APPROVED</span><span class="f-note" data-i18n="file.approved">your approval</span></li>
+                  <li data-from="6" data-by="app"><span class="f-name">final.png</span><span class="f-note" data-i18n="file.final">what the agent uses</span></li>
                 </ul>
                 <p class="tree-key">
-                  <span class="key by-agent">the agent</span>
-                  <span class="key by-you">you</span>
-                  <span class="key by-app">the app</span>
+                  <span class="key by-agent" data-i18n="key.agent">the agent</span>
+                  <span class="key by-you" data-i18n="key.you">you</span>
+                  <span class="key by-app" data-i18n="key.app">the app</span>
                 </p>
               </div>
             </aside>
@@ -214,16 +238,16 @@
               <!-- 1 -->
               <article class="turn by-agent" id="turn-1" data-turn="1">
                 <header class="turn-head">
-                  <p class="turn-who"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-robot" /></svg>The agent <span>step 1 of 6</span></p>
+                  <p class="turn-who" data-i18n-text="who.agent"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-robot" /></svg>The agent <span data-i18n="step.1">step 1 of 6</span></p>
                   <p class="turn-files"><span class="by-agent">slot.md</span><span class="by-agent">v1.md</span></p>
                 </header>
-                <h3>The agent writes the prompt</h3>
-                <p class="turn-text">It makes a slot for the picture it needs, with the prompt and the settings. You see the slot as a card.</p>
+                <h3 data-i18n="turn.1.h">The agent writes the prompt</h3>
+                <p class="turn-text" data-i18n="turn.1.p">It makes a slot for the picture it needs, with the prompt and the settings. You see the slot as a card.</p>
 
                 <figure class="appshot" data-reveal>
                   <picture>
                     <source media="(max-width: 640px)" srcset="assets/app/1-asked-narrow.webp" width="880" height="1384" />
-                    <img src="assets/app/1-asked.webp" alt="The slot's card in Asset Prompter, marked Needs generating: an empty drop area, the settings to choose, and the prompt with a Copy prompt button." width="1600" height="656" loading="lazy" />
+                    <img src="assets/app/1-asked.webp" data-i18n-alt="turn.1.alt" alt="The slot's card in Asset Prompter, marked Needs generating: an empty drop area, the settings to choose, and the prompt with a Copy prompt button." width="1600" height="656" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -231,15 +255,15 @@
               <!-- 2 -->
               <article class="turn by-you" id="turn-2" data-turn="2">
                 <header class="turn-head">
-                  <p class="turn-who"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>You <span>step 2 of 6</span></p>
+                  <p class="turn-who" data-i18n-text="you"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>You <span data-i18n="step.2">step 2 of 6</span></p>
                 </header>
-                <h3>You copy the prompt and generate</h3>
-                <p class="turn-text">Press Copy prompt, paste it into Google Flow or any other generator, and press Generate there.</p>
+                <h3 data-i18n="turn.2.h">You copy the prompt and generate</h3>
+                <p class="turn-text" data-i18n="turn.2.p">Press Copy prompt, paste it into Google Flow or any other generator, and press Generate there.</p>
 
                 <figure class="appshot is-part" data-reveal>
                   <picture>
                     <source media="(max-width: 640px)" srcset="assets/app/2-copied-narrow.webp" width="836" height="394" />
-                    <img src="assets/app/2-copied.webp" alt="The prompt box on the card after Copy prompt was pressed: the settings Image, 16:9 and Nano Banana Pro, the prompt, and the button now reading Copied." width="1046" height="394" loading="lazy" />
+                    <img src="assets/app/2-copied.webp" data-i18n-alt="turn.2.alt" alt="The prompt box on the card after Copy prompt was pressed: the settings Image, 16:9 and Nano Banana Pro, the prompt, and the button now reading Copied." width="1046" height="394" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -247,16 +271,16 @@
               <!-- 3 -->
               <article class="turn by-you" id="turn-3" data-turn="3">
                 <header class="turn-head">
-                  <p class="turn-who"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>You <span>step 3 of 6</span></p>
+                  <p class="turn-who" data-i18n-text="you"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>You <span data-i18n="step.3">step 3 of 6</span></p>
                   <p class="turn-files"><span class="by-you">v1/1.png</span></p>
                 </header>
-                <h3>You paste the picture into the slot</h3>
-                <p class="turn-text">Drop it on the card or press Ctrl+V. If it is already right, approve it now and skip to step 6.</p>
+                <h3 data-i18n="turn.3.h">You paste the picture into the slot</h3>
+                <p class="turn-text" data-i18n="turn.3.p">Drop it on the card or press Ctrl+V. If it is already right, approve it now and skip to step 6.</p>
 
                 <figure class="appshot" data-reveal>
                   <picture>
                     <source media="(max-width: 640px)" srcset="assets/app/2-result-narrow.webp" width="880" height="1638" />
-                    <img src="assets/app/2-result.webp" alt="The same card with your picture in it, a dining room on a space station. The card is now marked Agent's turn, with the buttons Approve v1 and Request changes." width="1600" height="750" loading="lazy" />
+                    <img src="assets/app/2-result.webp" data-i18n-alt="turn.3.alt" alt="The same card with your picture in it, a dining room on a space station. The card is now marked Agent's turn, with the buttons Approve v1 and Request changes." width="1600" height="750" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -264,15 +288,15 @@
               <!-- 4 -->
               <article class="turn by-you is-optional" id="turn-4" data-turn="4">
                 <header class="turn-head">
-                  <p class="turn-who"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>You <span>step 4 of 6</span></p>
-                  <span class="turn-opt">Optional</span>
+                  <p class="turn-who" data-i18n-text="you"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>You <span data-i18n="step.4">step 4 of 6</span></p>
+                  <span class="turn-opt" data-i18n="optional">Optional</span>
                 </header>
-                <h3>You tell the agent</h3>
-                <p class="turn-text">Press Notify agent. The agent opens your picture and checks it against what it asked for.</p>
+                <h3 data-i18n="turn.4.h">You tell the agent</h3>
+                <p class="turn-text" data-i18n="turn.4.p">Press Notify agent. The agent opens your picture and checks it against what it asked for.</p>
 
                 <figure class="appshot is-part" data-reveal>
                   <picture>
-                    <img src="assets/app/4-notify-narrow.webp" alt="The row above the cards: one slot under Agent's turn, and the Notify agent button with a green dot, which means the agent is listening." width="880" height="382" loading="lazy" />
+                    <img src="assets/app/4-notify-narrow.webp" data-i18n-alt="turn.4.alt" alt="The row above the cards: one slot under Agent's turn, and the Notify agent button with a green dot, which means the agent is listening." width="880" height="382" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -280,17 +304,17 @@
               <!-- 5 -->
               <article class="turn by-agent is-optional" id="turn-5" data-turn="5">
                 <header class="turn-head">
-                  <p class="turn-who"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-robot" /></svg>You or the agent <span>step 5 of 6</span></p>
-                  <span class="turn-opt">Optional</span>
+                  <p class="turn-who" data-i18n-text="who.either"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-robot" /></svg>You or the agent <span data-i18n="step.5">step 5 of 6</span></p>
+                  <span class="turn-opt" data-i18n="optional">Optional</span>
                   <p class="turn-files"><span class="by-you">v1.feedback.md</span><span class="by-agent">v2.md</span></p>
                 </header>
-                <h3>Either of you asks for a change</h3>
-                <p class="turn-text">Type what should change, or the agent says what is off. It writes the next prompt, and you generate again.</p>
+                <h3 data-i18n="turn.5.h">Either of you asks for a change</h3>
+                <p class="turn-text" data-i18n="turn.5.p">Type what should change, or the agent says what is off. It writes the next prompt, and you generate again.</p>
 
                 <figure class="appshot" data-reveal>
                   <picture>
                     <source media="(max-width: 640px)" srcset="assets/app/3-change-request-narrow.webp" width="880" height="1710" />
-                    <img src="assets/app/3-change-request.webp" alt="The card with your change request typed under the prompt: Too cold and empty. Make the booths warm cognac leather, add warm ceiling lights, and let the sun rise over the horizon." width="1600" height="750" loading="lazy" />
+                    <img src="assets/app/3-change-request.webp" data-i18n-alt="turn.5.alt" alt="The card with your change request typed under the prompt: Too cold and empty. Make the booths warm cognac leather, add warm ceiling lights, and let the sun rise over the horizon." width="1600" height="750" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -298,16 +322,16 @@
               <!-- 6 -->
               <article class="turn by-you" id="turn-6" data-turn="6">
                 <header class="turn-head">
-                  <p class="turn-who"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>You <span>step 6 of 6</span></p>
+                  <p class="turn-who" data-i18n-text="you"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>You <span data-i18n="step.6">step 6 of 6</span></p>
                   <p class="turn-files"><span class="by-you">APPROVED</span><span class="by-app">final.png</span></p>
                 </header>
-                <h3>You approve</h3>
-                <p class="turn-text">One click makes the picture final. The agent is told the picture it asked for is ready, and which file to use.</p>
+                <h3 data-i18n="turn.6.h">You approve</h3>
+                <p class="turn-text" data-i18n="turn.6.p">One click makes the picture final. The agent is told the picture it asked for is ready, and which file to use.</p>
 
                 <figure class="appshot" data-reveal>
                   <picture>
                     <source media="(max-width: 640px)" srcset="assets/app/7-approved-narrow.webp" width="880" height="2190" />
-                    <img src="assets/app/7-approved.webp" alt="The card of the second version, marked Approved: the warm dining room with the sunrise, three results with yours picked, the agent's review, and your earlier change request folded below." width="1600" height="1042" loading="lazy" />
+                    <img src="assets/app/7-approved.webp" data-i18n-alt="turn.6.alt" alt="The card of the second version, marked Approved: the warm dining room with the sunrise, three results with yours picked, the agent's review, and your earlier change request folded below." width="1600" height="1042" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -320,32 +344,32 @@
       <section class="section" id="mcp">
         <div class="wrap">
           <div class="head" data-reveal-group>
-            <h2>To your agent, the same steps as an MCP server</h2>
-            <p class="lead">Only the far end changes. A provider's servers generate there, or you do.</p>
+            <h2 data-i18n="mcp.h2">To your agent, the same steps as an MCP server</h2>
+            <p class="lead" data-i18n="mcp.lead">Only the far end changes. A provider's servers generate there, or you do.</p>
           </div>
 
           <!-- One agent, one path, two far ends. A light runs the path and reaches the two ends in turn. -->
-          <figure class="lanes" data-reveal data-lit aria-label="The agent takes the same four steps whether an MCP server generates the picture or you do.">
+          <figure class="lanes" data-reveal data-lit data-i18n-aria-label="mcp.figure" aria-label="The agent takes the same four steps whether an MCP server generates the picture or you do.">
             <span class="lane-box"><svg class="icon" width="15" height="15" aria-hidden="true"><use href="#i-robot" /></svg>Agent</span>
 
             <div class="lane-track">
               <span class="lane-wire" aria-hidden="true"><i></i></span>
               <ol class="lane-steps">
-                <li style="--i: 0"><span class="lane-node" data-n="1" aria-hidden="true">1</span><span class="lane-step">asks</span></li>
-                <li style="--i: 1"><span class="lane-node" data-n="2" aria-hidden="true">2</span><span class="lane-step">waits</span></li>
-                <li style="--i: 2"><span class="lane-node" data-n="3" aria-hidden="true">3</span><span class="lane-step">gets the file</span></li>
-                <li style="--i: 3"><span class="lane-node" data-n="4" aria-hidden="true">4</span><span class="lane-step">tries again</span></li>
+                <li style="--i: 0"><span class="lane-node" data-n="1" aria-hidden="true">1</span><span class="lane-step" data-i18n="lane.1">asks</span></li>
+                <li style="--i: 1"><span class="lane-node" data-n="2" aria-hidden="true">2</span><span class="lane-step" data-i18n="lane.2">waits</span></li>
+                <li style="--i: 2"><span class="lane-node" data-n="3" aria-hidden="true">3</span><span class="lane-step" data-i18n="lane.3">gets the file</span></li>
+                <li style="--i: 3"><span class="lane-node" data-n="4" aria-hidden="true">4</span><span class="lane-step" data-i18n="lane.4">tries again</span></li>
               </ol>
             </div>
 
             <div class="lane-fork">
               <div class="lane-end is-server"><i class="lane-ping" aria-hidden="true"></i>
                 <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#i-server" /></svg>
-                <p><strong>MCP server</strong><span>when the generator has one</span></p>
+                <p><strong>MCP server</strong><span data-i18n="lane.server">when the generator has one</span></p>
               </div>
               <div class="lane-end is-you"><i class="lane-ping" aria-hidden="true"></i>
                 <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#i-spark" /></svg>
-                <p><strong>You</strong><span>when it doesn't</span></p>
+                <p><strong data-i18n="you">You</strong><span data-i18n="lane.you">when it doesn't</span></p>
               </div>
             </div>
           </figure>
@@ -355,6 +379,7 @@
             <div class="art is-4x3" data-slot="you-are-the-server" data-reveal>
               <img
                 src="assets/art/you-are-the-server.webp"
+                data-i18n-alt="mcp.alt"
                 alt="Pixel art: the person in the gold hoodie sits at their own desk and holds up a finished picture. The robot is inside the monitor and holds a prompt sheet out of the screen toward them."
                 width="960"
                 height="716"
@@ -362,10 +387,10 @@
               />
             </div>
             <div class="split-text" data-reveal-group>
-              <h3 class="h-sub">For generators whose plan has no MCP server</h3>
+              <h3 class="h-sub" data-i18n="mcp.h3">For generators whose plan has no MCP server</h3>
               <dl class="names">
                 <div class="t-generate">
-                  <dt>No public API</dt>
+                  <dt data-i18n="mcp.noApi">No public API</dt>
                   <dd>
                     <ul class="name-chips">
                       <li>Google Flow</li>
@@ -374,7 +399,7 @@
                   </dd>
                 </div>
                 <div class="t-generate">
-                  <dt>API billed separately from the plan</dt>
+                  <dt data-i18n="mcp.billed">API billed separately from the plan</dt>
                   <dd>
                     <ul class="name-chips">
                       <li>Leonardo.Ai</li>
@@ -383,7 +408,7 @@
                   </dd>
                 </div>
                 <div class="is-quiet">
-                  <dt>Official MCP server, so you may not need this</dt>
+                  <dt data-i18n="mcp.official">Official MCP server, so you may not need this</dt>
                   <dd>
                     <ul class="name-chips">
                       <li>Higgsfield</li>
@@ -393,7 +418,7 @@
                   </dd>
                 </div>
               </dl>
-              <p class="fine">
+              <p class="fine" data-i18n="mcp.fine">
                 Product names belong to their owners. Asset Prompter is an independent project, not affiliated with or endorsed by
                 any of them. Plans and APIs as checked on 2 October 2026.
               </p>
@@ -405,18 +430,18 @@
       <section class="section band" id="why">
         <div class="wrap courier">
           <div class="courier-text" data-reveal-group>
-            <h2>Without it, you are the courier</h2>
-            <p class="lead">
+            <h2 data-i18n="why.h2">Without it, you are the courier</h2>
+            <p class="lead" data-i18n="why.lead">
               Your agent knows which pictures it needs, but they come from a generator you use by hand. So the carrying falls to you.
             </p>
             <ul class="plain-list">
-              <li>You copy a prompt out of the chat, paste it into the generator, download the result, rename it and move it into the repo.</li>
-              <li>The agent never sees what came out, so you describe the picture back to it in words.</li>
-              <li>Three rounds later nobody knows which file was the good one, or which prompt made it.</li>
+              <li data-i18n="why.1">You copy a prompt out of the chat, paste it into the generator, download the result, rename it and move it into the repo.</li>
+              <li data-i18n="why.2">The agent never sees what came out, so you describe the picture back to it in words.</li>
+              <li data-i18n="why.3">Three rounds later nobody knows which file was the good one, or which prompt made it.</li>
             </ul>
           </div>
           <div class="art" data-slot="problem-courier" data-reveal>
-            <img src="assets/art/problem-courier.webp" alt="Pixel art: a person runs between a chat bubble and a pile of pictures, papers flying, while a robot waits and sees none of it." width="1280" height="714" loading="lazy" />
+            <img src="assets/art/problem-courier.webp" data-i18n-alt="why.alt" alt="Pixel art: a person runs between a chat bubble and a pile of pictures, papers flying, while a robot waits and sees none of it." width="1280" height="714" loading="lazy" />
           </div>
         </div>
       </section>
@@ -424,58 +449,58 @@
       <section class="section" id="agent">
         <div class="wrap">
           <div class="head" data-reveal-group>
-            <h2>What the folder gives your agent</h2>
-            <p class="lead">Everything you generate lands where the agent can look.</p>
+            <h2 data-i18n="agent.h2">What the folder gives your agent</h2>
+            <p class="lead" data-i18n="agent.lead">Everything you generate lands where the agent can look.</p>
           </div>
 
           <div class="rows">
             <article class="row">
               <figure class="row-pic" data-reveal>
-                <img src="assets/shots/version-results.webp" alt="Part of the approved slot's details in the app: the three results of version 2 with 2.png picked, the agent's verdict, Agent approves, picks 2.png, and the note on what changed from version 1." width="1320" height="894" loading="lazy" />
+                <img src="assets/shots/version-results.webp" data-i18n-alt="versions.alt" alt="Part of the approved slot's details in the app: the three results of version 2 with 2.png picked, the agent's verdict, Agent approves, picks 2.png, and the note on what changed from version 1." width="1320" height="894" loading="lazy" />
               </figure>
               <div class="row-text" data-reveal-group>
-                <h3>It sees every version</h3>
-                <p>A new version never replaces an old one. Every result, your change request and its own review stay in the slot folder, where it can read them.</p>
+                <h3 data-i18n="versions.h">It sees every version</h3>
+                <p data-i18n="versions.p">A new version never replaces an old one. Every result, your change request and its own review stay in the slot folder, where it can read them.</p>
               </div>
             </article>
 
             <article class="row is-flip">
               <figure class="row-pic" data-reveal>
-                <img src="assets/shots/variants-dialog.webp" alt="The variants of one approved picture, as the app shows them: a 1920 by 1080 WebP, a 1200 by 630 JPG for social cards and a square crop, each with a Copy image button." width="1640" height="762" loading="lazy" />
+                <img src="assets/shots/variants-dialog.webp" data-i18n-alt="variants.alt" alt="The variants of one approved picture, as the app shows them: a 1920 by 1080 WebP, a 1200 by 630 JPG for social cards and a square crop, each with a Copy image button." width="1640" height="762" loading="lazy" />
               </figure>
               <div class="row-text" data-reveal-group>
-                <h3>It makes variants of the final picture</h3>
-                <p>Crops, other sizes, other formats and small edits, made from the file you approved. No new generation.</p>
-                <p>They stay in one place beside the final picture. In the app you open them from its tile and copy any of them with one click.</p>
+                <h3 data-i18n="variants.h">It makes variants of the final picture</h3>
+                <p data-i18n="variants.p1">Crops, other sizes, other formats and small edits, made from the file you approved. No new generation.</p>
+                <p data-i18n="variants.p2">They stay in one place beside the final picture. In the app you open them from its tile and copy any of them with one click.</p>
               </div>
             </article>
 
             <!-- A clip, and the two things the app makes from it for the agent. -->
             <article class="row is-stack">
               <div class="row-text" data-reveal-group>
-                <h3>It checks a clip it can't play</h3>
-                <p>An agent can't watch video. So the app turns every clip you drop into pictures and numbers it can read.</p>
+                <h3 data-i18n="clip.h">It checks a clip it can't play</h3>
+                <p data-i18n="clip.p">An agent can't watch video. So the app turns every clip you drop into pictures and numbers it can read.</p>
               </div>
               <div class="pipe" data-reveal-group>
                 <figure class="pipe-step">
                   <div class="pipe-pic">
                     <div class="art" data-slot="loop-relay" data-video="assets/art/loop-relay.mp4">
-                      <img src="assets/art/loop-relay.webp" alt="The clip from the top of this page: the robot holds a prompt sheet toward the shared folder and the person lifts a picture out of it." width="1280" height="714" loading="lazy" />
+                      <img src="assets/art/loop-relay.webp" data-i18n-alt="clip.alt" alt="The clip from the top of this page: the robot holds a prompt sheet toward the shared folder and the person lifts a picture out of it." width="1280" height="714" loading="lazy" />
                     </div>
                   </div>
-                  <figcaption><strong>Your clip</strong>Eight seconds, dropped on the card.</figcaption>
+                  <figcaption data-i18n="clip.caption"><strong>Your clip</strong>Eight seconds, dropped on the card.</figcaption>
                 </figure>
                 <figure class="pipe-step">
                   <div class="pipe-pic">
-                    <img src="assets/demo/clip-loop-relay-frames.webp" alt="A frame sheet: four frames of that clip from the same second, in a two by two grid." width="1280" height="720" loading="lazy" />
+                    <img src="assets/demo/clip-loop-relay-frames.webp" data-i18n-alt="frames.alt" alt="A frame sheet: four frames of that clip from the same second, in a two by two grid." width="1280" height="720" loading="lazy" />
                   </div>
-                  <figcaption><strong>Frame sheets</strong>One per second, four frames each. The agent reads them in order.</figcaption>
+                  <figcaption data-i18n="frames.caption"><strong>Frame sheets</strong>One per second, four frames each. The agent reads them in order.</figcaption>
                 </figure>
                 <figure class="pipe-step">
                   <div class="pipe-pic">
-                    <img src="assets/demo/clip-loop-relay-motion.webp" alt="The motion map of that clip: the first frame, dimmed, with the sheet, the picture and the sparkle marked in red." width="640" height="360" loading="lazy" />
+                    <img src="assets/demo/clip-loop-relay-motion.webp" data-i18n-alt="motion.alt" alt="The motion map of that clip: the first frame, dimmed, with the sheet, the picture and the sparkle marked in red." width="640" height="360" loading="lazy" />
                   </div>
-                  <figcaption><strong>Motion map</strong>Red marks everything that moved during the clip.</figcaption>
+                  <figcaption data-i18n="motion.caption"><strong>Motion map</strong>Red marks everything that moved during the clip.</figcaption>
                 </figure>
               </div>
             </article>
@@ -486,32 +511,32 @@
       <section class="section band" id="uses">
         <div class="wrap">
           <div class="head" data-reveal-group>
-            <h2>What it is good for</h2>
+            <h2 data-i18n="uses.h2">What it is good for</h2>
           </div>
           <ul class="uses" data-reveal-group>
             <li class="use">
-              <div class="use-pic"><img src="assets/demo/hero-space-diner.webp" alt="A generated photo of a diner on a space station, Earth in the windows." width="880" height="491" loading="lazy" /></div>
-              <h3>Images for a site your agent is building</h3>
-              <p>Hero banners, section photos, backgrounds. The agent knows where each one goes and what it has to do there, and writes that into the slot.</p>
+              <div class="use-pic"><img src="assets/demo/hero-space-diner.webp" data-i18n-alt="use.1.alt" alt="A generated photo of a diner on a space station, Earth in the windows." width="880" height="491" loading="lazy" /></div>
+              <h3 data-i18n="use.1.h">Images for a site your agent is building</h3>
+              <p data-i18n="use.1.p">Hero banners, section photos, backgrounds. The agent knows where each one goes and what it has to do there, and writes that into the slot.</p>
             </li>
             <li class="use">
-              <div class="use-pic"><img src="assets/demo/signature-orbital-burger.webp" alt="A generated product photo of a burger on a slate plate." width="880" height="491" loading="lazy" /></div>
-              <h3>One product across many assets</h3>
-              <p>Approve a master image first, and later slots take it as their reference. A slot that depends on another waits until that one is approved.</p>
+              <div class="use-pic"><img src="assets/demo/signature-orbital-burger.webp" data-i18n-alt="use.2.alt" alt="A generated product photo of a burger on a slate plate." width="880" height="491" loading="lazy" /></div>
+              <h3 data-i18n="use.2.h">One product across many assets</h3>
+              <p data-i18n="use.2.p">Approve a master image first, and later slots take it as their reference. A slot that depends on another waits until that one is approved.</p>
             </li>
             <li class="use">
-              <div class="use-pic"><img src="assets/demo/clip-loop-relay-frames.webp" alt="Four frames from a generated pixel-art clip: a robot hands a sheet to a folder while a person lifts a picture out of it." width="1280" height="720" loading="lazy" /></div>
-              <h3>Short clips from approved stills</h3>
-              <p>A video slot can take an approved image as its start frame. The agent then checks the motion second by second, and whether the clip loops.</p>
+              <div class="use-pic"><img src="assets/demo/clip-loop-relay-frames.webp" data-i18n-alt="use.3.alt" alt="Four frames from a generated pixel-art clip: a robot hands a sheet to a folder while a person lifts a picture out of it." width="1280" height="720" loading="lazy" /></div>
+              <h3 data-i18n="use.3.h">Short clips from approved stills</h3>
+              <p data-i18n="use.3.p">A video slot can take an approved image as its start frame. The agent then checks the motion second by second, and whether the clip loops.</p>
             </li>
             <li class="use use-icons">
               <div class="use-pic use-icons-art">
-                <img class="px" src="assets/demo/app-icon-256.png" alt="The Asset Prompter app icon, large." width="128" height="128" loading="lazy" />
+                <img class="px" src="assets/demo/app-icon-256.png" data-i18n-alt="use.4.alt" alt="The Asset Prompter app icon, large." width="128" height="128" loading="lazy" />
                 <img class="px" src="assets/demo/app-icon-256.png" alt="" width="64" height="64" loading="lazy" />
                 <img class="px" src="assets/demo/app-icon-48.png" alt="" width="32" height="32" loading="lazy" />
               </div>
-              <h3>App and brand art</h3>
-              <p>Icons, empty states, illustrations. Once you approve one, the agent exports the sizes and formats it needs from that file.</p>
+              <h3 data-i18n="use.4.h">App and brand art</h3>
+              <p data-i18n="use.4.p">Icons, empty states, illustrations. Once you approve one, the agent exports the sizes and formats it needs from that file.</p>
             </li>
           </ul>
         </div>
@@ -520,32 +545,32 @@
       <section class="section" id="tradeoffs">
         <div class="wrap">
           <div class="head" data-reveal-group>
-            <h2>It doesn't generate anything</h2>
-            <p class="lead">You press Generate in your own tool, every time. For batches that run while you are away, pick a generator with an API or an MCP server.</p>
+            <h2 data-i18n="fit.h2">It doesn't generate anything</h2>
+            <p class="lead" data-i18n="fit.lead">You press Generate in your own tool, every time. For batches that run while you are away, pick a generator with an API or an MCP server.</p>
           </div>
 
           <div class="fit" data-reveal-group>
             <div class="art is-4x3 fit-art" data-slot="you-press-generate">
-              <img src="assets/art/you-press-generate.webp" alt="Pixel art: a person's hand presses a big gold button while a robot stands beside it and watches." width="960" height="716" loading="lazy" />
+              <img src="assets/art/you-press-generate.webp" data-i18n-alt="fit.alt" alt="Pixel art: a person's hand presses a big gold button while a robot stands beside it and watches." width="960" height="716" loading="lazy" />
             </div>
 
             <div class="fit-col t-approved">
-              <h3><svg class="icon" width="15" height="15" aria-hidden="true"><use href="#i-check" /></svg>A good fit if</h3>
+              <h3 data-i18n-text="fit.yes"><svg class="icon" width="15" height="15" aria-hidden="true"><use href="#i-check" /></svg>A good fit if</h3>
               <ul>
-                <li>Your generator has no API, and you want your agent to see the results.</li>
-                <li>You already pay for a generator plan and want no API bills on top.</li>
-                <li>You want the last word. Nothing is done until you approve it.</li>
-                <li>You want it on your machine: plain files in a folder, no account.</li>
+                <li data-i18n="fit.yes.1">Your generator has no API, and you want your agent to see the results.</li>
+                <li data-i18n="fit.yes.2">You already pay for a generator plan and want no API bills on top.</li>
+                <li data-i18n="fit.yes.3">You want the last word. Nothing is done until you approve it.</li>
+                <li data-i18n="fit.yes.4">You want it on your machine: plain files in a folder, no account.</li>
               </ul>
             </div>
 
             <div class="fit-col t-generate">
-              <h3><svg class="icon" width="15" height="15" aria-hidden="true"><use href="#i-info" /></svg>Know before you install</h3>
+              <h3 data-i18n-text="fit.know"><svg class="icon" width="15" height="15" aria-hidden="true"><use href="#i-info" /></svg>Know before you install</h3>
               <ul>
-                <li>One preset ships, for Google Flow. Another tool needs a short preset file.</li>
-                <li>Your agent has to work with files. A chat window in a browser can't.</li>
-                <li>The agent can't hear. Checking a clip's sound is your job.</li>
-                <li>Setup covers Windows and Linux. On macOS you install Bun yourself.</li>
+                <li data-i18n="fit.know.1">One preset ships, for Google Flow. Another tool needs a short preset file.</li>
+                <li data-i18n="fit.know.2">Your agent has to work with files. A chat window in a browser can't.</li>
+                <li data-i18n="fit.know.3">The agent can't hear. Checking a clip's sound is your job.</li>
+                <li data-i18n="fit.know.4">Setup covers Windows and Linux. On macOS you install Bun yourself.</li>
               </ul>
             </div>
           </div>
@@ -555,47 +580,47 @@
       <section class="section band" id="install">
         <div class="wrap">
           <div class="head" data-reveal-group>
-            <h2>Two ways to install it</h2>
-            <p class="lead">Either way, you need nothing installed beforehand.</p>
+            <h2 data-i18n="install.h2">Two ways to install it</h2>
+            <p class="lead" data-i18n="install.lead">Either way, you need nothing installed beforehand.</p>
           </div>
 
           <div class="ways" data-reveal-group>
             <article class="way by-agent" data-lit>
-              <p class="way-kind"><svg class="icon" width="13" height="13" aria-hidden="true"><use href="#i-robot" /></svg>Your agent does it</p>
-              <h3>Paste one message</h3>
-              <p class="way-text">Give it to a coding agent that can run commands, such as Claude Code.</p>
+              <p class="way-kind" data-i18n-text="way.agent"><svg class="icon" width="13" height="13" aria-hidden="true"><use href="#i-robot" /></svg>Your agent does it</p>
+              <h3 data-i18n="way.agent.h">Paste one message</h3>
+              <p class="way-text" data-i18n="way.agent.p">Give it to a coding agent that can run commands, such as Claude Code.</p>
               <div class="ask" data-lit>
-                <p class="ask-bar">
+                <p class="ask-bar" data-i18n-text="ask.install">
                   <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-robot" /></svg>
                   Message for your agent
                   <button type="button" class="btn btn-sm copy-btn" data-copy="#ask-install">
-                    <svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-clipboard" /></svg><span class="copy-label">Copy</span>
+                    <svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-clipboard" /></svg><span class="copy-label" data-i18n="copy">Copy</span>
                   </button>
                 </p>
                 <p class="ask-text" id="ask-install">Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md</p>
               </div>
               <ul class="way-does">
-                <li>It downloads the folder and runs setup.</li>
-                <li>It checks that the app runs.</li>
-                <li>It tells you where the app is and how to start it.</li>
+                <li data-i18n="way.agent.1">It downloads the folder and runs setup.</li>
+                <li data-i18n="way.agent.2">It checks that the app runs.</li>
+                <li data-i18n="way.agent.3">It tells you where the app is and how to start it.</li>
               </ul>
             </article>
 
             <article class="way by-you" data-lit>
-              <p class="way-kind"><svg class="icon" width="13" height="13" aria-hidden="true"><use href="#i-spark" /></svg>You do it</p>
-              <h3>Two steps by hand</h3>
+              <p class="way-kind" data-i18n-text="way.you"><svg class="icon" width="13" height="13" aria-hidden="true"><use href="#i-spark" /></svg>You do it</p>
+              <h3 data-i18n="way.you.h">Two steps by hand</h3>
               <ol class="way-steps">
                 <li>
-                  <strong>Download the folder</strong>
-                  <p>Get the ZIP and unzip it anywhere, or clone the repository.</p>
-                  <a class="btn btn-primary" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip">
+                  <strong data-i18n="way.you.1">Download the folder</strong>
+                  <p data-i18n="way.you.1.p">Get the ZIP and unzip it anywhere, or clone the repository.</p>
+                  <a class="btn btn-primary" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip" data-i18n-text="download">
                     <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-download" /></svg>
                     Download ZIP
                   </a>
                 </li>
                 <li>
-                  <strong>Run setup once</strong>
-                  <p>
+                  <strong data-i18n="way.you.2">Run setup once</strong>
+                  <p data-i18n="way.you.2.p">
                     On Windows, double-click <code>setup.bat</code>. On Linux, run <code>sh setup.sh</code> in the folder. Setup installs
                     Bun, ffmpeg and the app's packages, adds an Asset Prompter icon and opens the app.
                   </p>
@@ -604,7 +629,7 @@
             </article>
           </div>
 
-          <p class="ways-next" data-reveal>
+          <p class="ways-next" data-reveal data-i18n="install.next">
             <strong>Then, in the app:</strong> open a project, press Copy agent instructions and paste it into a chat with your agent. A
             two-minute tutorial opens on the first start.
           </p>
@@ -614,53 +639,53 @@
       <section class="section" id="questions">
         <div class="wrap faq">
           <div>
-            <h2>Before you try it</h2>
+            <h2 data-i18n="faq.h2">Before you try it</h2>
           </div>
           <div class="faq-list" data-reveal-group>
             <details open>
-              <summary>Which agents does it work with?<i class="faq-x" aria-hidden="true"></i></summary>
-              <div class="faq-a"><p>
+              <summary data-i18n-text="faq.1.q">Which agents does it work with?<i class="faq-x" aria-hidden="true"></i></summary>
+              <div class="faq-a"><p data-i18n="faq.1.a">
                 Any agent that can read and write files in the project folder and follow a written guide. The app writes that guide,
                 HOW-TO-USE.md, into every project. If the agent can also run a command in the background and is woken when it ends,
                 Notify agent wakes it. If not, you tell it "done" in the chat.
               </p></div>
             </details>
             <details>
-              <summary>Which generators?<i class="faq-x" aria-hidden="true"></i></summary>
-              <div class="faq-a"><p>
+              <summary data-i18n-text="faq.2.q">Which generators?<i class="faq-x" aria-hidden="true"></i></summary>
+              <div class="faq-a"><p data-i18n="faq.2.a">
                 Any tool you can paste a prompt into and get a file out of. A preset tells the agent which models, aspect ratios and
                 durations a tool offers, and the app warns you when a result doesn't match. A preset for Google Flow is included; it is a
                 short text file you can copy and edit for another tool.
               </p></div>
             </details>
             <details>
-              <summary>My generator has an MCP server. Do I still need this?<i class="faq-x" aria-hidden="true"></i></summary>
-              <div class="faq-a"><p>
+              <summary data-i18n-text="faq.3.q">My generator has an MCP server. Do I still need this?<i class="faq-x" aria-hidden="true"></i></summary>
+              <div class="faq-a"><p data-i18n="faq.3.a">
                 Maybe not. Several generators now offer an official MCP server that lets an agent generate on your plan, among them
                 Higgsfield, Ideogram, Krea and Runway. Asset Prompter still helps there if you want to choose and approve every result
                 yourself and keep each version in the folder, or if you use features the tool keeps to its own app.
               </p></div>
             </details>
             <details>
-              <summary>Do I need an agent at all?<i class="faq-x" aria-hidden="true"></i></summary>
-              <div class="faq-a"><p>
+              <summary data-i18n-text="faq.4.q">Do I need an agent at all?<i class="faq-x" aria-hidden="true"></i></summary>
+              <div class="faq-a"><p data-i18n="faq.4.a">
                 No. New slot lets you write prompts yourself. You still get versions, results side by side and a shelf of approved files.
               </p></div>
             </details>
             <details>
-              <summary>Does anything leave my machine?<i class="faq-x" aria-hidden="true"></i></summary>
-              <div class="faq-a"><p>
+              <summary data-i18n-text="faq.5.q">Does anything leave my machine?<i class="faq-x" aria-hidden="true"></i></summary>
+              <div class="faq-a"><p data-i18n="faq.5.a">
                 The app listens on 127.0.0.1 only, has no account, and keeps everything in your project folder. Two things do go out: the
                 interface loads its fonts from Google Fonts, and whatever you paste into your generator goes to that generator.
               </p></div>
             </details>
             <details>
-              <summary>What does it cost?<i class="faq-x" aria-hidden="true"></i></summary>
-              <div class="faq-a"><p>Nothing. You pay for your generator and your agent, as you do now.</p></div>
+              <summary data-i18n-text="faq.6.q">What does it cost?<i class="faq-x" aria-hidden="true"></i></summary>
+              <div class="faq-a"><p data-i18n="faq.6.a">Nothing. You pay for your generator and your agent, as you do now.</p></div>
             </details>
             <details>
-              <summary>Can I change an asset after I approved it?<i class="faq-x" aria-hidden="true"></i></summary>
-              <div class="faq-a"><p>
+              <summary data-i18n-text="faq.7.q">Can I change an asset after I approved it?<i class="faq-x" aria-hidden="true"></i></summary>
+              <div class="faq-a"><p data-i18n="faq.7.a">
                 Yes. Remove the approval in Details to reopen the slot, or clone the slot to try another direction and keep the original.
               </p></div>
             </details>
@@ -671,18 +696,18 @@
       <section class="section band closing">
         <div class="wrap">
           <div class="art closing-art" data-slot="gallery-full" data-video="assets/art/gallery-full.mp4" data-reveal>
-            <img src="assets/art/gallery-full.webp" alt="Pixel art: a gallery wall full of finished pictures, with a robot and a person standing in front of it." loading="lazy" />
+            <img src="assets/art/gallery-full.webp" data-i18n-alt="closing.alt" alt="Pixel art: a gallery wall full of finished pictures, with a robot and a person standing in front of it." loading="lazy" />
           </div>
           <div class="head" data-reveal-group>
-            <h2>Give your agent a way to ask for pictures.</h2>
-            <p class="lead">Download the folder, run setup, paste one message.</p>
+            <h2 data-i18n="closing.h2">Give your agent a way to ask for pictures.</h2>
+            <p class="lead" data-i18n="closing.lead">Download the folder, run setup, paste one message.</p>
           </div>
           <div class="hero-cta" data-reveal>
-            <a class="btn btn-primary btn-lg" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip">
+            <a class="btn btn-primary btn-lg" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip" data-i18n-text="download">
               <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#i-download" /></svg>
               Download ZIP
             </a>
-            <a class="btn btn-lg" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener">View on GitHub</a>
+            <a class="btn btn-lg" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" data-i18n="github">View on GitHub</a>
           </div>
         </div>
       </section>
@@ -694,11 +719,11 @@
           <svg class="logo" width="20" height="20" aria-hidden="true"><use href="#logo" /></svg>
           Asset Prompter
         </span>
-        <span>Illustrations generated by hand in Google Flow, through Asset Prompter.</span>
+        <span data-i18n="foot.art">Illustrations generated by hand in Google Flow, through Asset Prompter.</span>
         <a href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener">github.com/Djordje1998/asset-prompter</a>
       </div>
     </footer>
 
-    <script src="./main.js?v=w2-023" defer></script>
+    <script src="./main.js?v=w2-024" defer></script>
   </body>
 </html>
