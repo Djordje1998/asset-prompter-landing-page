@@ -1862,7 +1862,7 @@ li.is-pulse .f-front::after {
   }
 }
 
-/* A phone: the eight agents stand in two rows of four, the lower one moved half a step along,
+/* A phone: the eight cubes of each side stand in two rows of four, the lower one moved half a step along,
    so the wires of the upper row run down between the cubes of the lower one. */
 @media (max-width: 599px) {
   .hub {
@@ -1870,26 +1870,18 @@ li.is-pulse .f-front::after {
     --s: clamp(36px, calc((100vw - 32px - 117px) / 4.5), 54px);
   }
 
-  .hub-agents ul {
+  .hub-col ul {
     display: grid;
     grid-template-columns: repeat(9, calc(var(--step) / 2));
     gap: 30px 0;
   }
 
-  .hub-agents li {
+  .hub-col li {
     grid-column: span 2;
   }
 
-  .hub-agents li:nth-child(5) {
+  .hub-col li:nth-child(5) {
     grid-column: 2 / span 2;
-  }
-
-  .hub-gens {
-    --s: clamp(32px, calc((100vw - 32px - 117px) / 4.9), 50px);
-  }
-
-  .hub-gens ul {
-    gap: 22px;
   }
 }
 
@@ -1972,7 +1964,7 @@ li.is-pulse .f-front::after {
   }
 
   .hub-gens {
-    --s: clamp(62px, 5vw, 76px);
+    --s: clamp(54px, 4.4vw, 64px);
     grid-column: 3;
     justify-self: start;
   }
