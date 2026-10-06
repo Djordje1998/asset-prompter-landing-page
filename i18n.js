@@ -185,7 +185,7 @@
     "fit.yes.3": "Želiš poslednju reč. Ništa nije gotovo dok ti ne odobriš.",
     "fit.yes.4": "Želiš da sve bude na tvom računaru: obični fajlovi u folderu, bez naloga.",
     "fit.know": "Pre instalacije treba da znaš",
-    "fit.know.1": "Uz aplikaciju stiže jedan preset, za Google Flow. Za drugi alat potreban je kratak preset fajl.",
+    "fit.know.1": "Uz aplikaciju stižu preseti za sedam generatora sa vrha stranice. Za drugi alat potreban je kratak preset fajl.",
     "fit.know.2": "Tvoj agent mora da radi sa fajlovima. Prozor za čet u pregledaču to ne može.",
     "fit.know.3": "Agent ne čuje. Provera zvuka u klipu je tvoj posao.",
     "fit.know.4": "Setup radi na Windowsu i Linuxu. Na macOS-u Bun instaliraš ručno.",
@@ -217,7 +217,7 @@
       "Sa svakim agentom koji može da čita i piše fajlove u folderu projekta i da prati pisano uputstvo. To uputstvo, HOW-TO-USE.md, aplikacija upisuje u svaki projekat. Ako agent ume i da pokrene komandu u pozadini i da se probudi kada se ona završi, budi ga „Notify agent”. Ako ne ume, u četu mu napišeš „gotovo”.",
     "faq.2.q": "Sa kojim generatorima?",
     "faq.2.a":
-      "Sa svakim alatom u koji možeš da nalepiš prompt i iz kog dobijaš fajl. Preset govori agentu koje modele, odnose stranica i trajanja alat nudi, a aplikacija te upozorava kada se rezultat ne poklapa. Preset za Google Flow je uključen; to je kratak tekstualni fajl koji možeš da kopiraš i prilagodiš drugom alatu.",
+      "Sa svakim alatom u koji možeš da nalepiš prompt i iz kog dobijaš fajl. Preset govori agentu koje modele, režime, odnose stranica i trajanja alat nudi, a aplikacija te upozorava kada se rezultat ne poklapa. Uključeni su preseti za ChatGPT Images, Dreaminu, Google Flow, Grok Imagine, Leonardo.Ai, Lumu i Midjourney, a svaki slot može da koristi bilo koji od njih, pa jedan projekat može da kombinuje alate. Svaki preset je kratak tekstualni fajl koji možeš da kopiraš i prilagodiš drugom alatu.",
     "faq.3.q": "Moj generator ima MCP server. Da li mi ovo i dalje treba?",
     "faq.3.a":
       "Možda i ne. Nekoliko generatora sada nudi zvanični MCP server preko kog agent može da generiše u okviru tvoje pretplate, među njima Higgsfield, Ideogram, Krea i Runway. Asset Prompter i tu pomaže ako želiš da svaki rezultat lično biraš i odobravaš i da svaku verziju čuvaš u folderu, ili ako koristiš mogućnosti koje alat zadržava samo za svoju aplikaciju.",
