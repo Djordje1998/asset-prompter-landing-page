@@ -27,8 +27,8 @@
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=w2-025" />
-    <script src="./i18n.js?v=w2-026"></script>
+    <link rel="stylesheet" href="./styles.css?v=w2-027" />
+    <script src="./i18n.js?v=w2-027"></script>
   </head>
   <body id="top">
     <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
@@ -517,6 +517,34 @@
             <h2 data-i18n="uses.h2">What it is good for</h2>
           </div>
           <ul class="uses" data-reveal-group>
+            <li class="use use-wide">
+              <div class="use-pic use-film" data-lit>
+                <p class="pane-label" data-i18n="film.label">The project folder</p>
+                <ul class="tree film-tree">
+                  <li class="tree-root">
+                    <svg class="icon" width="13" height="13" aria-hidden="true"><use href="#i-folder" /></svg><span class="f-name">night-courier/</span>
+                  </li>
+                  <li data-by="agent"><span class="f-name">script.md</span><span class="f-note" data-i18n="film.script">the script, shot by shot</span></li>
+                  <li class="t-approved"><span class="f-name">cast/mara/</span><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
+                  <li class="t-approved"><span class="f-name">cast/bag/</span><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
+                  <li class="t-approved"><span class="f-name">cast/street/</span><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
+                  <li class="t-approved"><span class="f-name">shots/01-wait/</span><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
+                  <li class="t-review"><span class="f-name">shots/01-wait-clip/</span><span class="tag t-review"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-eye" /></svg>Needs your approval</span></li>
+                  <li class="t-generate"><span class="f-name">shots/02-handover/</span><span class="tag t-generate"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>Needs generating</span></li>
+                  <li class="is-future"><span class="f-name">shots/02-handover-clip/</span><span class="f-note" data-i18n="film.waits">waits for 02-handover</span></li>
+                  <li class="t-generate"><span class="f-name">shots/03-ride/</span><span class="tag t-generate"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>Needs generating</span></li>
+                </ul>
+              </div>
+              <div class="use-text">
+                <h3 data-i18n="film.h">Films, ads and short scenes</h3>
+                <p data-i18n="film.p">A whole scene from one brief, with the same characters from the first frame to the last.</p>
+                <ol class="film-steps">
+                  <li data-i18n="film.1"><strong>Script.</strong> The agent writes it and splits it into shots, in the project folder, where you can read it.</li>
+                  <li data-i18n="film.2"><strong>Cast and props.</strong> One slot for each character, prop and place. You approve them once, and every shot takes them as references, so the same face and the same bag turn up in every frame.</li>
+                  <li data-i18n="film.3"><strong>Shots.</strong> A still for each shot, then a clip that starts from it. The slots are numbered in shot order, so you always know what to generate next.</li>
+                </ol>
+              </div>
+            </li>
             <li class="use">
               <div class="use-pic"><img src="assets/demo/hero-space-diner.webp" data-i18n-alt="use.1.alt" alt="A generated photo of a diner on a space station, Earth in the windows." width="880" height="491" loading="lazy" /></div>
               <h3 data-i18n="use.1.h">Images for a site your agent is building</h3>

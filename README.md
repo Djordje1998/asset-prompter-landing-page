@@ -50,6 +50,8 @@ Sections alternate between the page colour and the band colour (`band` on the `<
 
 Each later section makes one point with one picture and little text: a heading, at most two sentences, and a picture or a short list. Longer explanations belong under "Before you try it".
 
+The one exception is the first tile of "What it is good for" (films, ads and short scenes), which is as wide as the row: a project folder drawn like the slot folder of section 2, beside three numbered lines, because that use is a sequence and a single picture would not show it.
+
 ## How the look is built
 
 `styles.css` is numbered in the order of the list at its top. The colour tokens, the three fonts, the pixel icons and the hard offset shadows follow the app (`src/web/styles.css` in the app's repository); the page's own tokens are `--hi`, `--hi-strong` (the lit inner edge of a surface), `--shadow-soft` (a soft shadow under the hard one), `--grain` and two easings.

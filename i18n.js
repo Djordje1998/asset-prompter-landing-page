@@ -161,6 +161,16 @@
 
     /* ---- uses ---- */
     "uses.h2": "Čemu služi",
+    "film.label": "Folder projekta",
+    "film.script": "scenario, kadar po kadar",
+    "film.waits": "čeka 02-handover",
+    "film.h": "Filmovi, reklame i kratke scene",
+    "film.p": "Cela scena iz jednog zadatka, sa istim likovima od prvog do poslednjeg frejma.",
+    "film.1": "<strong>Scenario.</strong> Agent ga napiše i podeli na kadrove, u folderu projekta, gde možeš da ga pročitaš.",
+    "film.2":
+      "<strong>Likovi i stvari.</strong> Po jedan slot za svaki lik, predmet i mesto. Odobriš ih jednom, a svaki kadar ih uzima kao reference, pa isto lice i ista torba stižu u svaki frejm.",
+    "film.3":
+      "<strong>Kadrovi.</strong> Za svaki kadar jedna slika, pa klip koji od nje kreće. Slotovi su numerisani po redu kadrova, pa uvek znaš šta je sledeće za generisanje.",
     "use.1.alt": "Generisana fotografija restorana na svemirskoj stanici, sa Zemljom u prozorima.",
     "use.1.h": "Slike za sajt koji tvoj agent pravi",
     "use.1.p": "Naslovni baneri, fotografije za sekcije, pozadine. Agent zna gde koja ide i šta tamo treba da postigne, i to upisuje u slot.",

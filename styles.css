@@ -3061,6 +3061,77 @@ li.is-pulse .f-front::after {
   text-wrap: pretty;
 }
 
+/* The first tile is wide: this use takes three lines, not one, and a project folder in the style of section 2 beside them. */
+.use-wide {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(22px, 3.4vw, 48px);
+  align-items: center;
+  margin-bottom: clamp(4px, 1vw, 12px);
+}
+
+.use.use-wide h3 {
+  margin-top: 0;
+  min-height: 0;
+}
+
+.use-film {
+  aspect-ratio: auto;
+  padding: 16px 16px 12px;
+  background: var(--page);
+}
+
+.film-tree .tag {
+  padding: 0 8px 0 7px;
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.film-tree li.is-future {
+  opacity: 0.55;
+}
+
+.film-tree li.is-future .f-name {
+  color: var(--faint);
+}
+
+.film-steps {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  counter-reset: step;
+}
+
+.film-steps li {
+  position: relative;
+  padding-left: 30px;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.film-steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  top: 2px;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--edge-strong);
+  border-radius: 6px;
+  color: var(--text);
+  font: 600 11px/18px var(--mono);
+  text-align: center;
+}
+
+.film-steps strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
 /* Trade-offs: the picture, then two quiet lists. */
 .fit {
   display: grid;
@@ -3671,6 +3742,12 @@ li.is-pulse .f-front::after {
 
 /* A narrow phone: everything in the bar at its smallest, the language as its two letters and Install without its glyph. */
 @media (max-width: 480px) {
+  /* The folder rows are too long for a phone with a tag beside the name: the tag drops under it. */
+  .film-tree li {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
   .bar,
   .bar-right {
     gap: 8px;
@@ -3689,6 +3766,11 @@ li.is-pulse .f-front::after {
 @media (max-width: 720px) {
   .uses {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .use-wide {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
   }
 }
 
