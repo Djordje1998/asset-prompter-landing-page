@@ -126,6 +126,37 @@ if (!reducedMotion && hasObserver) {
   for (const el of document.querySelectorAll("[data-reveal], [data-reveal-group]")) seen.observe(el);
 }
 
+/* ---- the uses: the two halves of a card come in from opposite sides as it scrolls up, meet in the middle of the window, and hold ---- */
+
+const uses = [...document.querySelectorAll(".use")];
+if (uses.length && root.classList.contains("motion")) {
+  // The halves travel while the card's top rises from the bottom edge of the window to just past its middle.
+  const SPAN = 0.45;
+  let first = true;
+  const place = oncePerFrame(() => {
+    for (const card of uses) {
+      const top = card.getBoundingClientRect().top;
+      const raw = Math.min(1, Math.max(0, (innerHeight - top) / (innerHeight * SPAN)));
+      // Slow at first, fast at the end: they hit rather than land.
+      card.style.setProperty("--p", (raw * raw).toFixed(4));
+      if (raw < 1) {
+        card.classList.remove("is-joined", "is-hit");
+      } else if (!card.classList.contains("is-joined")) {
+        card.classList.add("is-joined");
+        // Already joined when the page opens: no hit for that.
+        if (!first) {
+          card.classList.add("is-hit");
+          setTimeout(() => card.classList.remove("is-hit"), 600);
+        }
+      }
+    }
+    first = false;
+  });
+  addEventListener("scroll", place, { passive: true });
+  addEventListener("resize", place);
+  place();
+}
+
 /* ---- the MCP figure: its light runs only while the figure is on screen ---- */
 
 const lanes = document.querySelector(".lanes");

@@ -845,6 +845,11 @@ h3 {
   padding-block: clamp(84px, 10.5vw, 152px);
 }
 
+/* The halves of the use cards start past the page's edge; the section cuts that off, not the window. */
+#uses {
+  overflow-x: clip;
+}
+
 /* The band is lit from above: a bright line along its top edge and a faint wash under it. */
 .band {
   background-color: var(--bar);
@@ -879,7 +884,8 @@ h3 {
 .appshot,
 .row-pic,
 .pipe-pic,
-.use {
+.use-pic,
+.use-text {
   position: relative;
   overflow: hidden;
   background: var(--card);
@@ -894,7 +900,8 @@ h3 {
 .appshot::after,
 .row-pic::after,
 .pipe-pic::after,
-.use::after {
+.use-pic::after,
+.use-text::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -3020,7 +3027,9 @@ li.is-pulse .f-front::after {
 
 /* ================= 12. Uses, trade-offs ================= */
 
-/* Each use is a card: the picture on one side, the words on the other, and the sides swap from card to card. */
+/* Each use is a card in two halves, the picture and the words, with the sides swapping from card to card.
+   With motion the halves come in from opposite sides as the card scrolls up, meet, and hold: main.js sets --p,
+   0 while the card is below the window and 1 once its top has passed the middle. Without it they stand joined. */
 .uses {
   display: grid;
   gap: clamp(16px, 2vw, 24px);
@@ -3039,17 +3048,39 @@ li.is-pulse .f-front::after {
 
 .use:nth-child(even) .use-pic {
   order: 2;
-  border-right: 0;
-  border-left: 1px solid var(--edge);
 }
 
+/* The outer corners are round, the two at the seam square, so the halves make one card. The right half lies on
+   the left one by a pixel, so the seam is one line. */
 .use-pic {
-  position: relative;
   align-self: stretch;
   min-height: 0;
   aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-right: 1px solid var(--edge);
+  border-radius: 8px 0 0 8px;
+}
+
+.use-text {
+  z-index: 1;
+  margin-left: -1px;
+  padding: clamp(22px, 3vw, 40px);
+  border-radius: 0 8px 8px 0;
+}
+
+.use:nth-child(even) .use-pic {
+  z-index: 1;
+  margin-left: -1px;
+  border-radius: 0 8px 8px 0;
+}
+
+.use:nth-child(even) .use-text {
+  z-index: 0;
+  margin-left: 0;
+  border-radius: 8px 0 0 8px;
+}
+
+.use-pic::after,
+.use-text::after {
+  border-radius: inherit;
 }
 
 .use-pic > img {
@@ -3058,8 +3089,102 @@ li.is-pulse .f-front::after {
   object-fit: cover;
 }
 
-.use-text {
-  padding: clamp(22px, 3vw, 40px);
+/* The approach: each half starts most of its own width away, on its side, faint. */
+.motion .use-pic,
+.motion .use-text {
+  --away: calc(1 - var(--p, 1));
+  opacity: min(1, var(--p, 1) * 6);
+  will-change: transform, opacity;
+}
+
+.motion .use-pic {
+  transform: translate3d(calc(var(--away) * -70%), 0, 0);
+}
+
+.motion .use-text {
+  transform: translate3d(calc(var(--away) * 70%), 0, 0);
+}
+
+.motion .use:nth-child(even) .use-pic {
+  transform: translate3d(calc(var(--away) * 70%), 0, 0);
+}
+
+.motion .use:nth-child(even) .use-text {
+  transform: translate3d(calc(var(--away) * -70%), 0, 0);
+}
+
+/* The hit: for half a second the halves press into each other and a light runs down the seam. */
+.use-text::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 3;
+  width: 2px;
+  background: #fff;
+  box-shadow: 0 0 14px 3px rgb(255 255 255 / 0.6);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.use:nth-child(even) .use-text::before {
+  inset: 0 0 0 auto;
+}
+
+.motion .use.is-hit .use-pic {
+  transform-origin: right center;
+  animation: hit-left 0.5s var(--ease-out);
+}
+
+.motion .use.is-hit .use-text {
+  transform-origin: left center;
+  animation: hit-right 0.5s var(--ease-out);
+}
+
+.motion .use:nth-child(even).is-hit .use-pic {
+  transform-origin: left center;
+  animation-name: hit-right;
+}
+
+.motion .use:nth-child(even).is-hit .use-text {
+  transform-origin: right center;
+  animation-name: hit-left;
+}
+
+.motion .use.is-hit .use-text::before {
+  animation: seam 0.55s ease-out;
+}
+
+@keyframes hit-left {
+  30% {
+    transform: translate3d(5px, 0, 0) scaleX(0.985);
+  }
+}
+
+@keyframes hit-right {
+  30% {
+    transform: translate3d(-5px, 0, 0) scaleX(0.985);
+  }
+}
+
+@keyframes hit-up {
+  30% {
+    transform: translate3d(0, 3px, 0) scaleY(0.985);
+  }
+}
+
+@keyframes hit-down {
+  30% {
+    transform: translate3d(0, -3px, 0) scaleY(0.985);
+  }
+}
+
+@keyframes seam {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 .use h3 {
@@ -3767,20 +3892,44 @@ li.is-pulse .f-front::after {
 }
 
 @media (max-width: 720px) {
-  /* One column: the picture on top, whichever side it had. */
+  /* One column: the picture on top, whichever side it had, the words under it. The seam runs across. */
   .use,
   .use:nth-child(even) {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .use .use-pic,
   .use:nth-child(even) .use-pic {
     order: 0;
-    border-left: 0;
+    z-index: 0;
+    margin: 0;
+    border-radius: 8px 8px 0 0;
   }
 
-  .use-pic {
-    border-right: 0;
-    border-bottom: 1px solid var(--edge);
+  .use .use-text,
+  .use:nth-child(even) .use-text {
+    z-index: 1;
+    margin: -1px 0 0;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .use .use-text::before,
+  .use:nth-child(even) .use-text::before {
+    inset: 0 0 auto 0;
+    width: auto;
+    height: 2px;
+  }
+
+  .motion .use.is-hit .use-pic,
+  .motion .use:nth-child(even).is-hit .use-pic {
+    transform-origin: center bottom;
+    animation-name: hit-up;
+  }
+
+  .motion .use.is-hit .use-text,
+  .motion .use:nth-child(even).is-hit .use-text {
+    transform-origin: center top;
+    animation-name: hit-down;
   }
 }
 
