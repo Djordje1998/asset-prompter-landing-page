@@ -879,7 +879,7 @@ h3 {
 .appshot,
 .row-pic,
 .pipe-pic,
-.use-pic {
+.use {
   position: relative;
   overflow: hidden;
   background: var(--card);
@@ -894,7 +894,7 @@ h3 {
 .appshot::after,
 .row-pic::after,
 .pipe-pic::after,
-.use-pic::after {
+.use::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -3020,21 +3020,58 @@ li.is-pulse .f-front::after {
 
 /* ================= 12. Uses, trade-offs ================= */
 
+/* Each use is a card: the picture on one side, the words on the other, and the sides swap from card to card. */
 .uses {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(18px, 2.2vw, 30px);
+  gap: clamp(16px, 2vw, 24px);
   margin-top: clamp(40px, 5vw, 64px);
 }
 
-.use-pic {
-  aspect-ratio: 16 / 10;
+.use {
+  display: grid;
+  grid-template-columns: minmax(0, 11fr) minmax(0, 14fr);
+  align-items: center;
 }
 
-.use-pic:not(.use-icons-art) > img {
+.use:nth-child(even) {
+  grid-template-columns: minmax(0, 14fr) minmax(0, 11fr);
+}
+
+.use:nth-child(even) .use-pic {
+  order: 2;
+  border-right: 0;
+  border-left: 1px solid var(--edge);
+}
+
+.use-pic {
+  position: relative;
+  align-self: stretch;
+  min-height: 0;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-right: 1px solid var(--edge);
+}
+
+.use-pic > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.use-text {
+  padding: clamp(22px, 3vw, 40px);
+}
+
+.use h3 {
+  text-wrap: balance;
+}
+
+.use p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.5;
+  text-wrap: pretty;
 }
 
 .use-icons-art {
@@ -3048,37 +3085,15 @@ li.is-pulse .f-front::after {
   background-size: 16px 16px;
 }
 
-.use h3 {
-  margin-top: 22px;
-  text-wrap: balance;
+.use-icons-art > img {
+  width: auto;
+  height: auto;
 }
 
-.use p {
-  margin-top: 7px;
-  color: var(--muted);
-  font-size: 15.5px;
-  line-height: 1.5;
-  text-wrap: pretty;
-}
-
-/* The first tile is wide: this use takes three lines, not one, and a project folder in the style of section 2 beside them. */
-.use-wide {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-  gap: clamp(22px, 3.4vw, 48px);
-  align-items: center;
-  margin-bottom: clamp(4px, 1vw, 12px);
-}
-
-.use.use-wide h3 {
-  margin-top: 0;
-  min-height: 0;
-}
-
+/* The film card: a project folder drawn like the slot folder of section 2. */
 .use-film {
   aspect-ratio: auto;
-  padding: 16px 16px 12px;
+  padding: 18px 18px 14px;
   background: var(--page);
 }
 
@@ -3496,25 +3511,11 @@ li.is-pulse .f-front::after {
 
 /* ================= 16. Narrower screens ================= */
 
-@media (min-width: 1041px) {
-  /* Four tiles in a row: every heading takes two lines, so the texts under them start level. */
-  .use h3 {
-    min-height: 2.5em;
-  }
-}
-
 @media (min-width: 901px) {
   /* The heading keeps the questions company while they scroll past. */
   .faq > :first-child {
     position: sticky;
     top: calc(var(--bar-h) + 40px);
-  }
-}
-
-@media (max-width: 1040px) {
-  .uses {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 36px 22px;
   }
 }
 
@@ -3742,12 +3743,6 @@ li.is-pulse .f-front::after {
 
 /* A narrow phone: everything in the bar at its smallest, the language as its two letters and Install without its glyph. */
 @media (max-width: 480px) {
-  /* The folder rows are too long for a phone with a tag beside the name: the tag drops under it. */
-  .film-tree li {
-    flex-wrap: wrap;
-    row-gap: 4px;
-  }
-
   .bar,
   .bar-right {
     gap: 8px;
@@ -3763,14 +3758,29 @@ li.is-pulse .f-front::after {
   }
 }
 
+/* Where the folder is narrower than its longest row, the tag drops under the file name. */
+@media (max-width: 960px) {
+  .film-tree li {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+}
+
 @media (max-width: 720px) {
-  .uses {
+  /* One column: the picture on top, whichever side it had. */
+  .use,
+  .use:nth-child(even) {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .use-wide {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 22px;
+  .use:nth-child(even) .use-pic {
+    order: 0;
+    border-left: 0;
+  }
+
+  .use-pic {
+    border-right: 0;
+    border-bottom: 1px solid var(--edge);
   }
 }
 

@@ -50,7 +50,7 @@ Sections alternate between the page colour and the band colour (`band` on the `<
 
 Each later section makes one point with one picture and little text: a heading, at most two sentences, and a picture or a short list. Longer explanations belong under "Before you try it".
 
-The one exception is the first tile of "What it is good for" (films, ads and short scenes), which is as wide as the row: a project folder drawn like the slot folder of section 2, beside three numbered lines, because that use is a sequence and a single picture would not show it.
+"What it is good for" lays its five uses out as cards, each a picture on one side and the words on the other, the sides swapping from card to card. The last card, films, ads and short scenes, has a project folder drawn like the slot folder of section 2 in place of a picture, beside three numbered lines, because that use is a sequence.
 
 ## How the look is built
 

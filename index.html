@@ -27,7 +27,7 @@
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=w2-027" />
+    <link rel="stylesheet" href="./styles.css?v=w2-028" />
     <script src="./i18n.js?v=w2-027"></script>
   </head>
   <body id="top">
@@ -517,8 +517,40 @@
             <h2 data-i18n="uses.h2">What it is good for</h2>
           </div>
           <ul class="uses" data-reveal-group>
-            <li class="use use-wide">
-              <div class="use-pic use-film" data-lit>
+            <li class="use">
+              <div class="use-pic"><img src="assets/demo/hero-space-diner.webp" data-i18n-alt="use.1.alt" alt="A generated photo of a diner on a space station, Earth in the windows." width="880" height="491" loading="lazy" /></div>
+              <div class="use-text">
+                <h3 data-i18n="use.1.h">Images for a site your agent is building</h3>
+                <p data-i18n="use.1.p">Hero banners, section photos, backgrounds. The agent knows where each one goes and what it has to do there, and writes that into the slot.</p>
+              </div>
+            </li>
+            <li class="use">
+              <div class="use-pic"><img src="assets/demo/signature-orbital-burger.webp" data-i18n-alt="use.2.alt" alt="A generated product photo of a burger on a slate plate." width="880" height="491" loading="lazy" /></div>
+              <div class="use-text">
+                <h3 data-i18n="use.2.h">One product across many assets</h3>
+                <p data-i18n="use.2.p">Approve a master image first, and later slots take it as their reference. A slot that depends on another waits until that one is approved.</p>
+              </div>
+            </li>
+            <li class="use">
+              <div class="use-pic"><img src="assets/demo/clip-loop-relay-frames.webp" data-i18n-alt="use.3.alt" alt="Four frames from a generated pixel-art clip: a robot hands a sheet to a folder while a person lifts a picture out of it." width="1280" height="720" loading="lazy" /></div>
+              <div class="use-text">
+                <h3 data-i18n="use.3.h">Short clips from approved stills</h3>
+                <p data-i18n="use.3.p">A video slot can take an approved image as its start frame. The agent then checks the motion second by second, and whether the clip loops.</p>
+              </div>
+            </li>
+            <li class="use">
+              <div class="use-pic use-icons-art">
+                <img class="px" src="assets/demo/app-icon-256.png" data-i18n-alt="use.4.alt" alt="The Asset Prompter app icon, large." width="128" height="128" loading="lazy" />
+                <img class="px" src="assets/demo/app-icon-256.png" alt="" width="64" height="64" loading="lazy" />
+                <img class="px" src="assets/demo/app-icon-48.png" alt="" width="32" height="32" loading="lazy" />
+              </div>
+              <div class="use-text">
+                <h3 data-i18n="use.4.h">App and brand art</h3>
+                <p data-i18n="use.4.p">Icons, empty states, illustrations. Once you approve one, the agent exports the sizes and formats it needs from that file.</p>
+              </div>
+            </li>
+            <li class="use">
+              <div class="use-pic use-film">
                 <p class="pane-label" data-i18n="film.label">The project folder</p>
                 <ul class="tree film-tree">
                   <li class="tree-root">
@@ -544,30 +576,6 @@
                   <li data-i18n="film.3"><strong>Shots.</strong> A still for each shot, then a clip that starts from it. The slots are numbered in shot order, so you always know what to generate next.</li>
                 </ol>
               </div>
-            </li>
-            <li class="use">
-              <div class="use-pic"><img src="assets/demo/hero-space-diner.webp" data-i18n-alt="use.1.alt" alt="A generated photo of a diner on a space station, Earth in the windows." width="880" height="491" loading="lazy" /></div>
-              <h3 data-i18n="use.1.h">Images for a site your agent is building</h3>
-              <p data-i18n="use.1.p">Hero banners, section photos, backgrounds. The agent knows where each one goes and what it has to do there, and writes that into the slot.</p>
-            </li>
-            <li class="use">
-              <div class="use-pic"><img src="assets/demo/signature-orbital-burger.webp" data-i18n-alt="use.2.alt" alt="A generated product photo of a burger on a slate plate." width="880" height="491" loading="lazy" /></div>
-              <h3 data-i18n="use.2.h">One product across many assets</h3>
-              <p data-i18n="use.2.p">Approve a master image first, and later slots take it as their reference. A slot that depends on another waits until that one is approved.</p>
-            </li>
-            <li class="use">
-              <div class="use-pic"><img src="assets/demo/clip-loop-relay-frames.webp" data-i18n-alt="use.3.alt" alt="Four frames from a generated pixel-art clip: a robot hands a sheet to a folder while a person lifts a picture out of it." width="1280" height="720" loading="lazy" /></div>
-              <h3 data-i18n="use.3.h">Short clips from approved stills</h3>
-              <p data-i18n="use.3.p">A video slot can take an approved image as its start frame. The agent then checks the motion second by second, and whether the clip loops.</p>
-            </li>
-            <li class="use use-icons">
-              <div class="use-pic use-icons-art">
-                <img class="px" src="assets/demo/app-icon-256.png" data-i18n-alt="use.4.alt" alt="The Asset Prompter app icon, large." width="128" height="128" loading="lazy" />
-                <img class="px" src="assets/demo/app-icon-256.png" alt="" width="64" height="64" loading="lazy" />
-                <img class="px" src="assets/demo/app-icon-48.png" alt="" width="32" height="32" loading="lazy" />
-              </div>
-              <h3 data-i18n="use.4.h">App and brand art</h3>
-              <p data-i18n="use.4.p">Icons, empty states, illustrations. Once you approve one, the agent exports the sizes and formats it needs from that file.</p>
             </li>
           </ul>
         </div>
