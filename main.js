@@ -126,6 +126,13 @@ if (!reducedMotion && hasObserver) {
   for (const el of document.querySelectorAll("[data-reveal], [data-reveal-group]")) seen.observe(el);
 }
 
+/* ---- smooth scrolling: Lenis (assets/vendor) eases the wheel, so what follows the scroll moves evenly instead of in steps.
+   Touch scrolling stays native. Lenis puts .lenis on <html>; styles.css turns the browser's own smooth anchors off there. ---- */
+
+if (!reducedMotion && typeof Lenis === "function") {
+  new Lenis({ autoRaf: true, lerp: 0.12, anchors: true });
+}
+
 /* ---- the uses: the two halves of a card come in from opposite sides as it scrolls up, meet in the middle of the window, and hold ---- */
 
 const uses = [...document.querySelectorAll(".use")];
@@ -279,20 +286,26 @@ if (finePointer) {
   );
 }
 
-/* ---- questions: an answer opens and closes smoothly ---- */
+/* ---- questions: an answer opens and closes smoothly, and only one is open at a time ---- */
 
-for (const item of document.querySelectorAll(".faq-list details")) {
+const faqs = [...document.querySelectorAll(".faq-list details")];
+const closers = new Map();
+for (const item of faqs) {
   const summary = item.querySelector("summary");
   const body = item.querySelector(".faq-a");
-  if (!summary || !body || reducedMotion || !body.animate) continue;
+  if (!summary || !body || reducedMotion || !body.animate) {
+    // The browser does the opening; this only closes the others.
+    item.addEventListener("toggle", () => {
+      if (item.open) for (const other of faqs) if (other !== item) other.open = false;
+    });
+    continue;
+  }
   let anim = null;
 
-  summary.addEventListener("click", (event) => {
-    event.preventDefault();
+  const move = (opening) => {
     // Where the answer is now, which is part-way if it was caught in the middle of a move.
     const from = item.open ? body.getBoundingClientRect().height : 0;
     if (anim) anim.cancel();
-    const opening = !item.open || item.classList.contains("is-closing");
     item.classList.toggle("is-closing", !opening);
     if (opening) item.open = true;
     const to = opening ? body.scrollHeight : 0;
@@ -306,6 +319,17 @@ for (const item of document.querySelectorAll(".faq-list details")) {
       item.open = false;
       item.classList.remove("is-closing");
     };
+  };
+
+  closers.set(item, () => {
+    if (item.open && !item.classList.contains("is-closing")) move(false);
+  });
+
+  summary.addEventListener("click", (event) => {
+    event.preventDefault();
+    const opening = !item.open || item.classList.contains("is-closing");
+    if (opening) for (const [other, close] of closers) if (other !== item) close();
+    move(opening);
   });
 }
 
