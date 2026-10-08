@@ -21,7 +21,7 @@
   <a href="https://github.com/Djordje1998/asset-prompter-landing-page/actions/workflows/check.yml"><img src="https://github.com/Djordje1998/asset-prompter-landing-page/actions/workflows/check.yml/badge.svg" alt="Check"></a>
   <img src="https://img.shields.io/badge/hosted%20on-GitHub%20Pages-7b7290" alt="Hosted on GitHub Pages">
   <img src="https://img.shields.io/badge/languages-English%20%C2%B7%20Srpski-d9a441" alt="English and Serbian">
-  <img src="https://img.shields.io/badge/static-no%20build%20step-3d8f6f" alt="Static, no build step">
+  <img src="https://img.shields.io/badge/static-served%20as%20committed-3d8f6f" alt="Static, served as committed">
 </p>
 
 <p align="center">
