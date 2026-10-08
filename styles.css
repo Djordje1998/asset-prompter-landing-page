@@ -4522,6 +4522,22 @@ li.is-pulse .f-front::after {
   overflow-wrap: normal;
 }
 
+/* A guide's language link names the language it leads to: the word where the bar has room, its code on a phone, where
+   the home page's button shows only its code too. */
+.lang-name + .lang-code {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .lang-name {
+    display: none;
+  }
+
+  .lang-name + .lang-code {
+    display: inline;
+  }
+}
+
 /* A Serbian guide quotes in the marks of its own text, „…”, as the home page does, whatever the language of the words
    quoted (the browser's own Serbian marks end in “). */
 :root:lang(sr) :is(.prose, .guide-table) q {
