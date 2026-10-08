@@ -407,7 +407,7 @@
             <div class="prose">
               <h2 id="short" data-i18n="g.api.short.h">Kratak odgovor</h2>
               <p data-i18n="g.api.short.1"><strong>Midjourney i Google Flow nemaju javni API.</strong> Pravila servisa Midjourney zabranjuju njegovu automatizaciju; modeli koje Flow koristi, Veo i Nano Banana, dostupni su u Gemini API-ju kompanije Google, koji se naplaćuje odvojeno od Google AI pretplate.</p>
-              <p data-i18n="g.api.short.2"><strong>ChatGPT Images, Grok Imagine, Leonardo.Ai i Luma imaju API</strong>, koji se, gde proizvođač to navodi, naplaćuje odvojeno od pretplate na aplikaciju; Leonardo i Luma imaju i MCP servere, koji rade preko te API naplate.</p>
+              <p data-i18n="g.api.short.2"><strong>ChatGPT Images, Grok Imagine, Leonardo.Ai i Luma imaju API</strong>, koji se, gde proizvođač to navodi, naplaćuje odvojeno od pretplate na aplikaciju. Leonardo ima i MCP server, a Lumina GitHub organizacija ima jedan; oba rade preko te API naplate.</p>
               <p data-i18n="g.api.short.3"><strong>Higgsfield, Ideogram, Krea, Kling i Runway imaju zvanične MCP servere</strong> na koje se prijavljuješ svojim nalogom; Ideogram i Runway kažu da korišćenje preko MCP-a troši istu pretplatu ili kredite kao i njihova aplikacija.</p>
             </div>
           </div>
@@ -456,10 +456,10 @@
                 </tr>
                 <tr>
                   <th scope="row">Dreamina (CapCut)</th>
-                  <td data-i18n="g.api.a.4.1"><span class="tag t-review">Nije pronađeno</span> Javni API za Dreaminu nije pronađen. ByteDanceovi modeli Seedance (video) i Seedream (slike) nude se programerima preko platforme BytePlus ModelArk.</td>
-                  <td data-i18n="g.api.a.4.2">ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom.</td>
+                  <td data-i18n="g.api.a.4.1"><span class="tag t-review">Odvojeno</span> Za samu aplikaciju Dreamina nije pronađen. BytePlus prodaje njene modele kao API na platformi ModelArk: <q lang="en">Dreamina Seedance 2.0 is now available through ModelArk on BytePlus, giving businesses and developers API access</q>, a ModelArk-ov API za generisanje slika ima modele Seedream.</td>
+                  <td data-i18n="g.api.a.4.2">ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom. BytePlus: <q lang="en">BytePlus is not available in the United States.</q></td>
                   <td data-i18n="g.api.a.4.3"><span class="tag t-review">Nije pronađeno</span></td>
-                  <td data-i18n="g.api.a.4.4"><span class="src"><a href="https://docs.byteplus.com/en/docs/ModelArk/1631633" target="_blank" rel="noopener">BytePlus ModelArk dokumentacija</a></span></td>
+                  <td data-i18n="g.api.a.4.4"><span class="src"><a href="https://www.byteplus.com/en/blog/dreamina-seedance2-0" target="_blank" rel="noopener">BytePlus: Dreamina Seedance 2.0</a>; <a href="https://docs.byteplus.com/en/docs/ModelArk/1541523" target="_blank" rel="noopener">ModelArk: API za generisanje slika</a></span></td>
                 </tr>
                 <tr>
                   <th scope="row">Grok Imagine (xAI)</th>
@@ -479,7 +479,7 @@
                   <th scope="row">Luma (Dream Machine)</th>
                   <td data-i18n="g.api.a.7.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Da</span> Luma API.</td>
                   <td data-i18n="g.api.a.7.2">Naplaćuje se odvojeno. Luma: <q lang="en">Dream Machine subscriptions and API are separate—credits do not transfer between them.</q></td>
-                  <td data-i18n="g.api.a.7.3"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Da</span> <code>luma-api-mcp</code>, u Luminoj GitHub organizaciji. Podešava se API ključem sa Lumine stranice za API ključeve, pa radi preko API kredita. Njegov README navodi modele za slike <code>photon-1</code> i <code>photon-flash-1</code> i modele za video <code>ray-2</code>, <code>ray-flash-2</code> i <code>ray-1-6</code>, a ne modele Ray3 iz Luminog preseta u aplikaciji.</td>
+                  <td data-i18n="g.api.a.7.3"><span class="tag t-review">U Luminom GitHubu</span> <code>luma-api-mcp</code>, u Luminoj GitHub organizaciji; njegov README ne kaže da je zvaničan. Podešava se API ključem sa Lumine stranice za API ključeve, pa radi preko API kredita. Njegov README navodi modele za slike <code>photon-1</code> i <code>photon-flash-1</code> i modele za video <code>ray-2</code>, <code>ray-flash-2</code> i <code>ray-1-6</code>, a ne modele Ray3 iz Luminog preseta u aplikaciji.</td>
                   <td data-i18n="g.api.a.7.4"><span class="src"><a href="https://lumalabs.ai/learning-hub/dream-machine-credit-system" target="_blank" rel="noopener">Luma: sistem kredita</a>; <a href="https://github.com/lumalabs/luma-api-mcp" target="_blank" rel="noopener">lumalabs/luma-api-mcp</a></span></td>
                 </tr>
               </tbody>
@@ -593,7 +593,7 @@
             <h3 data-i18n="g.api.means.1.h">Generator ima zvanični MCP server u okviru tvoje pretplate</h3>
             <p data-i18n="g.api.means.1.p">Higgsfield, Ideogram i Runway, i Krea kada se prijaviš: agent može sam da generiše. I na MCP server Kling se prijavljuješ svojim nalogom; čije kredite troši, aplikacije ili API-ja, nije navedeno. Asset Prompter je tu opcion. Kako kaže odgovor na početnoj stranici, i dalje pomaže ako želiš da svaki rezultat lično biraš i odobravaš i da svaku verziju čuvaš u folderu, ili ako koristiš mogućnosti koje alat zadržava samo za svoju aplikaciju.</p>
             <h3 data-i18n="g.api.means.2.h">Ima API koji se naplaćuje odvojeno od pretplate</h3>
-            <p data-i18n="g.api.means.2.p">ChatGPT Images, Gemini API (Veo, Nano Banana), Grok Imagine, Leonardo.Ai i Luma: agent može da generiše preko skripte ili MCP servera sa API ključem, a ti plaćaš svako generisanje, pored pretplate koju možda već imaš.</p>
+            <p data-i18n="g.api.means.2.p">ChatGPT Images, Gemini API (Veo, Nano Banana), Leonardo.Ai i Luma: agent može da generiše preko skripte ili MCP servera sa API ključem, a ti plaćaš svako generisanje, pored pretplate koju možda već imaš. I Grok Imagine ima API; da li Grok pretplata pokriva išta od toga, stranice kompanije xAI ne kažu.</p>
             <h3 data-i18n="g.api.means.3.h">Nema API</h3>
             <p data-i18n="g.api.means.3.p">Midjourney i Google Flow: agent ne može da pritisne „Generate”. Automatizovanje veb-aplikacije krši uslove korišćenja servisa Midjourney. Ostaje da promptove i fajlove prenosiš ručno, ili preko zajedničkog foldera kao što je onaj u Asset Prompteru; vodič <a href="/sr/guides/get-images-into-coding-agent-project/">pet načina da slike stignu u projekat tvog agenta</a> ih poredi, a <a href="/sr/guides/how-this-site-was-made/">kako su nastale slike ovog sajta</a> pokazuje folder sa alatom Flow.</p>
           </div>

@@ -98,7 +98,7 @@ const SR = {
     "Za klip koji kreće od slike, uputstvo aplikacije za agenta kaže da se koriste dva slota: slika, pa video slot čiji je ulaz <code>start_frame</code> postavljen na <code>slot: &lt;slot slike&gt;</code>. Aplikacija video slot drži na čekanju dok slika ne bude odobrena, pa se ništa ne generiše iz nacrta.",
   "g.made.3.h": "Kako agent proverava klip koji ne može da gleda",
   "g.made.3.p1":
-    'Agent ne može da gleda video. Zato za svaki klip koji prevučeš na karticu aplikacija pokreće ffmpeg i pretvara ga u slike i brojeve koje agent može da pročita (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):',
+    'Agent ne može da gleda video. Zato za svaki klip koji prevučeš na karticu aplikacija pokreće ffmpeg (Setup ga instalira na Windowsu i Linuxu) i pretvara ga u slike i brojeve koje agent može da pročita (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):',
   "g.made.3.list":
     "<li><strong>Listovi sa frejmovima</strong>: četiri frejma u sekundi, na 250 ms jedan od drugog, u mreži 2 × 2, svaki frejm 640 px po dužoj strani, pa je list ovog klipa 1280 × 720. Po jedan list za svaku sekundu, pa osmosekundni klip ispod ima osam listova, od <code>001.jpg</code> do <code>008.jpg</code>, koji se čitaju sleva nadesno, odozgo nadole.</li>\n" +
     "              <li><strong><code>first-last.jpg</code></strong>: prvi i poslednji frejm jedan pored drugog, da se vidi da li se kraj klipa u petlji spaja sa njegovim početkom.</li>\n" +
@@ -151,7 +151,7 @@ const SR = {
   "g.api.short.1":
     "<strong>Midjourney i Google Flow nemaju javni API.</strong> Pravila servisa Midjourney zabranjuju njegovu automatizaciju; modeli koje Flow koristi, Veo i Nano Banana, dostupni su u Gemini API-ju kompanije Google, koji se naplaćuje odvojeno od Google AI pretplate.",
   "g.api.short.2":
-    "<strong>ChatGPT Images, Grok Imagine, Leonardo.Ai i Luma imaju API</strong>, koji se, gde proizvođač to navodi, naplaćuje odvojeno od pretplate na aplikaciju; Leonardo i Luma imaju i MCP servere, koji rade preko te API naplate.",
+    "<strong>ChatGPT Images, Grok Imagine, Leonardo.Ai i Luma imaju API</strong>, koji se, gde proizvođač to navodi, naplaćuje odvojeno od pretplate na aplikaciju. Leonardo ima i MCP server, a Lumina GitHub organizacija ima jedan; oba rade preko te API naplate.",
   "g.api.short.3":
     "<strong>Higgsfield, Ideogram, Krea, Kling i Runway imaju zvanične MCP servere</strong> na koje se prijavljuješ svojim nalogom; Ideogram i Runway kažu da korišćenje preko MCP-a troši istu pretplatu ili kredite kao i njihova aplikacija.",
   "g.api.table.h": "Sedam generatora za koje Asset Prompter ima presete",
@@ -186,11 +186,12 @@ const SR = {
   "g.api.a.3.4":
     '<span class="src"><a href="https://ai.google.dev/gemini-api/docs/veo" target="_blank" rel="noopener">Gemini API: Veo</a>; <a href="https://ai.google.dev/gemini-api/docs/google-ai-plans" target="_blank" rel="noopener">Google AI pretplate</a>; <a href="https://github.com/google/mcp" target="_blank" rel="noopener">google/mcp</a>; <a href="https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia" target="_blank" rel="noopener">Genmedia README</a></span>',
   "g.api.a.4.1":
-    '<span class="tag t-review">Nije pronađeno</span> Javni API za Dreaminu nije pronađen. ByteDanceovi modeli Seedance (video) i Seedream (slike) nude se programerima preko platforme BytePlus ModelArk.',
-  "g.api.a.4.2": "ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom.",
+    '<span class="tag t-review">Odvojeno</span> Za samu aplikaciju Dreamina nije pronađen. BytePlus prodaje njene modele kao API na platformi ModelArk: <q lang="en">Dreamina Seedance 2.0 is now available through ModelArk on BytePlus, giving businesses and developers API access</q>, a ModelArk-ov API za generisanje slika ima modele Seedream.',
+  "g.api.a.4.2":
+    'ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom. BytePlus: <q lang="en">BytePlus is not available in the United States.</q>',
   "g.api.a.4.3": '<span class="tag t-review">Nije pronađeno</span>',
   "g.api.a.4.4":
-    '<span class="src"><a href="https://docs.byteplus.com/en/docs/ModelArk/1631633" target="_blank" rel="noopener">BytePlus ModelArk dokumentacija</a></span>',
+    '<span class="src"><a href="https://www.byteplus.com/en/blog/dreamina-seedance2-0" target="_blank" rel="noopener">BytePlus: Dreamina Seedance 2.0</a>; <a href="https://docs.byteplus.com/en/docs/ModelArk/1541523" target="_blank" rel="noopener">ModelArk: API za generisanje slika</a></span>',
   "g.api.a.5.1":
     '<span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Da</span> API kompanije xAI nudi generisanje slika i videa modelom Grok Imagine.',
   "g.api.a.5.2":
@@ -210,7 +211,7 @@ const SR = {
   "g.api.a.7.2":
     'Naplaćuje se odvojeno. Luma: <q lang="en">Dream Machine subscriptions and API are separate—credits do not transfer between them.</q>',
   "g.api.a.7.3":
-    '<span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Da</span> <code>luma-api-mcp</code>, u Luminoj GitHub organizaciji. Podešava se API ključem sa Lumine stranice za API ključeve, pa radi preko API kredita. Njegov README navodi modele za slike <code>photon-1</code> i <code>photon-flash-1</code> i modele za video <code>ray-2</code>, <code>ray-flash-2</code> i <code>ray-1-6</code>, a ne modele Ray3 iz Luminog preseta u aplikaciji.',
+    '<span class="tag t-review">U Luminom GitHubu</span> <code>luma-api-mcp</code>, u Luminoj GitHub organizaciji; njegov README ne kaže da je zvaničan. Podešava se API ključem sa Lumine stranice za API ključeve, pa radi preko API kredita. Njegov README navodi modele za slike <code>photon-1</code> i <code>photon-flash-1</code> i modele za video <code>ray-2</code>, <code>ray-flash-2</code> i <code>ray-1-6</code>, a ne modele Ray3 iz Luminog preseta u aplikaciji.',
   "g.api.a.7.4":
     '<span class="src"><a href="https://lumalabs.ai/learning-hub/dream-machine-credit-system" target="_blank" rel="noopener">Luma: sistem kredita</a>; <a href="https://github.com/lumalabs/luma-api-mcp" target="_blank" rel="noopener">lumalabs/luma-api-mcp</a></span>',
   "g.api.b.h": "Generatori sa zvaničnim MCP serverom na tvom nalogu",
@@ -283,7 +284,7 @@ const SR = {
     "Higgsfield, Ideogram i Runway, i Krea kada se prijaviš: agent može sam da generiše. I na MCP server Kling se prijavljuješ svojim nalogom; čije kredite troši, aplikacije ili API-ja, nije navedeno. Asset Prompter je tu opcion. Kako kaže odgovor na početnoj stranici, i dalje pomaže ako želiš da svaki rezultat lično biraš i odobravaš i da svaku verziju čuvaš u folderu, ili ako koristiš mogućnosti koje alat zadržava samo za svoju aplikaciju.",
   "g.api.means.2.h": "Ima API koji se naplaćuje odvojeno od pretplate",
   "g.api.means.2.p":
-    "ChatGPT Images, Gemini API (Veo, Nano Banana), Grok Imagine, Leonardo.Ai i Luma: agent može da generiše preko skripte ili MCP servera sa API ključem, a ti plaćaš svako generisanje, pored pretplate koju možda već imaš.",
+    "ChatGPT Images, Gemini API (Veo, Nano Banana), Leonardo.Ai i Luma: agent može da generiše preko skripte ili MCP servera sa API ključem, a ti plaćaš svako generisanje, pored pretplate koju možda već imaš. I Grok Imagine ima API; da li Grok pretplata pokriva išta od toga, stranice kompanije xAI ne kažu.",
   "g.api.means.3.h": "Nema API",
   "g.api.means.3.p":
     'Midjourney i Google Flow: agent ne može da pritisne „Generate”. Automatizovanje veb-aplikacije krši uslove korišćenja servisa Midjourney. Ostaje da promptove i fajlove prenosiš ručno, ili preko zajedničkog foldera kao što je onaj u Asset Prompteru; vodič <a href="/guides/get-images-into-coding-agent-project/">pet načina da slike stignu u projekat tvog agenta</a> ih poredi, a <a href="/guides/how-this-site-was-made/">kako su nastale slike ovog sajta</a> pokazuje folder sa alatom Flow.',
@@ -316,14 +317,14 @@ const SR = {
   "g.ways.facts.5": "Izaberi ovo kada",
   "g.ways.1.1": "Agent.",
   "g.ways.1.2":
-    "Na Codexu ništa pored ChatGPT Plus, Pro ili Business pretplate: potezi sa slikama troše njene Codex limite, brže od ostalih poteza, a besplatna pretplata ih nema. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.",
+    "Na Codexu ništa pored ChatGPT Plus, Pro ili Business pretplate: potezi sa slikama troše njene Codex limite, brže od ostalih poteza; generisanje slika nije dostupno na besplatnoj pretplati. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.",
   "g.ways.1.3": "Sliku koju je napravio.",
   "g.ways.1.4":
     "Tamo gde ih alat čuva. Cursor ih podrazumevano čuva u folderu <code>assets/</code> projekta. Codex ih drži u <code>$CODEX_HOME/generated_images/</code>, a njegov skill za slike kaže agentu da ono što projekat koristi kopira u projekat, kao nov fajl, na primer <code>hero-v2.png</code>, a ne preko starog.",
   "g.ways.1.5": "Agentov model je dovoljno dobar za tu sliku, a ne treba ti određeni generator.",
   "g.ways.2.h": "2. Zvanični MCP server",
   "g.ways.2.p":
-    "Higgsfield, Ideogram, Krea, Kling i Runway imaju MCP servere na koje se prijavljuješ svojim nalogom; Leonardo.Ai i Luma imaju servere koji rade preko njihovog API-ja.",
+    "Higgsfield, Ideogram, Krea, Kling i Runway imaju MCP servere na koje se prijavljuješ svojim nalogom; Leonardo.Ai ima server koji radi preko svog API-ja, a Lumina GitHub organizacija ima jedan koji radi preko Luminog.",
   "g.ways.2.1": "Agent.",
   "g.ways.2.2":
     "Higgsfield, Ideogram i Runway troše tvoju pretplatu ili njene kredite, a Krea računske jedinice tvog radnog prostora kada se prijaviš. Serverima za Leonardo i Lumu treba API ključ i troše API kredite.",
@@ -334,7 +335,8 @@ const SR = {
   "g.ways.3.p":
     "API za slike kompanije OpenAI, Gemini API kompanije Google (Nano Banana za slike, Veo za video), Grok Imagine kompanije xAI, Leonardo.Ai i Luma: agent piše skriptu za API i pokreće je.",
   "g.ways.3.1": "Agent, preko skripte.",
-  "g.ways.3.2": "Svako generisanje, naplaćeno odvojeno od pretplate na aplikaciju koju već plaćaš.",
+  "g.ways.3.2":
+    "Svako generisanje, naplaćeno odvojeno od pretplate na aplikaciju koju već plaćaš. Za Grok Imagine stranice kompanije xAI ne kažu da li Grok pretplata pokriva išta od toga.",
   "g.ways.3.3": "Fajlove koje skripta sačuva.",
   "g.ways.3.4": "Tamo gde ih skripta sačuva; traži folder projekta, sa novim imenom za svaku verziju.",
   "g.ways.3.5": "Želiš postupak koji možeš ponovo da pokreneš, više dimenzija odjednom ili serije. API ključ drži van repozitorijuma.",
@@ -351,7 +353,8 @@ const SR = {
     "Mala lokalna aplikacija koja prenosi promptove i rezultate između agenta i bilo kog generatora koji koristiš ručno, uključujući Midjourney i Google Flow. Radi sa svakim agentom koji može da čita i piše fajlove u folderu projekta.",
   "g.ways.5.1": "Ti, svaki put, u svom generatoru.",
   "g.ways.5.2": "Ništa: aplikacija je besplatna, pod MIT licencom. Plaćaš svoj generator i svog agenta, kao i do sada.",
-  "g.ways.5.3": "Svaki rezultat. Svaki pregleda, a klip čita kroz listove sa frejmovima i mapu pokreta.",
+  "g.ways.5.3":
+    "Svaki rezultat. Svaki pregleda, a klip čita kroz listove sa frejmovima i mapu pokreta, koje pravi ffmpeg; Setup ga instalira na Windowsu i Linuxu.",
   "g.ways.5.4": "U folderu slota, kao obični fajlovi: svaka verzija, rezultat, zahtev za izmenu i pregled. Tvoje odobrenje je konačno.",
   "g.ways.5.5": "Tvoj generator nema API ili želiš poslednju reč o svakoj slici.",
   "g.ways.5.more":
@@ -416,7 +419,8 @@ const SR = {
   "g.ways.need.no.3": "Treba ti jedna ili dve slike, jednom.",
   "g.ways.need.no.4": "Radiš u prozoru za čet u pregledaču, a ne sa agentom koji radi sa fajlovima: aplikaciji treba agent koji to ume.",
   "g.ways.need.no.5": "Radiš na macOS-u i ne želiš da Bun instaliraš ručno.",
-  "g.ways.need.yes.5": "Želiš da agent proverava tvoje video klipove, kroz listove sa frejmovima i mapu pokreta.",
+  "g.ways.need.yes.5":
+    "Želiš da agent proverava tvoje video klipove, kroz listove sa frejmovima i mapu pokreta (uz ffmpeg, koji Setup instalira).",
   "g.ways.next":
     'Dalje: <a href="/guides/how-this-site-was-made/">kako su uz njega nastale slike ovog sajta</a>, korak po korak, i <a href="/#install">dva načina da ga instaliraš</a>.',
 };

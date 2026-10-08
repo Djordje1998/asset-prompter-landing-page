@@ -467,8 +467,8 @@
           <div class="prose">
             <h2 id="clip" data-i18n="g.made.3.h">How an agent checks a clip it can't watch</h2>
             <p data-i18n="g.made.3.p1">
-              An agent can't watch video. So for every clip you drop on a card, the app runs ffmpeg and turns it into pictures
-              and numbers the agent can read (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):
+              An agent can't watch video. So for every clip you drop on a card, the app runs ffmpeg (setup installs it on
+              Windows and Linux) and turns it into pictures and numbers the agent can read (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):
             </p>
             <ul data-i18n="g.made.3.list">
               <li><strong>Frame sheets</strong>: four frames a second, 250 ms apart, in a 2 × 2 grid, each frame 640 px on its long side, so a sheet of this clip is 1280 × 720. One sheet per second, so the eight-second clip below has eight, <code>001.jpg</code> to <code>008.jpg</code>, read left to right, top to bottom.</li>
@@ -526,7 +526,7 @@
               <li>For a clip, save <code>final.mp4</code> as <code>assets/art/&lt;slot&gt;.mp4</code>, without sound.</li>
               <li>Make the clip's AV1 copy, and keep it only if every frame of it is within SSIM 0.995 of the H.264 frame:</li>
             </ol>
-            <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
+            <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -svtav1-params tune=0 -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
             <p data-i18n="g.made.4.p2">
               The AV1 copies are about half the bytes: <code>loop-relay</code> is 365 KiB against 776 KiB in H.264, and
               <code>gallery-full</code> 245 KiB against 536 KiB. The lowest frame SSIM of the two was 0.9956. The home page takes the

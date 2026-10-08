@@ -445,7 +445,7 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="clip" data-i18n="g.made.3.h">Kako agent proverava klip koji ne može da gleda</h2>
-            <p data-i18n="g.made.3.p1">Agent ne može da gleda video. Zato za svaki klip koji prevučeš na karticu aplikacija pokreće ffmpeg i pretvara ga u slike i brojeve koje agent može da pročita (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):</p>
+            <p data-i18n="g.made.3.p1">Agent ne može da gleda video. Zato za svaki klip koji prevučeš na karticu aplikacija pokreće ffmpeg (Setup ga instalira na Windowsu i Linuxu) i pretvara ga u slike i brojeve koje agent može da pročita (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):</p>
             <ul data-i18n="g.made.3.list"><li><strong>Listovi sa frejmovima</strong>: četiri frejma u sekundi, na 250 ms jedan od drugog, u mreži 2 × 2, svaki frejm 640 px po dužoj strani, pa je list ovog klipa 1280 × 720. Po jedan list za svaku sekundu, pa osmosekundni klip ispod ima osam listova, od <code>001.jpg</code> do <code>008.jpg</code>, koji se čitaju sleva nadesno, odozgo nadole.</li>
               <li><strong><code>first-last.jpg</code></strong>: prvi i poslednji frejm jedan pored drugog, da se vidi da li se kraj klipa u petlji spaja sa njegovim početkom.</li>
               <li><strong><code>motion.jpg</code></strong>, mapa pokreta: crvenom bojom je označeno ono što se promenilo tokom klipa, preko zatamnjenog prvog frejma.</li>
@@ -492,7 +492,7 @@
               <li>Pretvori njegov <code>final.png</code> u <code>assets/art/&lt;slot&gt;.webp</code>. Širina od oko 1400 px je sasvim dovoljna; fajlovi ovde su široki 1280 i 960 px.</li>
               <li>Za klip, sačuvaj <code>final.mp4</code> kao <code>assets/art/&lt;slot&gt;.mp4</code>, bez zvuka.</li>
               <li>Napravi AV1 kopiju klipa i zadrži je samo ako svaki njen frejm ima SSIM od najmanje 0,995 u odnosu na H.264 frejm:</li></ol>
-            <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
+            <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -svtav1-params tune=0 -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
             <p data-i18n="g.made.4.p2">AV1 kopije imaju otprilike upola manje bajtova: <code>loop-relay</code> ima 365 KiB naspram 776 KiB u H.264, a <code>gallery-full</code> 245 KiB naspram 536 KiB. Najniži SSIM jednog frejma u ta dva klipa bio je 0,9956. Početna stranica uzima AV1 fajl samo tamo gde pregledač na pitanje da li ga pušta odgovori <span lang="en">„probably”</span>, a H.264 fajl svuda drugde.</p>
             <h3 data-i18n="g.made.4.exports.h">Dimenzije i isečci nastaju iz odobrenog fajla</h3>
             <p data-i18n="g.made.4.p3">Folder <code>exports/</code> u slotu sadrži ono što agent napravi od konačnog fajla: isečke, druge dimenzije, druge formate i sitne izmene, bez novog generisanja. Aplikacija ih prikazuje pored konačne slike, svaku sa dugmetom „Copy image”. Dijalog ispod je iz slota <code>hero-space-diner</code> u projektu <code>orbital-eats</code>, iz kog potiču snimci ekrana aplikacije na početnoj stranici, a ne iz projekta ovog sajta.</p>
