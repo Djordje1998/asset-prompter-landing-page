@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="g.made.title">How this site's art was made with Google Flow</title>
+    <meta name="description" data-i18n-content="g.made.description" content="The real files behind this site&#x27;s illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Đorđe Novaković" />
+    <!-- A guide sits two folders down, so every address in it starts at the root, as in 404.html. Its Serbian copy,
+         when there is one, is the same path under /sr/ and is named by a third hreflang link. -->
+    <link rel="canonical" href="https://assetprompter.com/guides/how-this-site-was-made/" />
+    <link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/how-this-site-was-made/" />
+    <link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/how-this-site-was-made/" />
+    <!-- The language. A reader who chose Serbian (with the language link of a guide, or the menu of the home page; both
+         keep the choice in localStorage) and opens an English guide goes on to its Serbian copy, which the hreflang
+         link above names, before anything is fetched or drawn; ?lang=en keeps English, as on the home page. A guide that
+         has no Serbian copy yet has no such link, and stays. The guides load no other script. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var asked = (/[?&]lang=([a-z]+)/.exec(location.search) || [])[1];
+        var saved = null;
+        try {
+          saved = localStorage.getItem("lang");
+        } catch (e) {}
+        var other = document.querySelector('link[rel="alternate"][hreflang="' + (root.lang === "en" ? "sr" : "en") + '"]');
+        if (other) {
+          var path = new URL(other.href).pathname;
+          if (root.lang === "en" && (asked === "sr" || (saved === "sr" && asked !== "en"))) location.replace(path + location.hash);
+          else if (root.lang !== "en" && asked === "en") location.replace(path + "?lang=en" + location.hash);
+        }
+        // Following a language link keeps that choice, as the menu of the home page does.
+        document.addEventListener("click", function (event) {
+          var link = event.target.closest && event.target.closest("a[data-lang]");
+          if (!link) return;
+          try {
+            localStorage.setItem("lang", link.getAttribute("data-lang"));
+          } catch (e) {}
+        });
+      })();
+    </script>
+    <meta name="theme-color" content="#19171d" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Asset Prompter" />
+    <meta property="og:locale" data-i18n-content="og.locale" content="en_US" />
+    <meta property="og:title" data-i18n-content="g.made.title" content="How this site&#x27;s art was made with Google Flow" />
+    <meta property="og:description" data-i18n-content="g.made.description" content="The real files behind this site&#x27;s illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
+    <meta property="og:url" content="https://assetprompter.com/guides/how-this-site-was-made/" />
+    <meta property="og:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <meta property="article:published_time" content="2026-10-08" />
+    <meta property="article:modified_time" content="2026-10-08" />
+    <meta property="article:author" content="https://github.com/Djordje1998" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" data-i18n-content="g.made.title" content="How this site&#x27;s art was made with Google Flow" />
+    <meta name="twitter:description" data-i18n-content="g.made.description" content="The real files behind this site&#x27;s illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
+    <meta name="twitter:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
+    <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=w2-044" />
+    <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
+         the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
+         site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebPage",
+            "@id": "https://assetprompter.com/guides/how-this-site-was-made/#webpage",
+            "url": "https://assetprompter.com/guides/how-this-site-was-made/",
+            "name": "How this site's art was made with Google Flow",
+            "description": "The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step.",
+            "inLanguage": "en",
+            "isPartOf": {
+              "@id": "https://assetprompter.com/#website"
+            },
+            "about": {
+              "@id": "https://assetprompter.com/#app"
+            },
+            "breadcrumb": {
+              "@id": "https://assetprompter.com/guides/how-this-site-was-made/#breadcrumb"
+            },
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://assetprompter.com/assets/art/loop-relay.webp",
+              "width": 1280,
+              "height": 714
+            },
+            "datePublished": "2026-10-08",
+            "dateModified": "2026-10-08"
+          },
+          {
+            "@type": "Article",
+            "@id": "https://assetprompter.com/guides/how-this-site-was-made/#article",
+            "headline": "How the pictures on this site were made",
+            "description": "The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step.",
+            "inLanguage": "en",
+            "mainEntityOfPage": {
+              "@id": "https://assetprompter.com/guides/how-this-site-was-made/#webpage"
+            },
+            "isPartOf": {
+              "@id": "https://assetprompter.com/#website"
+            },
+            "author": {
+              "@id": "https://assetprompter.com/#author"
+            },
+            "publisher": {
+              "@id": "https://assetprompter.com/#author"
+            },
+            "about": {
+              "@id": "https://assetprompter.com/#app"
+            },
+            "image": "https://assetprompter.com/assets/og.jpg",
+            "datePublished": "2026-10-08",
+            "dateModified": "2026-10-08",
+            "mentions": [
+              {
+                "@type": "Thing",
+                "name": "Google Flow",
+                "sameAs": "https://www.wikidata.org/wiki/Q140560557"
+              },
+              {
+                "@type": "Thing",
+                "name": "FFmpeg"
+              }
+            ]
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://assetprompter.com/guides/how-this-site-was-made/#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Asset Prompter",
+                "item": "https://assetprompter.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Guides",
+                "item": "https://assetprompter.com/guides/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "How this site was made"
+              }
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://assetprompter.com/#author",
+            "name": "Đorđe Novaković",
+            "url": "https://github.com/Djordje1998",
+            "sameAs": [
+              "https://github.com/Djordje1998",
+              "https://www.linkedin.com/in/dj-nov"
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
+      <symbol id="logo" viewBox="0 0 16 16"><rect x="12" y="1" width="1" height="1" fill="#c08ab5"/><rect x="11" y="2" width="3" height="1" fill="#c08ab5"/><rect x="1" y="3" width="9" height="1" fill="#4a4652"/><rect x="12" y="3" width="1" height="1" fill="#c08ab5"/><rect x="1" y="4" width="1" height="1" fill="#4a4652"/><rect x="9" y="4" width="1" height="1" fill="#4a4652"/><rect x="1" y="5" width="1" height="1" fill="#4a4652"/><rect x="4" y="5" width="11" height="1" fill="#6e6878"/><rect x="1" y="6" width="1" height="1" fill="#4a4652"/><rect x="4" y="6" width="1" height="1" fill="#6e6878"/><rect x="14" y="6" width="1" height="1" fill="#6e6878"/><rect x="1" y="7" width="1" height="1" fill="#4a4652"/><rect x="4" y="7" width="1" height="1" fill="#6e6878"/><rect x="6" y="7" width="2" height="1" fill="#d9a441"/><rect x="14" y="7" width="1" height="1" fill="#6e6878"/><rect x="1" y="8" width="1" height="1" fill="#4a4652"/><rect x="4" y="8" width="1" height="1" fill="#6e6878"/><rect x="6" y="8" width="2" height="1" fill="#d9a441"/><rect x="14" y="8" width="1" height="1" fill="#6e6878"/><rect x="1" y="9" width="3" height="1" fill="#4a4652"/><rect x="4" y="9" width="1" height="1" fill="#6e6878"/><rect x="12" y="9" width="1" height="1" fill="#6cc4b8"/><rect x="14" y="9" width="1" height="1" fill="#6e6878"/><rect x="4" y="10" width="1" height="1" fill="#6e6878"/><rect x="11" y="10" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="10" width="1" height="1" fill="#6e6878"/><rect x="4" y="11" width="1" height="1" fill="#6e6878"/><rect x="7" y="11" width="1" height="1" fill="#6cc4b8"/><rect x="10" y="11" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="11" width="1" height="1" fill="#6e6878"/><rect x="4" y="12" width="1" height="1" fill="#6e6878"/><rect x="6" y="12" width="3" height="1" fill="#6cc4b8"/><rect x="9" y="12" width="1" height="1" fill="#4f9e94"/><rect x="10" y="12" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="12" width="1" height="1" fill="#6e6878"/><rect x="4" y="13" width="1" height="1" fill="#6e6878"/><rect x="5" y="13" width="4" height="1" fill="#6cc4b8"/><rect x="9" y="13" width="3" height="1" fill="#4f9e94"/><rect x="12" y="13" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="13" width="1" height="1" fill="#6e6878"/><rect x="4" y="14" width="11" height="1" fill="#6e6878"/></symbol>
+      <symbol id="i-star" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM4 2h4v1h-4zM4 3h4v1h-4zM0 4h12v1h-12zM1 5h10v1h-10zM2 6h8v1h-8zM3 7h6v1h-6zM2 8h8v1h-8zM2 9h3v1h-3zM7 9h3v1h-3zM1 10h2v1h-2zM9 10h2v1h-2z"/></symbol>
+      <symbol id="i-download" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM5 2h2v1h-2zM5 3h2v1h-2zM2 4h2v1h-2zM5 4h2v1h-2zM8 4h2v1h-2zM3 5h6v1h-6zM4 6h4v1h-4zM5 7h2v1h-2zM1 9h2v1h-2zM9 9h2v1h-2zM1 10h10v1h-10z"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 12 12"><path d="M5 0h1v1h-1zM5 1h1v1h-1zM4 2h3v1h-3zM2 3h7v1h-7zM4 4h3v1h-3zM5 5h1v1h-1zM10 5h1v1h-1zM5 6h1v1h-1zM9 6h3v1h-3zM10 7h1v1h-1zM3 8h1v1h-1zM2 9h3v1h-3zM3 10h1v1h-1z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 12 12"><path d="M10 1h2v1h-2zM9 2h3v1h-3zM8 3h3v1h-3zM1 4h2v1h-2zM7 4h3v1h-3zM1 5h3v1h-3zM6 5h3v1h-3zM2 6h5v1h-5zM3 7h3v1h-3zM4 8h1v1h-1z"/></symbol>
+      <symbol id="i-info" viewBox="0 0 12 12"><path d="M3 0h6v1h-6zM2 1h1v1h-1zM9 1h1v1h-1zM1 2h1v1h-1zM5 2h2v1h-2zM10 2h1v1h-1zM1 3h1v1h-1zM10 3h1v1h-1zM1 4h1v1h-1zM5 4h2v1h-2zM10 4h1v1h-1zM1 5h1v1h-1zM5 5h2v1h-2zM10 5h1v1h-1zM1 6h1v1h-1zM5 6h2v1h-2zM10 6h1v1h-1zM1 7h1v1h-1zM5 7h2v1h-2zM10 7h1v1h-1zM2 8h1v1h-1zM9 8h1v1h-1zM3 9h6v1h-6z"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 12 12"><path d="M1 1h4v1h-4zM1 2h1v1h-1zM4 2h1v1h-1zM1 3h1v1h-1zM4 3h6v1h-6zM1 4h1v1h-1zM9 4h2v1h-2zM1 5h10v1h-10zM1 6h1v1h-1zM10 6h1v1h-1zM1 7h1v1h-1zM10 7h1v1h-1zM1 8h1v1h-1zM10 8h1v1h-1zM1 9h10v1h-10z"/></symbol>
+    </svg>
+
+    <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+    <header class="bar">
+      <a class="brand" href="/">
+        <svg class="logo" width="24" height="24" aria-hidden="true"><use href="#logo" /></svg>
+        Asset Prompter
+      </a>
+      <!-- The home page's sections, and the guides. The language link (a.btn.lang-btn, data-lang) goes first in
+           .bar-right once the guide has a Serbian copy. -->
+      <nav class="bar-links" aria-label="Site" data-i18n-aria-label="g.nav.label">
+        <a href="/#loop" data-i18n="nav.loop">The loop</a>
+        <a href="/#mcp" data-i18n="nav.mcp">Compared with MCP</a>
+        <a href="/#questions" data-i18n="nav.questions">Questions</a>
+        <a href="/guides/" aria-current="true" data-i18n="foot.guides">Guides</a>
+      </nav>
+      <div class="bar-right">
+        <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star on GitHub: Asset Prompter" data-i18n-aria-label="star.label">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-star" /></svg>
+          <span class="bar-github-text" data-i18n="star">Star<span class="bar-github-on"> on GitHub</span></span>
+        </a>
+        <a class="btn btn-primary" href="/#install" data-i18n-text="install">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-download" /></svg>
+          Install
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="section guide-top">
+        <div class="wrap">
+          <nav class="crumbs" aria-label="Breadcrumb" data-i18n-aria-label="g.crumbs.label">
+            <ol>
+              <li><a href="/" data-i18n="g.crumbs.home">Asset Prompter</a></li>
+              <li><a href="/guides/" data-i18n="foot.guides">Guides</a></li>
+              <li aria-current="page" data-i18n="g.made.crumb">How this site was made</li>
+            </ol>
+          </nav>
+          <div class="head">
+            <h1 data-i18n="g.made.h1">How the pictures on this site were made</h1>
+            <p class="lead" data-i18n="g.made.lead">The footer says it: illustrations generated by hand in Google Flow, through Asset Prompter. Here are the slots, the files and the steps behind them.</p>
+            <p class="guide-meta" data-i18n="g.byline">
+              By <a href="https://github.com/Djordje1998" target="_blank" rel="noopener author">Đorđe Novaković</a>, who makes Asset Prompter ·
+              Updated <time datetime="2026-10-08">8 October 2026</time>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band guide-sec" aria-labelledby="slots">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="slots" data-i18n="g.made.1.h">One project, six slots</h2>
+            <p data-i18n="g.made.1.p1">
+              Every illustration and clip on the <a href="/">home page</a> came out of one Asset Prompter project,
+              <code>asset-prompter-landing</code>. Each picture was asked for as a <strong>slot</strong>, a folder for one asset, and
+              each file on the site is named after its slot: <code>&lt;slot&gt;.webp</code> for a picture, <code>&lt;slot&gt;.mp4</code> for
+              its clip. The illustrations were generated by hand in Google Flow.
+            </p>
+          </div>
+          <section class="table-wrap guide-wide" aria-labelledby="slots-caption" tabindex="0">
+            <table class="guide-table">
+              <caption id="slots-caption" data-i18n="g.made.t.caption">The six slots and where their files are on the home page. Sizes measured from the files on 8 October 2026.</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="g.made.t.slot">Slot</th>
+                  <th scope="col" data-i18n="g.made.t.kind">Kind</th>
+                  <th scope="col" data-i18n="g.made.t.where">Where it is on the home page</th>
+                  <th scope="col" data-i18n="g.made.t.file">File on the site</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row"><code>loop-relay</code></th>
+                  <td data-i18n="g.made.t.1.kind">A picture and its clip</td>
+                  <td data-i18n="g.made.t.1.where">The top of the page, and <a href="/#agent">"It checks a clip it can't play"</a></td>
+                  <td><code>assets/art/loop-relay.webp</code>, 1280 × 714; <code>loop-relay.mp4</code> and <code>loop-relay-av1.mp4</code></td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>loop-relay-clip</code></th>
+                  <td data-i18n="g.made.t.2.kind">A video slot</td>
+                  <td data-i18n="g.made.t.2.where">Frame sheet 003 and the motion map of its version 2, in <a href="/#agent">"It checks a clip it can't play"</a></td>
+                  <td><code>assets/demo/clip-loop-relay-frames.webp</code>, 1280 × 720; <code>clip-loop-relay-motion.webp</code>, 640 × 360</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>you-are-the-server</code></th>
+                  <td data-i18n="g.made.t.3.kind">A picture</td>
+                  <td data-i18n="g.made.t.3.where"><a href="/#mcp">"To your agent, the same steps as an MCP server"</a></td>
+                  <td><code>assets/art/you-are-the-server.webp</code>, 960 × 716</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>problem-courier</code></th>
+                  <td data-i18n="g.made.t.4.kind">A picture</td>
+                  <td data-i18n="g.made.t.4.where"><a href="/#why">"Without it, you are the courier"</a></td>
+                  <td><code>assets/art/problem-courier.webp</code>, 1280 × 714</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>you-press-generate</code></th>
+                  <td data-i18n="g.made.t.5.kind">A picture</td>
+                  <td data-i18n="g.made.t.5.where"><a href="/#tradeoffs">"It doesn't generate anything"</a></td>
+                  <td><code>assets/art/you-press-generate.webp</code>, 960 × 716</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>gallery-full</code></th>
+                  <td data-i18n="g.made.t.6.kind">A picture and its clip</td>
+                  <td data-i18n="g.made.t.6.where">The closing section, "Give your agent a way to ask for pictures."</td>
+                  <td><code>assets/art/gallery-full.webp</code>, 1280 × 714; <code>gallery-full.mp4</code> and <code>gallery-full-av1.mp4</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <div class="prose">
+            <p data-i18n="g.made.1.p2">
+              The page was built slot first. Until a slot's file exists, the page draws the place it will take as a dashed
+              frame with the slot's name and what the picture should show, under the same "Needs generating" the app puts on a
+              card that waits for you:
+            </p>
+          </div>
+          <figure class="guide-wide guide-fig is-small">
+            <div class="art is-missing">
+              <span class="tag t-generate"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>Needs generating</span>
+              <span class="art-slot">problem-courier</span>
+              <span class="art-hint" data-i18n="g.made.missing.hint">a person runs between a chat bubble and a pile of pictures, papers flying, while a robot waits and sees none of it.</span>
+            </div>
+            <figcaption data-i18n="g.made.missing.caption">What the home page shows in a picture's place before its file exists: the page's own markup, not a screenshot.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section guide-sec" aria-labelledby="loop">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="loop" data-i18n="g.made.2.h">The loop a picture goes through</h2>
+            <p data-i18n="g.made.2.p1">
+              A slot is a folder, and the agent and you take turns in it. The <a href="/#loop">six steps on the home page</a> show one
+              picture going round; this is who writes which file, as the app's
+              <a href="https://github.com/Djordje1998/asset-prompter/blob/master/README.md#the-folder" target="_blank" rel="noopener">README</a> lays the folder out:
+            </p>
+            <ol data-i18n="g.made.2.list">
+              <li>The agent writes <code>slot.md</code>, what the asset is for, and <code>v1.md</code>: the prompt, with the settings in front of it (<code>tool</code>, <code>type</code>, <code>model</code>, <code>mode</code>, <code>aspect_ratio</code>, <code>duration</code>, <code>inputs</code>).</li>
+              <li>You copy the prompt into the generator, press Generate there, and drop the result on the slot's card. It lands in <code>v1/</code>.</li>
+              <li>The agent opens the result and writes <code>v1.review.md</code>, with <code>verdict: approve</code> or <code>verdict: revise</code>.</li>
+              <li>If it should change, you write <code>v1.feedback.md</code>, or the agent revises on its own, and the agent writes <code>v2.md</code>.</li>
+              <li>You approve. That writes <code>APPROVED</code>, and the app copies the result to <code>final.png</code> (or <code>final.mp4</code>), the file the agent uses.</li>
+            </ol>
+          </div>
+          <div class="guide-wide guide-tree">
+            <div class="rail-box">
+              <p class="pane-label" data-i18n="rail.label">The slot folder</p>
+              <ul class="tree">
+                <li class="tree-root">
+                  <svg class="icon" width="13" height="13" aria-hidden="true"><use href="#i-folder" /></svg><span class="f-name">&lt;slot&gt;/</span>
+                </li>
+                <li data-by="agent"><span class="f-name">slot.md</span><span class="f-note" data-i18n="g.made.tree.slot">what the asset is for</span></li>
+                <li data-by="agent"><span class="f-name">v1.md</span><span class="f-note" data-i18n="file.prompt">prompt and settings</span></li>
+                <li data-by="you"><span class="f-name">v1/</span><span class="f-note" data-i18n="g.made.tree.results">your results</span></li>
+                <li data-by="agent"><span class="f-name">v1.review.md</span><span class="f-note" data-i18n="g.made.tree.review">the agent's review</span></li>
+                <li data-by="you"><span class="f-name">v1.feedback.md</span><span class="f-note" data-i18n="file.feedback">your change request</span></li>
+                <li data-by="agent"><span class="f-name">v2.md</span><span class="f-note" data-i18n="file.next">the next prompt</span></li>
+                <li data-by="you"><span class="f-name">APPROVED</span><span class="f-note" data-i18n="file.approved">your approval</span></li>
+                <li data-by="app"><span class="f-name">final.png</span><span class="f-note" data-i18n="file.final">what the agent uses</span></li>
+                <li data-by="agent"><span class="f-name">exports/</span><span class="f-note" data-i18n="g.made.tree.exports">the agent's variants</span></li>
+              </ul>
+              <p class="tree-key">
+                <span class="key by-agent" data-i18n="key.agent">the agent</span>
+                <span class="key by-you" data-i18n="key.you">you</span>
+                <span class="key by-app" data-i18n="key.app">the app</span>
+              </p>
+            </div>
+          </div>
+          <div class="prose">
+            <h3 data-i18n="g.made.2.flow.h">What Google Flow asks of the prompt</h3>
+            <p data-i18n="g.made.2.flow.p">
+              The agent learns a generator from its preset. Asset Prompter's
+              <a href="https://github.com/Djordje1998/asset-prompter/blob/master/presets/google-flow.md" target="_blank" rel="noopener">Google Flow preset</a> (checked 6 October 2026) tells it, among other things:
+            </p>
+            <ul data-i18n="g.made.2.flow.list">
+              <li>Flow has no negative prompt and no seed, so what should be left out goes into the prompt itself ("no people, no text").</li>
+              <li>A video from the prompt alone is the mode <code>frames</code> with no start frame.</li>
+              <li>Videos come with generated sound, and Flow has no switch for it per clip: describe the sound in the prompt, or write "no sound".</li>
+              <li>Every account gets 50 credits a day; Veo 3.1 Lite costs 10 per generation, Quality 100.</li>
+            </ul>
+            <p data-i18n="g.made.2.p2">
+              For a clip that starts from a picture, the app's guide for the agent says to use two slots: the picture, then a
+              video slot whose <code>start_frame</code> input is <code>slot: &lt;picture slot&gt;</code>. The app holds the video slot
+              back until the picture is approved, so nothing is generated from a draft.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band guide-sec" aria-labelledby="clip">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="clip" data-i18n="g.made.3.h">How an agent checks a clip it can't watch</h2>
+            <p data-i18n="g.made.3.p1">
+              An agent can't watch video. So for every clip you drop on a card, the app runs ffmpeg and turns it into pictures
+              and numbers the agent can read (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):
+            </p>
+            <ul data-i18n="g.made.3.list">
+              <li><strong>Frame sheets</strong>: four frames a second, 250 ms apart, in a 2 × 2 grid, 640 px on the long side. One sheet per second, so the eight-second clip below has eight, <code>001.jpg</code> to <code>008.jpg</code>, read left to right, top to bottom.</li>
+              <li><strong><code>first-last.jpg</code></strong>: the first and the last frame side by side, to see whether a clip meets itself in a loop.</li>
+              <li><strong><code>motion.jpg</code></strong>, the motion map: red marks what changed during the clip, over a dimmed first frame.</li>
+              <li>Per second, how far the picture has moved from the first frame and from the frame before, in percent, in <code>info.md</code>.</li>
+            </ul>
+            <p data-i18n="g.made.3.p2">
+              Here is the hero's clip with frame sheet 003 and the motion map of <code>loop-relay-clip</code>, version 2. The
+              site's copy of the clip is eight seconds, 1280 × 720, 24 frames a second, with no sound track. Press play to watch it.
+            </p>
+          </div>
+          <div class="pipe guide-wide">
+            <figure class="pipe-step">
+              <div class="pipe-pic">
+                <div class="art">
+                  <video controls muted playsinline preload="none" poster="/assets/art/loop-relay.webp" width="1280" height="720" data-i18n-aria-label="clip.alt" aria-label="The clip from the top of this page: the robot holds a prompt sheet toward the shared folder and the person lifts a picture out of it.">
+                    <source src="/assets/art/loop-relay-av1.mp4" type='video/mp4; codecs="av01.0.05M.08"' />
+                    <source src="/assets/art/loop-relay.mp4" type='video/mp4; codecs="avc1.64001F"' />
+                  </video>
+                </div>
+              </div>
+              <figcaption data-i18n="clip.caption"><strong>Your clip</strong>Eight seconds, dropped on the card.</figcaption>
+            </figure>
+            <figure class="pipe-step">
+              <div class="pipe-pic">
+                <img src="/assets/demo/clip-loop-relay-frames.webp" data-i18n-alt="frames.alt" alt="A frame sheet: four frames of that clip from the same second, in a two by two grid." width="1280" height="720" loading="lazy" />
+              </div>
+              <figcaption data-i18n="frames.caption"><strong>Frame sheets</strong>One per second, four frames each. The agent reads them in order.</figcaption>
+            </figure>
+            <figure class="pipe-step">
+              <div class="pipe-pic">
+                <img src="/assets/demo/clip-loop-relay-motion.webp" data-i18n-alt="motion.alt" alt="The motion map of that clip: the first frame, dimmed, with the sheet, the picture and the sparkle marked in red." width="640" height="360" loading="lazy" />
+              </div>
+              <figcaption data-i18n="motion.caption"><strong>Motion map</strong>Red marks everything that moved during the clip.</figcaption>
+            </figure>
+          </div>
+          <div class="prose">
+            <p data-i18n="g.made.3.p3">
+              What the pictures can't carry is sound. As the home page says under <a href="/#tradeoffs">trade-offs</a>: the agent
+              can't hear, and checking a clip's sound is your job.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section guide-sec" aria-labelledby="export">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="export" data-i18n="g.made.4.h">From the approved file to this page</h2>
+            <p data-i18n="g.made.4.p1">Once a slot was approved, its final file went into this site's repository in four steps:</p>
+            <ol data-i18n="g.made.4.list">
+              <li>Approve the slot in Asset Prompter.</li>
+              <li>Convert its <code>final.png</code> to <code>assets/art/&lt;slot&gt;.webp</code>. About 1400 px wide is plenty; the files here are 1280 and 960 px wide.</li>
+              <li>For a clip, save <code>final.mp4</code> as <code>assets/art/&lt;slot&gt;.mp4</code>, without sound.</li>
+              <li>Make the clip's AV1 copy, and keep it only if every frame of it is within SSIM 0.995 of the H.264 frame:</li>
+            </ol>
+            <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
+            <p data-i18n="g.made.4.p2">
+              The AV1 copies are about half the bytes: <code>loop-relay</code> is 365 KiB against 776 KiB in H.264, and
+              <code>gallery-full</code> 245 KiB against 536 KiB. The lowest frame SSIM of the two was 0.9956. The page takes the AV1
+              file only where the browser answers "probably" when asked whether it plays it, and the H.264 file everywhere else.
+            </p>
+            <h3 data-i18n="g.made.4.exports.h">Sizes and crops come from the approved file</h3>
+            <p data-i18n="g.made.4.p3">
+              A slot's <code>exports/</code> folder holds what the agent makes from the final file: crops, other sizes, other formats
+              and small edits, with no new generation. The app shows them beside the final picture, each with a Copy image button.
+              The dialog below is from <code>hero-space-diner</code> in the app's demo project <code>orbital-eats</code>, not from this site.
+            </p>
+          </div>
+          <figure class="guide-wide guide-fig">
+            <div class="appshot">
+              <img src="/assets/shots/variants-dialog.webp" srcset="/assets/shots/variants-dialog-820.webp 820w, /assets/shots/variants-dialog.webp 1640w" sizes="(max-width: 832px) calc(100vw - 32px), 800px" data-i18n-alt="variants.alt" alt="The variants of one approved picture, as the app shows them: a 1920 by 1080 WebP, a 1200 by 630 JPG for social cards and a square crop, each with a Copy image button." width="1640" height="762" loading="lazy" />
+            </div>
+            <figcaption data-i18n="g.made.4.caption">The variants of one approved picture: a 1920 × 1080 WebP, a 1200 × 630 JPG for social cards and a square crop.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section band guide-sec" aria-labelledby="revision">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="revision" data-i18n="g.made.5.h">One revision, as the app shows it</h2>
+            <p data-i18n="g.made.5.p1">
+              The screenshots of the app on the home page come from that demo project, from the slot
+              <code>observation-dining-room</code>. In the real project that slot is still waiting for approval; the screenshots
+              show a staged copy. Read off the cards, its revision went like this:
+            </p>
+            <ul data-i18n="g.made.5.list">
+              <li><code>slot.md</code>: <q>Atmospheric photograph for the 'About Our Dining Experience' section of the website. It must show the spacious seating area and the realistic observation lounge overlooking outer space.</q></li>
+              <li>Version 1: Image, 16:9, Nano Banana Pro, a prompt of 374 characters that begins <q>Eye-level wide photograph of the main observation dining hall in an orbital restaurant.</q></li>
+              <li>The change request on version 1: <q>Too cold and empty. Make the booths warm cognac leather, add warm ceiling lights, and let the sun rise over the horizon.</q></li>
+              <li>Version 2, a prompt of 637 characters. The agent's note: <q>Changed in v2: Warm cognac booths, warm ceiling light strips and a sunrise over the horizon; v1 was cold and empty.</q></li>
+              <li>Three results for version 2, and the agent's verdict <q>Agent approves, picks 2.png</q>, a picture of 1376&nbsp;×&nbsp;768.</li>
+            </ul>
+          </div>
+          <figure class="guide-wide guide-fig">
+            <div class="appshot">
+            <picture>
+              <source media="(max-width: 640px)" srcset="/assets/app/7-approved-narrow-440.webp 440w, /assets/app/7-approved-narrow.webp 880w" sizes="(max-width: 472px) calc(100vw - 32px), 440px" width="880" height="2190" />
+              <img src="/assets/app/7-approved.webp" srcset="/assets/app/7-approved-800.webp 800w, /assets/app/7-approved.webp 1600w" sizes="(max-width: 832px) calc(100vw - 32px), 800px" data-i18n-alt="turn.6.alt" alt="The card of the second version, marked Approved: the warm dining room with the sunrise, three results with yours picked, the agent's review, and your earlier change request folded below." width="1600" height="1042" loading="lazy" />
+            </picture>
+            </div>
+            <figcaption data-i18n="g.made.5.caption">Version 2 approved: the three results with 2.png picked, the agent's review, and the change request on version 1 folded below.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section guide-sec" aria-labelledby="took">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="took" data-i18n="g.made.6.h">What it took, and what it didn't do</h2>
+            <p data-i18n="g.made.6.p1">
+              Every illustration was generated by hand: someone pasted the prompt into Google Flow and pressed Generate there.
+              Asset Prompter doesn't generate anything. Flow has no public API (see
+              <a href="/guides/image-generators-api-mcp/">which generators have an API or an MCP server</a>), so an agent can't press
+              Generate in it; what the folder gave the agent was the results, to see, review and ask again.
+            </p>
+            <p data-i18n="g.made.6.p2">
+              For batches that run while you are away, pick a generator with an API or an MCP server instead. The other ways, and when
+              each fits, are in <a href="/guides/get-images-into-coding-agent-project/">five ways to get images into your coding
+              agent's project</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band closing">
+        <div class="wrap">
+          <div class="head">
+            <h2 data-i18n="closing.h2">Give your agent a way to ask for pictures.</h2>
+            <p class="lead" data-i18n="closing.lead">Download the folder, run setup, paste one message.</p>
+          </div>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip" data-i18n-text="download">
+              <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#i-download" /></svg>
+              Download ZIP
+            </a>
+            <a class="btn btn-lg" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" data-i18n="github">View on GitHub</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-row">
+        <span class="brand">
+          <svg class="logo" width="20" height="20" aria-hidden="true"><use href="#logo" /></svg>
+          Asset Prompter
+        </span>
+        <span data-i18n="foot.art">Illustrations generated by hand in Google Flow, through Asset Prompter.</span>
+        <span class="foot-links">
+          <a href="/guides/" data-i18n="foot.guides">Guides</a>
+          <a href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener">github.com/Djordje1998/asset-prompter</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

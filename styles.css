@@ -4546,12 +4546,11 @@ li.is-pulse .f-front::after {
   text-wrap: pretty;
 }
 
-/* The slot folder of the loop, standing alone at the size it has beside the six steps. It scrolls inside its frame
-   rather than widening a narrow page. */
+/* The slot folder of the loop, standing alone at the size it has beside the six steps. On a narrow phone its notes
+   end in an ellipsis, as they do there. */
 .guide-tree {
   max-width: 420px;
   margin-inline: auto;
-  overflow-x: auto;
 }
 
 /* A table is a surface like a picture: the card colour, the hard shadow and the lit inner edge. On a phone it scrolls
@@ -4604,6 +4603,7 @@ li.is-pulse .f-front::after {
 
 .guide-table tbody th {
   min-width: 140px;
+  white-space: nowrap;
   color: var(--text);
   font-weight: 600;
 }
@@ -4670,8 +4670,14 @@ li.is-pulse .f-front::after {
 
 /* The guides listed on /guides/: the rows of "What the folder gives your agent", one per guide, with the date
    under the text. */
+.guide-list .rows {
+  margin-top: 0;
+}
+
 .guide-list .row-text .guide-meta {
   margin-top: 16px;
+  color: var(--faint);
+  font-size: 13px;
 }
 
 .guide-list .row-text h2 a {

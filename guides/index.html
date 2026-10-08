@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="g.hub.title">Asset Prompter guides: agents, image and video tools</title>
+    <meta name="description" data-i18n-content="g.hub.description" content="How this site&#x27;s pictures were made, which image and video generators have an API or MCP server, and how images get into a coding agent&#x27;s project." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Đorđe Novaković" />
+    <!-- A guide sits two folders down, so every address in it starts at the root, as in 404.html. Its Serbian copy,
+         when there is one, is the same path under /sr/ and is named by a third hreflang link. -->
+    <link rel="canonical" href="https://assetprompter.com/guides/" />
+    <link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/" />
+    <link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/" />
+    <!-- The language. A reader who chose Serbian (with the language link of a guide, or the menu of the home page; both
+         keep the choice in localStorage) and opens an English guide goes on to its Serbian copy, which the hreflang
+         link above names, before anything is fetched or drawn; ?lang=en keeps English, as on the home page. A guide that
+         has no Serbian copy yet has no such link, and stays. The guides load no other script. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var asked = (/[?&]lang=([a-z]+)/.exec(location.search) || [])[1];
+        var saved = null;
+        try {
+          saved = localStorage.getItem("lang");
+        } catch (e) {}
+        var other = document.querySelector('link[rel="alternate"][hreflang="' + (root.lang === "en" ? "sr" : "en") + '"]');
+        if (other) {
+          var path = new URL(other.href).pathname;
+          if (root.lang === "en" && (asked === "sr" || (saved === "sr" && asked !== "en"))) location.replace(path + location.hash);
+          else if (root.lang !== "en" && asked === "en") location.replace(path + "?lang=en" + location.hash);
+        }
+        // Following a language link keeps that choice, as the menu of the home page does.
+        document.addEventListener("click", function (event) {
+          var link = event.target.closest && event.target.closest("a[data-lang]");
+          if (!link) return;
+          try {
+            localStorage.setItem("lang", link.getAttribute("data-lang"));
+          } catch (e) {}
+        });
+      })();
+    </script>
+    <meta name="theme-color" content="#19171d" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Asset Prompter" />
+    <meta property="og:locale" data-i18n-content="og.locale" content="en_US" />
+    <meta property="og:title" data-i18n-content="g.hub.title" content="Asset Prompter guides: agents, image and video tools" />
+    <meta property="og:description" data-i18n-content="g.hub.description" content="How this site&#x27;s pictures were made, which image and video generators have an API or MCP server, and how images get into a coding agent&#x27;s project." />
+    <meta property="og:url" content="https://assetprompter.com/guides/" />
+    <meta property="og:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" data-i18n-content="g.hub.title" content="Asset Prompter guides: agents, image and video tools" />
+    <meta name="twitter:description" data-i18n-content="g.hub.description" content="How this site&#x27;s pictures were made, which image and video generators have an API or MCP server, and how images get into a coding agent&#x27;s project." />
+    <meta name="twitter:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
+    <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=w2-044" />
+    <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
+         the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
+         site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "CollectionPage",
+            "@id": "https://assetprompter.com/guides/#webpage",
+            "url": "https://assetprompter.com/guides/",
+            "name": "Asset Prompter guides: agents, image and video tools",
+            "description": "How this site's pictures were made, which image and video generators have an API or MCP server, and how images get into a coding agent's project.",
+            "inLanguage": "en",
+            "isPartOf": {
+              "@id": "https://assetprompter.com/#website"
+            },
+            "about": {
+              "@id": "https://assetprompter.com/#app"
+            },
+            "breadcrumb": {
+              "@id": "https://assetprompter.com/guides/#breadcrumb"
+            },
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://assetprompter.com/assets/og.jpg",
+              "width": 1200,
+              "height": 630
+            },
+            "hasPart": [
+              {
+                "@id": "https://assetprompter.com/guides/how-this-site-was-made/#article"
+              },
+              {
+                "@id": "https://assetprompter.com/guides/image-generators-api-mcp/#article"
+              },
+              {
+                "@id": "https://assetprompter.com/guides/get-images-into-coding-agent-project/#article"
+              }
+            ],
+            "datePublished": "2026-10-08",
+            "dateModified": "2026-10-08"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://assetprompter.com/guides/#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Asset Prompter",
+                "item": "https://assetprompter.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Guides"
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
+      <symbol id="logo" viewBox="0 0 16 16"><rect x="12" y="1" width="1" height="1" fill="#c08ab5"/><rect x="11" y="2" width="3" height="1" fill="#c08ab5"/><rect x="1" y="3" width="9" height="1" fill="#4a4652"/><rect x="12" y="3" width="1" height="1" fill="#c08ab5"/><rect x="1" y="4" width="1" height="1" fill="#4a4652"/><rect x="9" y="4" width="1" height="1" fill="#4a4652"/><rect x="1" y="5" width="1" height="1" fill="#4a4652"/><rect x="4" y="5" width="11" height="1" fill="#6e6878"/><rect x="1" y="6" width="1" height="1" fill="#4a4652"/><rect x="4" y="6" width="1" height="1" fill="#6e6878"/><rect x="14" y="6" width="1" height="1" fill="#6e6878"/><rect x="1" y="7" width="1" height="1" fill="#4a4652"/><rect x="4" y="7" width="1" height="1" fill="#6e6878"/><rect x="6" y="7" width="2" height="1" fill="#d9a441"/><rect x="14" y="7" width="1" height="1" fill="#6e6878"/><rect x="1" y="8" width="1" height="1" fill="#4a4652"/><rect x="4" y="8" width="1" height="1" fill="#6e6878"/><rect x="6" y="8" width="2" height="1" fill="#d9a441"/><rect x="14" y="8" width="1" height="1" fill="#6e6878"/><rect x="1" y="9" width="3" height="1" fill="#4a4652"/><rect x="4" y="9" width="1" height="1" fill="#6e6878"/><rect x="12" y="9" width="1" height="1" fill="#6cc4b8"/><rect x="14" y="9" width="1" height="1" fill="#6e6878"/><rect x="4" y="10" width="1" height="1" fill="#6e6878"/><rect x="11" y="10" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="10" width="1" height="1" fill="#6e6878"/><rect x="4" y="11" width="1" height="1" fill="#6e6878"/><rect x="7" y="11" width="1" height="1" fill="#6cc4b8"/><rect x="10" y="11" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="11" width="1" height="1" fill="#6e6878"/><rect x="4" y="12" width="1" height="1" fill="#6e6878"/><rect x="6" y="12" width="3" height="1" fill="#6cc4b8"/><rect x="9" y="12" width="1" height="1" fill="#4f9e94"/><rect x="10" y="12" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="12" width="1" height="1" fill="#6e6878"/><rect x="4" y="13" width="1" height="1" fill="#6e6878"/><rect x="5" y="13" width="4" height="1" fill="#6cc4b8"/><rect x="9" y="13" width="3" height="1" fill="#4f9e94"/><rect x="12" y="13" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="13" width="1" height="1" fill="#6e6878"/><rect x="4" y="14" width="11" height="1" fill="#6e6878"/></symbol>
+      <symbol id="i-star" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM4 2h4v1h-4zM4 3h4v1h-4zM0 4h12v1h-12zM1 5h10v1h-10zM2 6h8v1h-8zM3 7h6v1h-6zM2 8h8v1h-8zM2 9h3v1h-3zM7 9h3v1h-3zM1 10h2v1h-2zM9 10h2v1h-2z"/></symbol>
+      <symbol id="i-download" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM5 2h2v1h-2zM5 3h2v1h-2zM2 4h2v1h-2zM5 4h2v1h-2zM8 4h2v1h-2zM3 5h6v1h-6zM4 6h4v1h-4zM5 7h2v1h-2zM1 9h2v1h-2zM9 9h2v1h-2zM1 10h10v1h-10z"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 12 12"><path d="M5 0h1v1h-1zM5 1h1v1h-1zM4 2h3v1h-3zM2 3h7v1h-7zM4 4h3v1h-3zM5 5h1v1h-1zM10 5h1v1h-1zM5 6h1v1h-1zM9 6h3v1h-3zM10 7h1v1h-1zM3 8h1v1h-1zM2 9h3v1h-3zM3 10h1v1h-1z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 12 12"><path d="M10 1h2v1h-2zM9 2h3v1h-3zM8 3h3v1h-3zM1 4h2v1h-2zM7 4h3v1h-3zM1 5h3v1h-3zM6 5h3v1h-3zM2 6h5v1h-5zM3 7h3v1h-3zM4 8h1v1h-1z"/></symbol>
+      <symbol id="i-info" viewBox="0 0 12 12"><path d="M3 0h6v1h-6zM2 1h1v1h-1zM9 1h1v1h-1zM1 2h1v1h-1zM5 2h2v1h-2zM10 2h1v1h-1zM1 3h1v1h-1zM10 3h1v1h-1zM1 4h1v1h-1zM5 4h2v1h-2zM10 4h1v1h-1zM1 5h1v1h-1zM5 5h2v1h-2zM10 5h1v1h-1zM1 6h1v1h-1zM5 6h2v1h-2zM10 6h1v1h-1zM1 7h1v1h-1zM5 7h2v1h-2zM10 7h1v1h-1zM2 8h1v1h-1zM9 8h1v1h-1zM3 9h6v1h-6z"/></symbol>
+    </svg>
+
+    <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+    <header class="bar">
+      <a class="brand" href="/">
+        <svg class="logo" width="24" height="24" aria-hidden="true"><use href="#logo" /></svg>
+        Asset Prompter
+      </a>
+      <!-- The home page's sections, and the guides. The language link (a.btn.lang-btn, data-lang) goes first in
+           .bar-right once the guide has a Serbian copy. -->
+      <nav class="bar-links" aria-label="Site" data-i18n-aria-label="g.nav.label">
+        <a href="/#loop" data-i18n="nav.loop">The loop</a>
+        <a href="/#mcp" data-i18n="nav.mcp">Compared with MCP</a>
+        <a href="/#questions" data-i18n="nav.questions">Questions</a>
+        <a href="/guides/" aria-current="page" data-i18n="foot.guides">Guides</a>
+      </nav>
+      <div class="bar-right">
+        <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star on GitHub: Asset Prompter" data-i18n-aria-label="star.label">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-star" /></svg>
+          <span class="bar-github-text" data-i18n="star">Star<span class="bar-github-on"> on GitHub</span></span>
+        </a>
+        <a class="btn btn-primary" href="/#install" data-i18n-text="install">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-download" /></svg>
+          Install
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="section guide-top">
+        <div class="wrap">
+          <nav class="crumbs" aria-label="Breadcrumb" data-i18n-aria-label="g.crumbs.label">
+            <ol>
+              <li><a href="/" data-i18n="g.crumbs.home">Asset Prompter</a></li>
+              <li aria-current="page" data-i18n="foot.guides">Guides</li>
+            </ol>
+          </nav>
+          <div class="head">
+            <h1 data-i18n="g.hub.h1">Guides</h1>
+            <p class="lead" data-i18n="g.hub.lead">First-hand notes from the maker of Asset Prompter, each dated and sourced.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band guide-sec guide-list">
+        <div class="wrap">
+          <div class="rows">
+            <article class="row">
+              <figure class="row-pic">
+                <img src="/assets/art/loop-relay.webp" data-i18n-alt="hero.alt" alt="Pixel art: a robot puts a prompt sheet into a shared folder from one side, and a person puts a finished picture in from the other." width="1280" height="714" loading="eager" />
+              </figure>
+              <div class="row-text">
+                <h2 class="h-sub"><a href="/guides/how-this-site-was-made/" data-i18n="g.hub.made.h">How the pictures on this site were made</a></h2>
+                <p data-i18n="g.hub.made.p">The six slots behind this site's illustrations and clips, how an agent checked a clip it can't watch, and how the approved files became the ones you see.</p>
+                <p class="guide-meta" data-i18n="g.updated">Updated <time datetime="2026-10-08">8 October 2026</time></p>
+              </div>
+            </article>
+            <article class="row is-flip">
+              <figure class="row-pic">
+                <img src="/assets/art/you-are-the-server.webp" data-i18n-alt="mcp.alt" alt="Pixel art: the person in the gold hoodie sits at their own desk and holds up a finished picture. The robot is inside the monitor and holds a prompt sheet out of the screen toward them." width="960" height="716" loading="lazy" />
+              </figure>
+              <div class="row-text">
+                <h2 class="h-sub"><a href="/guides/image-generators-api-mcp/" data-i18n="g.hub.api.h">Which image and video generators have an API or an MCP server</a></h2>
+                <p data-i18n="g.hub.api.p">A dated table of twelve generators and five coding agents: who has a public API, who has an official MCP server, and what each costs on top of your plan.</p>
+                <p class="guide-meta" data-i18n="g.updated">Updated <time datetime="2026-10-08">8 October 2026</time></p>
+              </div>
+            </article>
+            <article class="row">
+              <figure class="row-pic">
+                <img src="/assets/art/problem-courier.webp" data-i18n-alt="why.alt" alt="Pixel art: a person runs between a chat bubble and a pile of pictures, papers flying, while a robot waits and sees none of it." width="1280" height="714" loading="lazy" />
+              </figure>
+              <div class="row-text">
+                <h2 class="h-sub"><a href="/guides/get-images-into-coding-agent-project/" data-i18n="g.hub.ways.h">Five ways to get generated images and video into your coding agent's project</a></h2>
+                <p data-i18n="g.hub.ways.p">Built-in tools, MCP servers, a paid API, copy and paste, or a shared folder: who presses Generate in each, what it costs, and when you don't need Asset Prompter.</p>
+                <p class="guide-meta" data-i18n="g.updated">Updated <time datetime="2026-10-08">8 October 2026</time></p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section closing">
+        <div class="wrap">
+          <div class="head">
+            <h2 data-i18n="closing.h2">Give your agent a way to ask for pictures.</h2>
+            <p class="lead" data-i18n="closing.lead">Download the folder, run setup, paste one message.</p>
+          </div>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip" data-i18n-text="download">
+              <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#i-download" /></svg>
+              Download ZIP
+            </a>
+            <a class="btn btn-lg" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" data-i18n="github">View on GitHub</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot is-band">
+      <div class="wrap foot-row">
+        <span class="brand">
+          <svg class="logo" width="20" height="20" aria-hidden="true"><use href="#logo" /></svg>
+          Asset Prompter
+        </span>
+        <span data-i18n="foot.art">Illustrations generated by hand in Google Flow, through Asset Prompter.</span>
+        <span class="foot-links">
+          <a href="/guides/" data-i18n="foot.guides">Guides</a>
+          <a href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener">github.com/Djordje1998/asset-prompter</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>
