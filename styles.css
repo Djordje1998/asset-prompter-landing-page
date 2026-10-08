@@ -1429,9 +1429,24 @@ h3 {
 }
 
 /* The same dots, brighter, seen only in a circle around the pointer. main.js writes --px and --py and sets is-pointed.
-   They lie under the hub's content, so they never show over the paste window, the buttons or the picture. */
+   They lie under the hub's content, so they never show over the paste window, the buttons or the picture.
+   --px and --py are not inherited, and only this layer takes them from the hub: inherited, every move of the pointer
+   would make the browser restyle all of the hub (the cubes, their faces, the labels) for the one layer that reads them.
+   Browsers without @property inherit them as before; the layer looks the same either way. */
+@property --px {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --py {
+  syntax: "*";
+  inherits: false;
+}
+
 .hub::after {
   z-index: -1;
+  --px: inherit;
+  --py: inherit;
   --at: calc(var(--px, -999px) + var(--dx, 20px)) calc(var(--py, -999px) + var(--dy, 30px));
   background-image: radial-gradient(circle, color-mix(in srgb, var(--primary) 55%, var(--text)) 1px, transparent 1.7px);
   -webkit-mask-image: radial-gradient(circle 170px at var(--at), #000, rgb(0 0 0 / 0.35) 45%, transparent 100%);

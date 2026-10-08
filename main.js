@@ -56,6 +56,8 @@ try {
     };
     const landed = go();
     document.fonts?.ready.then(() => scrollY === landed && go());
+    // Chosen from the keyboard: focus goes back to the language button, as it did when the text changed in place.
+    if (place.kb) document.querySelector(".lang-btn")?.focus({ preventScroll: true });
   }
 } catch {}
 
@@ -65,10 +67,44 @@ if (langBox) {
   const list = langBox.querySelector(".lang-menu");
   const items = [...list.querySelectorAll("[data-lang]")];
   const current = items.find((item) => item.getAttribute("aria-checked") === "true") || items[0];
+  // Where each item goes, as the page has it.
+  const homes = new Map(items.map((item) => [item, item.href]));
+
+  // A reader who chose Serbian and opens English in a new tab (ctrl- or middle-click, the link's context menu) would be
+  // sent back to Serbian by the script at the top of the <head>; ?lang=en on the link keeps that tab English. Search
+  // engines keep no choice, so the link they read stays as it is.
+  const english = items.find((item) => item.dataset.lang === "en");
+  const plainEnglish = english?.getAttribute("href");
+  const mark = () => {
+    let saved = null;
+    try {
+      saved = localStorage.getItem("lang");
+    } catch {}
+    if (english) english.setAttribute("href", saved === "sr" ? plainEnglish + "?lang=en" : plainEnglish);
+  };
+  mark();
+  langBox.addEventListener("pointerenter", mark);
+  langBox.addEventListener("focusin", mark);
 
   const open = (on) => {
     list.hidden = !on;
     button.setAttribute("aria-expanded", String(on));
+  };
+
+  /** Every latin-ext font file the stylesheet names; or, where its rules cannot be read (a page opened from a file), the
+      latin-ext file of each preloaded font. */
+  const latinExt = () => {
+    const files = new Set();
+    try {
+      for (const sheet of document.styleSheets) {
+        for (const rule of sheet.cssRules) {
+          const src = /url\(["']?([^"')]*-latin-ext\.woff2)/.exec(rule.style?.getPropertyValue("src") || "");
+          if (src) files.add(new URL(src[1], sheet.href || location.href).href);
+        }
+      }
+    } catch {}
+    if (!files.size) for (const font of document.querySelectorAll('link[rel="preload"][as="font"]')) files.add(font.href.replace("-latin.", "-latin-ext."));
+    return [...files];
   };
 
   // As soon as the reader reaches for the menu, the other page is fetched, so the switch is quick; and from the English
@@ -77,10 +113,8 @@ if (langBox) {
   const warm = () => {
     if (warmed) return;
     warmed = true;
-    const fonts = document.querySelector('link[rel="preload"][href*="-latin-ext."]')
-      ? []
-      : [...document.querySelectorAll('link[rel="preload"][as="font"]')].map((font) => font.href.replace("-latin.", "-latin-ext."));
-    for (const href of [...items.filter((item) => item !== current).map((item) => item.href), ...fonts]) {
+    const fonts = document.querySelector('link[rel="preload"][href*="-latin-ext."]') ? [] : latinExt();
+    for (const href of [...items.filter((item) => item !== current).map((item) => homes.get(item)), ...fonts]) {
       const link = document.createElement("link");
       if (!link.relList?.supports?.("prefetch")) return;
       link.rel = "prefetch";
@@ -95,9 +129,25 @@ if (langBox) {
   langBox.addEventListener("pointerenter", warm);
   langBox.addEventListener("focusin", warm);
 
+  /** The reader's place: the part of the page at the top of the window, and how far into it the window's top is. */
+  const placeNow = () => {
+    const all = parts();
+    let i = 0;
+    all.forEach((part, n) => part.getBoundingClientRect().top <= 0 && (i = n));
+    const box = all[i].getBoundingClientRect();
+    return { i, f: box.height ? -box.top / box.height : 0 };
+  };
+  // Focus moving into the menu can scroll the page a little (the bar is sticky, and the page keeps room under it), so the
+  // place is taken as the menu opens. A choice made after the reader has really scrolled takes it again.
+  let opened = null;
+
   button.addEventListener("click", () => {
     open(list.hidden);
-    if (!list.hidden) current.focus();
+    if (list.hidden) return;
+    try {
+      opened = { y: scrollY, place: placeNow() };
+    } catch {}
+    current.focus();
   });
 
   for (const item of items) {
@@ -110,13 +160,10 @@ if (langBox) {
         button.focus();
         return;
       }
-      // The place is taken first: focus moving in the bar can scroll the page.
       try {
-        const all = parts();
-        let i = 0;
-        all.forEach((part, n) => part.getBoundingClientRect().top <= 0 && (i = n));
-        const box = all[i].getBoundingClientRect();
-        sessionStorage.setItem(PLACE, JSON.stringify({ i, f: box.height ? -box.top / box.height : 0, at: Date.now() }));
+        const place = opened && Math.abs(scrollY - opened.y) < 100 ? opened.place : placeNow();
+        // A click from the keyboard (Enter, or Space below) has no pointer behind it: detail is 0.
+        sessionStorage.setItem(PLACE, JSON.stringify({ ...place, kb: event.detail === 0 ? 1 : 0, at: Date.now() }));
       } catch {}
       open(false);
       const lang = item.dataset.lang;
@@ -125,7 +172,7 @@ if (langBox) {
         localStorage.setItem("lang", lang);
         kept = localStorage.getItem("lang") === lang;
       } catch {}
-      let href = item.href;
+      let href = homes.get(item);
       // A page opened from a file has no folder index.
       if (location.protocol === "file:" && href.endsWith("/")) href += "index.html";
       // A Serbian choice that could not be replaced would send the English page back to the Serbian one; ?lang=en stops that.
