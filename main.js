@@ -105,21 +105,25 @@ if (langBox) {
       // With a modifier the link opens as any link does, in a new tab or window.
       if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
-      open(false);
-      button.focus();
-      if (item === current) return;
-      const lang = item.dataset.lang;
-      let kept = false;
-      try {
-        localStorage.setItem("lang", lang);
-        kept = localStorage.getItem("lang") === lang;
-      } catch {}
+      if (item === current) {
+        open(false);
+        button.focus();
+        return;
+      }
+      // The place is taken first: focus moving in the bar can scroll the page.
       try {
         const all = parts();
         let i = 0;
         all.forEach((part, n) => part.getBoundingClientRect().top <= 0 && (i = n));
         const box = all[i].getBoundingClientRect();
         sessionStorage.setItem(PLACE, JSON.stringify({ i, f: box.height ? -box.top / box.height : 0, at: Date.now() }));
+      } catch {}
+      open(false);
+      const lang = item.dataset.lang;
+      let kept = false;
+      try {
+        localStorage.setItem("lang", lang);
+        kept = localStorage.getItem("lang") === lang;
       } catch {}
       let href = item.href;
       // A page opened from a file has no folder index.
