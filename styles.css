@@ -4375,6 +4375,7 @@ li.is-pulse .f-front::after {
   gap: 4px 8px;
   margin-bottom: 22px;
   color: var(--faint);
+  text-align: center;
   font: 500 12px/1.4 var(--mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -4671,6 +4672,12 @@ li.is-pulse .f-front::after {
   white-space: nowrap;
 }
 
+/* The clip on "How this site was made" is the only picture on the site a keyboard can reach. Its frames clip what is
+   drawn outside them, so its ring goes inside the picture. */
+.guide-wide video:focus-visible {
+  outline-offset: -4px;
+}
+
 .guide-table td {
   color: var(--muted);
 }
@@ -4798,7 +4805,13 @@ li.is-pulse .f-front::after {
   }
 
   .guide-table tbody th {
-    min-width: 0;
+    min-width: 8.5em;
     max-width: 8.5em;
+  }
+
+  /* A long slot name breaks at its hyphens rather than run under the next column. */
+  .guide-table tbody th code {
+    white-space: normal;
+    overflow-wrap: normal;
   }
 }
