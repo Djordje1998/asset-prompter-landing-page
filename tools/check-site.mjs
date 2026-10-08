@@ -15,7 +15,8 @@
 // - the JSON-LD parses, has what each kind of node needs, every @id is defined once in a page and every reference to
 //   one resolves on some page (a guide points at the site, the app and the author of the home page), the page's name
 //   and description are its title and description, an article's headline is its h1, the questions are as many as the
-//   page shows, and the page's dateModified is its lastmod in sitemap.xml and the date the page shows (<time>);
+//   page shows, and the page's dateModified is its lastmod in sitemap.xml and the date the page shows (<time>); an
+//   article's datePublished and dateModified are its article:published_time and article:modified_time in the head;
 // - one ?v= stamp for the stylesheet and the scripts across the pages, and the IndexNow key file holds its own name.
 //   node tools/check-site.mjs [folder]   exit 1, listing every problem, if anything is wrong
 import { spawnSync } from "node:child_process";
@@ -257,6 +258,10 @@ function checkJsonLd(file, url, html) {
     if (article.inLanguage !== lang) fail(file, `${types(article)[0]} inLanguage ${article.inLanguage} is not the page's lang ${lang}`);
     if (page && article.dateModified !== page.dateModified) fail(file, `${types(article)[0]} dateModified is not the WebPage's`);
     if (!new RegExp(`<time datetime="${article.dateModified}"`).test(html)) fail(file, `the page shows no <time datetime="${article.dateModified}">, its dateModified`);
+    for (const [prop, key] of [["article:published_time", "datePublished"], ["article:modified_time", "dateModified"]]) {
+      const got = tags(head, "meta").filter((t) => attr(t, "property") === prop).map((t) => attr(t, "content"));
+      if (got.length !== 1 || got[0] !== article[key]) fail(file, `${prop} ${got.join(", ") || "is missing"}; it should be the ${key}, ${article[key]}`);
+    }
   }
   const faq = graph.find((n) => types(n).includes("FAQPage"));
   if (faq) {
