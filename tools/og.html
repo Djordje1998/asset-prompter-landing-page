@@ -5,11 +5,24 @@
     <!-- A tool, published with the site but not a page of it: open it at 1200 by 630 and save a screenshot as assets/og.png. -->
     <meta name="robots" content="noindex" />
     <title>Link preview picture (tool)</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
     <style>
+      /* The page's own font files (see the top of section 2 of styles.css); the picture uses only latin letters. */
+      @font-face {
+        font-family: "Bricolage Grotesque";
+        font-style: normal;
+        font-weight: 400 800;
+        font-stretch: 100%;
+        font-display: swap;
+        src: url("../assets/fonts/bricolage-grotesque-v9-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Instrument Sans";
+        font-style: normal;
+        font-weight: 400 600;
+        font-stretch: 100%;
+        font-display: swap;
+        src: url("../assets/fonts/instrument-sans-v4-latin.woff2") format("woff2");
+      }
       :root {
         --page: #1d1b21;
         --card: #26242b;
