@@ -1,0 +1,209 @@
+# Asset Prompter
+
+> Asset Prompter is a free, small local app for Windows and Linux that carries prompts and results between your coding agent and the image or video generator you use by hand. Your agent writes the prompt. You make the picture.
+
+This is the full text of https://assetprompter.com/ as plain Markdown, for AI assistants and coding agents. The short index is https://assetprompter.com/llms.txt. The website is also in Serbian at https://assetprompter.com/sr/. The source code and the app's own documentation are at https://github.com/Djordje1998/asset-prompter. Product and generator names belong to their owners; Asset Prompter is an independent project, not affiliated with or endorsed by any of them.
+
+## In one sentence
+
+Asset Prompter is a free local app (Windows and Linux, MIT licence) that lets a coding agent such as Claude Code, Codex or Cursor ask for images and video: the agent writes each prompt into a project folder, you generate the picture by hand in a tool such as Midjourney, Google Flow or ChatGPT Images, and drop the result back where the agent can see, review and use it.
+
+## Key facts
+
+- What it is: a small local web app plus a folder ("slot folder") per picture, shared by you and your agent.
+- Price: free. "Nothing. You pay for your generator and your agent, as you do now."
+- Platforms: Windows and Linux (setup scripts). On macOS you install Bun yourself.
+- Licence: MIT. Source: https://github.com/Djordje1998/asset-prompter
+- Privacy: runs on your machine, listens on 127.0.0.1 only, no account, no API key.
+- It doesn't generate anything itself. You press Generate in your own tool, every time.
+- Agents: any agent that can read and write files in the project folder, such as Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode and Antigravity.
+- Generators: any tool you can paste a prompt into and get a file out of. Presets ship for ChatGPT Images, Dreamina, Google Flow, Grok Imagine, Leonardo.Ai, Luma AI and Midjourney.
+- Install by agent: paste "Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md" into a coding agent that can run commands.
+- Made by Đorđe Novaković (Djordje Novaković; GitHub: Djordje1998, LinkedIn: https://www.linkedin.com/in/dj-nov).
+
+## Who it is for
+
+- People who build a website, an app or a project with a coding agent (Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode, Antigravity or another agent that works with files) and need images or video clips for it.
+- People who make those pictures in a generator they use by hand and already pay for, such as Midjourney, Google Flow, ChatGPT Images, Dreamina, Grok Imagine, Leonardo.Ai or Luma AI, often one without a public API or with an API billed separately from the plan.
+- People who want the last word on every picture: nothing is final until they approve it.
+- People who want everything on their own machine, as plain files in a folder, with no account.
+
+## The problem: without it, you are the courier
+
+Your agent knows which pictures it needs, but they come from a generator you use by hand. So the carrying falls to you.
+
+- You copy a prompt out of the chat, paste it into the generator, download the result, rename it and move it into the repo.
+- The agent never sees what came out, so you describe the picture back to it in words.
+- Three rounds later nobody knows which file was the good one, or which prompt made it.
+
+## How it works: one picture, six steps
+
+The agent's steps and yours alternate. Steps 4 and 5 are optional: approve after step 3 and the picture is done.
+
+1. **The agent writes the prompt.** It makes a slot for the picture it needs, with the prompt and the settings. You see the slot as a card. (Files: `slot.md`, `v1.md`.)
+2. **You copy the prompt and generate.** Press Copy prompt, paste it into Google Flow or any other generator, and press Generate there.
+3. **You paste the picture into the slot.** Drop it on the card or press Ctrl+V. If it is already right, approve it now and skip to step 6. (File: `v1/1.png`.)
+4. **You tell the agent (optional).** Press Notify agent. The agent opens your picture and checks it against what it asked for.
+5. **Either of you asks for a change (optional).** Type what should change, or the agent says what is off. It writes the next prompt, and you generate again. (Files: `v1.feedback.md`, `v2.md`.)
+6. **You approve.** One click makes the picture final. The agent is told the picture it asked for is ready, and which file to use. (Files: `APPROVED`, `final.png`.)
+
+### The slot folder
+
+One slot is one picture. An approved slot, after two versions, holds:
+
+```
+observation-dining-room/
+  slot.md            what the picture is for
+  v1.md              prompt and settings
+  v1/1.png           your result
+  v1.feedback.md     your change request
+  v1.review.md       the agent's reply
+  v2.md              the next prompt
+  v2/1.png 2.png 3.png   three results
+  v2.review.md       picks 2.png
+  APPROVED           your approval
+  final.png          what the agent uses
+```
+
+## Compared with an MCP server or an API
+
+To your agent, Asset Prompter is the same steps as an MCP server: the agent (1) asks, (2) waits, (3) gets the file, (4) tries again. Only the far end changes. With an MCP server, a provider's servers generate the picture; with Asset Prompter, you do.
+
+The page lists generators whose plan has no MCP server (plans and APIs as checked on 2 October 2026):
+
+- No public API: Google Flow, Midjourney.
+- API billed separately from the plan: Leonardo.Ai, Luma AI.
+- Official MCP server, so you may not need this: Higgsfield, Kling, Runway.
+
+The agent works through the slot folder, with no account and no API key. If your generator has an official MCP server, you may not need Asset Prompter (see the questions below).
+
+## What the folder gives your agent
+
+Everything you generate lands where the agent can look.
+
+- **It sees every version.** A new version never replaces an old one. Every result, your change request and its own review stay in the slot folder, where it can read them.
+- **It makes variants of the final picture.** Crops, other sizes, other formats and small edits, made from the file you approved. No new generation. They stay in one place beside the final picture; in the app you open them from its tile and copy any of them with one click (for example a 1920 by 1080 WebP, a 1200 by 630 JPG for social cards and a square crop).
+- **It checks a clip it can't play.** An agent can't watch video, so the app turns every clip you drop into pictures and numbers it can read:
+  - Frame sheets: one per second, four frames each. The agent reads them in order.
+  - Motion map: red marks everything that moved during the clip.
+- **A written guide.** The app writes `HOW-TO-USE.md` into every project; the agent reads it and follows it.
+
+## Use cases (as people ask for them)
+
+- **"How do I get Claude Code (or Codex, or Cursor) to make images for the website it is building?"** Images for a site your agent is building: hero banners, section photos, backgrounds. The agent knows where each one goes and what it has to do there, and writes that into the slot. You generate each one in your own tool and drop it on the card.
+- **"How can my coding agent use Midjourney / Google Flow when they have no API?"** The agent writes the prompt and settings into a slot; you paste it into the generator, press Generate, and drop the result back. The agent then sees the result and can ask for changes.
+- **"How do I keep the same product or character consistent across many AI images?"** One product across many assets: approve a master image first, and later slots take it as their reference. A slot that depends on another waits until that one is approved.
+- **"How do I make short AI video clips from approved stills, and have my agent check them?"** A video slot can take an approved image as its start frame. The agent then checks the motion second by second, and whether the clip loops, using frame sheets and a motion map.
+- **"How do I get icons, empty states and illustrations for my app from an AI generator, in all the sizes I need?"** App and brand art: once you approve one, the agent exports the sizes and formats it needs from that file.
+- **"Can a coding agent plan a short film, ad or scene and keep the characters the same in every shot?"** Films, ads and short scenes: a whole scene from one brief, with the same characters from the first frame to the last.
+  1. Script. The agent writes it and splits it into shots, in the project folder, where you can read it.
+  2. Cast and props. One slot for each character, prop and place. You approve them once, and every shot takes them as references, so the same face and the same bag turn up in every frame.
+  3. Shots. A still for each shot, then a clip that starts from it. The slots are numbered in shot order, so you always know what to generate next.
+- **"How do I hand off prompts from my AI agent to an image generator without API keys or API bills?"** Asset Prompter runs locally with no account and no API key; you use the generator plan you already pay for.
+- **"How do I keep track of which AI-generated image was the good one and which prompt made it?"** Every version, result, change request and review stays in the slot folder as plain files, and one approved `final.png` is what the agent uses.
+- **"I don't use an agent. Can I still use it to organise prompts and results?"** Yes. New slot lets you write prompts yourself. You still get versions, results side by side and a shelf of approved files.
+
+Example project folder for a short scene:
+
+```
+night-courier/
+  script.md                 the script, shot by shot
+  cast/mara/                Approved
+  cast/bag/                 Approved
+  cast/street/              Approved
+  shots/01-wait/            Approved
+  shots/01-wait-clip/       Needs your approval
+  shots/02-handover/        Needs generating
+  shots/02-handover-clip/   waits for 02-handover
+  shots/03-ride/            Needs generating
+```
+
+## Supported agents and generators
+
+Agents (any agent that works with files): Antigravity, Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode. If the agent can also run a command in the background and is woken when it ends, Notify agent wakes it; if not, you tell it "done" in the chat. A chat window in a browser can't be used, because the agent has to work with files.
+
+Generators (any tool you paste a prompt into): ChatGPT Images, Dreamina, Google Flow, Grok Imagine, Leonardo.Ai, Luma AI, Midjourney. A preset tells the agent which models, modes, aspect ratios and lengths a tool offers, and the app warns you when a result doesn't match. A slot can use any preset, so one project can mix tools. Each preset is a short text file you can copy and edit for another tool.
+
+## Trade-offs
+
+It doesn't generate anything. You press Generate in your own tool, every time. For batches that run while you are away, pick a generator with an API or an MCP server.
+
+A good fit if:
+
+- Your generator has no API, and you want your agent to see the results.
+- You already pay for a generator plan and want no API bills on top.
+- You want the last word. Nothing is done until you approve it.
+- You want it on your machine: plain files in a folder, no account.
+
+Know before you install:
+
+- Presets ship for the seven generators above. Another tool needs a short preset file.
+- Your agent has to work with files. A chat window in a browser can't.
+- The agent can't hear. Checking a clip's sound is your job.
+- Setup covers Windows and Linux. On macOS you install Bun yourself.
+
+## Install
+
+Two ways; either way, you need nothing installed beforehand.
+
+### Your agent does it
+
+Give this one message to a coding agent that can run commands, such as Claude Code:
+
+```
+Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md
+```
+
+It downloads the folder and runs setup, checks that the app runs, and tells you where the app is and how to start it.
+
+### You do it, in two steps
+
+1. Download the folder: get the ZIP (https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip) and unzip it anywhere, or clone the repository.
+2. Run setup once. On Windows, double-click `setup.bat`. On Linux, run `sh setup.sh` in the folder. Setup installs Bun, ffmpeg and the app's packages, adds an Asset Prompter icon and opens the app.
+
+Then, in the app: open a project, press Copy agent instructions and paste it into a chat with your agent. A two-minute tutorial opens on the first start.
+
+## Questions and answers
+
+### Which agents does it work with?
+
+Any agent that can read and write files in the project folder and follow a written guide. The app writes that guide, HOW-TO-USE.md, into every project. If the agent can also run a command in the background and is woken when it ends, Notify agent wakes it. If not, you tell it "done" in the chat.
+
+### Which generators?
+
+Any tool you can paste a prompt into and get a file out of. A preset tells the agent which models, modes, aspect ratios and lengths a tool offers, and the app warns you when a result doesn't match. Presets for ChatGPT Images, Dreamina, Google Flow, Grok Imagine, Leonardo.Ai, Luma and Midjourney are included, and a slot can use any of them, so one project can mix tools. Each preset is a short text file you can copy and edit for another tool.
+
+### My generator has an MCP server. Do I still need this?
+
+Maybe not. Several generators now offer an official MCP server that lets an agent generate on your plan, among them Higgsfield, Ideogram, Krea and Runway. Asset Prompter still helps there if you want to choose and approve every result yourself and keep each version in the folder, or if you use features the tool keeps to its own app.
+
+### Do I need an agent at all?
+
+No. New slot lets you write prompts yourself. You still get versions, results side by side and a shelf of approved files.
+
+### Does anything leave my machine?
+
+The app listens on 127.0.0.1 only, has no account, and keeps everything in your project folder. Two things do go out: the interface loads its fonts from Google Fonts, and whatever you paste into your generator goes to that generator.
+
+### What does it cost?
+
+Nothing. You pay for your generator and your agent, as you do now.
+
+### Can I change an asset after I approved it?
+
+Yes. Remove the approval in Details to reopen the slot, or clone the slot to try another direction and keep the original.
+
+## Links
+
+- Website (English): https://assetprompter.com/
+- Website (Serbian): https://assetprompter.com/sr/
+- Short index for AI assistants: https://assetprompter.com/llms.txt
+- Source code (MIT): https://github.com/Djordje1998/asset-prompter
+- App README: https://github.com/Djordje1998/asset-prompter/blob/master/README.md
+- Agent install guide: https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md
+- Download ZIP: https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip
+- Author: Đorđe Novaković, https://github.com/Djordje1998 and https://www.linkedin.com/in/dj-nov
+
+## Na srpskom (Serbian)
+
+Asset Prompter je mala lokalna aplikacija koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno. Tvoj agent piše prompt, ti praviš sliku. Besplatna je, radi na Windowsu i Linuxu, sluša samo na 127.0.0.1, bez naloga i bez API ključa. Ceo sajt na srpskom: https://assetprompter.com/sr/

@@ -1,7 +1,6 @@
 // Small behaviours only; the page reads fine without any of it.
-// In order: the top bar, the folder beside the six steps, entrances, the MCP figure, art and clips,
+// In order: the language menu, the top bar, the folder beside the six steps, entrances, the MCP figure, art and clips,
 // the Copy buttons, light under the pointer, the questions, and the hub in the hero.
-// The language menu and the Serbian text are in i18n.js, which runs before this file.
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -9,34 +8,274 @@ const hasObserver = "IntersectionObserver" in window;
 const root = document.documentElement;
 root.classList.add("js");
 
-/** A text this script writes itself, in the page's language: i18n.js has the Serbian, the English is given here. */
-const say = (key, english) => window.i18n?.t(key) ?? english;
+/** A text this script writes itself, in the page's language. The English is given here; tools/build-sr.mjs puts the
+    Serbian of every key asked for here in sr/index.html (#say), and nothing else of i18n.js. */
+const sayings = (() => {
+  try {
+    return JSON.parse(document.getElementById("say")?.textContent || "{}");
+  } catch {
+    return {};
+  }
+})();
+const say = (key, english) => sayings[key] ?? english;
 
-/** Runs fn at most once per frame, however often it is asked for. */
-const oncePerFrame = (fn) => {
+/* The work of the coming frame. A job measures what it needs and returns a function that writes; every job of a frame
+   measures before any job writes, so the browser restyles and lays the page out once per frame, not once per job. */
+let jobs = [];
+/** A job that throws is reported as an uncaught error would be, and the frame's other jobs still run. */
+function reportJobError(error) {
+  if (window.reportError) reportError(error);
+  else
+    setTimeout(() => {
+      throw error;
+    });
+}
+const runJobs = (now) => {
+  const due = jobs;
+  jobs = [];
+  const writes = due.map((job) => {
+    try {
+      return job(now);
+    } catch (error) {
+      reportJobError(error);
+    }
+  });
+  for (const write of writes) {
+    try {
+      if (write) write();
+    } catch (error) {
+      reportJobError(error);
+    }
+  }
+};
+const inFrame = (job) => {
+  if (!jobs.length) requestAnimationFrame(runJobs);
+  jobs.push(job);
+};
+
+/** Runs job (as inFrame does) at most once per frame, however often it is asked for. */
+const oncePerFrame = (job) => {
   let queued = false;
   return () => {
     if (queued) return;
     queued = true;
-    requestAnimationFrame(() => {
+    inFrame((now) => {
       queued = false;
-      fn();
+      return job(now);
     });
   };
 };
+
+/* ---- language: each language is a page of its own (English at /, Serbian at sr/). The menu's items are links to them;
+   choosing one remembers it (the script at the top of the <head> reads it) and goes there, to the same place. ---- */
+
+const PLACE = "lang-place";
+
+/** The parts of the page, the same in both languages. A place is one of them and how far into it the window's top is,
+    since the other language's text runs to other heights. */
+const parts = () => [...document.querySelectorAll("main > section, body > footer")];
+/** The questions, and which of them are open (one closing counts as closed): the other page opens the same ones. */
+const answers = () => [...document.querySelectorAll(".faq-list details")];
+const openAnswers = () => answers().flatMap((item, n) => (item.open && !item.classList.contains("is-closing") ? [n] : []));
+
+// Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
+// The script at the top of the <head> has marked such a page: no entrance plays (.lang-switched, styles.css), and no
+// transition until the frame after this script has set the bar, the folder and the rest as they were (.lang-settling).
+const switched = root.classList.contains("lang-switched");
+if (root.classList.contains("lang-settling")) {
+  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("lang-settling")));
+}
+try {
+  const place = JSON.parse(sessionStorage.getItem(PLACE));
+  sessionStorage.removeItem(PLACE);
+  const part = place && Date.now() - place.at < 10000 && parts()[place.i];
+  if (part) {
+    // The answers the reader had open, before anything is measured: an open one makes its part taller.
+    if (Array.isArray(place.open)) answers().forEach((item, n) => (item.open = place.open.includes(n)));
+    const go = () => {
+      // At once: the stylesheet's smooth scrolling would ease it.
+      root.style.scrollBehavior = "auto";
+      scrollTo(0, Math.round(part.getBoundingClientRect().top + scrollY + part.offsetHeight * place.f));
+      root.style.scrollBehavior = "";
+      return scrollY;
+    };
+    const landed = go();
+    document.fonts?.ready.then(() => scrollY === landed && go());
+    // Chosen from the keyboard: focus goes back to the language button, as it did when the text changed in place.
+    if (place.kb) document.querySelector(".lang-btn")?.focus({ preventScroll: true });
+  }
+} catch {}
+
+const langBox = document.querySelector(".lang");
+if (langBox) {
+  const button = langBox.querySelector(".lang-btn");
+  const list = langBox.querySelector(".lang-menu");
+  const items = [...list.querySelectorAll("[data-lang]")];
+  const current = items.find((item) => item.getAttribute("aria-checked") === "true") || items[0];
+  // Where each item goes, as the page has it.
+  const homes = new Map(items.map((item) => [item, item.href]));
+
+  // A reader who chose Serbian and opens English in a new tab (ctrl- or middle-click, the link's context menu) would be
+  // sent back to Serbian by the script at the top of the <head>; ?lang=en on the link keeps that tab English. Search
+  // engines keep no choice, so the link they read stays as it is.
+  const english = items.find((item) => item.dataset.lang === "en");
+  const plainEnglish = english?.getAttribute("href");
+  const mark = () => {
+    let saved = null;
+    try {
+      saved = localStorage.getItem("lang");
+    } catch {}
+    if (english) english.setAttribute("href", saved === "sr" ? plainEnglish + "?lang=en" : plainEnglish);
+  };
+  mark();
+  langBox.addEventListener("pointerenter", mark);
+  langBox.addEventListener("focusin", mark);
+
+  const open = (on) => {
+    list.hidden = !on;
+    button.setAttribute("aria-expanded", String(on));
+  };
+
+  /** Every Serbian font file (-sr) the stylesheet names; or, where its rules cannot be read (a page opened from a file),
+      the Serbian file of each preloaded font. */
+  const serbianFonts = () => {
+    const files = new Set();
+    try {
+      for (const sheet of document.styleSheets) {
+        for (const rule of sheet.cssRules) {
+          const src = /url\(["']?([^"')]*-sr\.woff2)/.exec(rule.style?.getPropertyValue("src") || "");
+          if (src) files.add(new URL(src[1], sheet.href || location.href).href);
+        }
+      }
+    } catch {}
+    if (!files.size) for (const font of document.querySelectorAll('link[rel="preload"][as="font"]')) files.add(font.href.replace("-latin.", "-sr."));
+    return [...files];
+  };
+
+  // As soon as the reader reaches for the menu, the other page is fetched, so the switch is quick; and from the English
+  // page the fonts' Serbian files too, which hold the letters with marks. Browsers without prefetch skip it.
+  let warmed = false;
+  const warm = () => {
+    if (warmed) return;
+    warmed = true;
+    const fonts = document.querySelector('link[rel="preload"][href*="-sr."]') ? [] : serbianFonts();
+    for (const href of [...items.filter((item) => item !== current).map((item) => homes.get(item)), ...fonts]) {
+      const link = document.createElement("link");
+      if (!link.relList?.supports?.("prefetch")) return;
+      link.rel = "prefetch";
+      link.href = href;
+      if (fonts.includes(href)) {
+        link.as = "font";
+        link.crossOrigin = "anonymous";
+      }
+      document.head.append(link);
+    }
+  };
+  langBox.addEventListener("pointerenter", warm);
+  langBox.addEventListener("focusin", warm);
+
+  /** The reader's place: the part of the page at the top of the window, and how far into it the window's top is. */
+  const placeNow = () => {
+    const all = parts();
+    let i = 0;
+    all.forEach((part, n) => part.getBoundingClientRect().top <= 0 && (i = n));
+    const box = all[i].getBoundingClientRect();
+    return { i, f: box.height ? -box.top / box.height : 0 };
+  };
+  // Focus moving into the menu can scroll the page a little (the bar is sticky, and the page keeps room under it), so the
+  // place is taken as the menu opens. A choice made after the reader has really scrolled takes it again.
+  let opened = null;
+
+  button.addEventListener("click", () => {
+    open(list.hidden);
+    if (list.hidden) return;
+    try {
+      opened = { y: scrollY, place: placeNow() };
+    } catch {}
+    current.focus();
+  });
+
+  for (const item of items) {
+    item.addEventListener("click", (event) => {
+      // With a modifier the link opens as any link does, in a new tab or window.
+      if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      if (item === current) {
+        // Still a choice: English chosen on /?lang=en, while Serbian is saved, keeps / English from now on.
+        try {
+          localStorage.setItem("lang", item.dataset.lang);
+        } catch {}
+        mark();
+        open(false);
+        button.focus();
+        return;
+      }
+      try {
+        const place = opened && Math.abs(scrollY - opened.y) < 100 ? opened.place : placeNow();
+        // A click from the keyboard (Enter, or Space below) has no pointer behind it: detail is 0.
+        sessionStorage.setItem(PLACE, JSON.stringify({ ...place, open: openAnswers(), kb: event.detail === 0 ? 1 : 0, at: Date.now() }));
+      } catch {}
+      open(false);
+      const lang = item.dataset.lang;
+      let kept = false;
+      try {
+        localStorage.setItem("lang", lang);
+        kept = localStorage.getItem("lang") === lang;
+      } catch {}
+      let href = homes.get(item);
+      // A page opened from a file has no folder index.
+      if (location.protocol === "file:" && href.endsWith("/")) href += "index.html";
+      // A Serbian choice that could not be replaced would send the English page back to the Serbian one; ?lang=en stops that.
+      if (lang === "en" && !kept) href += "?lang=en";
+      // The switch takes the place of this page in the history, as a change of language on one page would.
+      location.replace(href);
+    });
+  }
+
+  langBox.addEventListener("keydown", (event) => {
+    if (list.hidden) return;
+    if (event.key === "Escape") {
+      open(false);
+      button.focus();
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const step = event.key === "ArrowDown" ? 1 : -1;
+      items[(items.indexOf(document.activeElement) + step + items.length) % items.length].focus();
+    } else if (event.key === " " && items.includes(document.activeElement)) {
+      // An item is a link, which Enter follows; as a menu item, Space chooses it too.
+      event.preventDefault();
+      document.activeElement.click();
+    }
+  });
+
+  // It closes when the reader clicks elsewhere or tabs out of it.
+  document.addEventListener("pointerdown", (event) => {
+    if (!langBox.contains(event.target)) open(false);
+  });
+  langBox.addEventListener("focusout", (event) => {
+    if (event.relatedTarget && !langBox.contains(event.relatedTarget)) open(false);
+  });
+}
 
 /* ---- top bar: clear over the hero, solid once the page has moved; a thread shows how far the page is read; the link of the section in view is marked ---- */
 
 const bar = document.querySelector(".bar");
 if (bar) {
-  // The thread on the lower edge of the window fills as the page is read.
+  // The thread on the lower edge of the window fills as the page is read. --read goes on the thread itself: written on
+  // <html>, it would make the browser restyle the whole page on every frame of a scroll.
+  const thread = document.querySelector(".read-progress") || root;
+  let read = "";
   const stick = oncePerFrame(() => {
-    bar.classList.toggle("is-stuck", scrollY > 8);
+    const y = scrollY;
     const span = root.scrollHeight - innerHeight;
-    root.style.setProperty("--read", span > 0 ? Math.min(1, Math.max(0, scrollY / span)).toFixed(4) : "0");
+    return () => {
+      bar.classList.toggle("is-stuck", y > 8);
+      const now = span > 0 ? Math.min(1, Math.max(0, y / span)).toFixed(4) : "0";
+      if (now !== read) thread.style.setProperty("--read", (read = now));
+    };
   });
   addEventListener("scroll", stick, { passive: true });
-  addEventListener("resize", stick);
+  addEventListener("resize", stick, { passive: true });
   stick();
 
   const links = new Map([...bar.querySelectorAll('.bar-links a[href^="#"]')].map((a) => [a.hash.slice(1), a]));
@@ -100,11 +339,11 @@ if (rail && turns.length) {
     for (const turn of turns) {
       if (turn.getBoundingClientRect().top <= line) n = Number(turn.dataset.turn);
     }
-    show(n);
+    return () => show(n);
   });
 
   addEventListener("scroll", sync, { passive: true });
-  addEventListener("resize", sync);
+  addEventListener("resize", sync, { passive: true });
   sync();
 }
 
@@ -123,14 +362,29 @@ if (!reducedMotion && hasObserver) {
     },
     { threshold: [0, 0.15, 0.3], rootMargin: "0px 0px -7% 0px" },
   );
-  for (const el of document.querySelectorAll("[data-reveal], [data-reveal-group]")) seen.observe(el);
+  for (const el of document.querySelectorAll("[data-reveal], [data-reveal-group]")) {
+    // After a change of language, what the reader had already seen stands where it is (.is-shown): all that is above
+    // the window, and what in it the observer would let in at once.
+    if (switched) {
+      const box = el.getBoundingClientRect();
+      const inView = Math.min(box.bottom, innerHeight * 0.93) - Math.max(box.top, 0);
+      if (box.bottom <= 0 || (inView > 0 && (inView >= box.height * 0.15 || inView >= innerHeight * 0.3))) {
+        el.classList.add("is-in", "is-shown");
+        continue;
+      }
+    }
+    seen.observe(el);
+  }
 }
 
 /* ---- smooth scrolling: Lenis (assets/vendor) eases the wheel, so what follows the scroll moves evenly instead of in steps.
    Touch scrolling stays native. Lenis puts .lenis on <html>; styles.css turns the browser's own smooth anchors off there. ---- */
 
-if (!reducedMotion && typeof Lenis === "function") {
-  new Lenis({ autoRaf: true, lerp: 0.12, anchors: true });
+// Lenis needs ResizeObserver (Safari 13.1, Firefox 69); without it, or if it fails, the page scrolls natively.
+if (!reducedMotion && typeof Lenis === "function" && "ResizeObserver" in window) {
+  try {
+    new Lenis({ autoRaf: true, lerp: 0.12, anchors: true });
+  } catch {}
 }
 
 /* ---- the uses: the two halves of a card come in from opposite sides as it scrolls up, meet in the middle of the window, and hold ---- */
@@ -141,26 +395,31 @@ if (uses.length && root.classList.contains("motion")) {
   const SPAN = 0.45;
   let first = true;
   const place = oncePerFrame(() => {
-    for (const card of uses) {
-      const top = card.getBoundingClientRect().top;
-      const raw = Math.min(1, Math.max(0, (innerHeight - top) / (innerHeight * SPAN)));
-      // Slow at first, fast at the end: they hit rather than land.
-      card.style.setProperty("--p", (raw * raw).toFixed(4));
-      if (raw < 1) {
-        card.classList.remove("is-joined", "is-hit");
-      } else if (!card.classList.contains("is-joined")) {
-        card.classList.add("is-joined");
-        // Already joined when the page opens: no hit for that.
-        if (!first) {
-          card.classList.add("is-hit");
-          setTimeout(() => card.classList.remove("is-hit"), 600);
+    // Every card is measured before any is written to.
+    const h = innerHeight;
+    const tops = uses.map((card) => card.getBoundingClientRect().top);
+    return () => {
+      uses.forEach((card, i) => {
+        const raw = Math.min(1, Math.max(0, (h - tops[i]) / (h * SPAN)));
+        // Slow at first, fast at the end: they hit rather than land. Written only when it has changed.
+        const p = (raw * raw).toFixed(4);
+        if (p !== card.p) card.style.setProperty("--p", (card.p = p));
+        if (raw < 1) {
+          if (card.classList.contains("is-joined") || card.classList.contains("is-hit")) card.classList.remove("is-joined", "is-hit");
+        } else if (!card.classList.contains("is-joined")) {
+          card.classList.add("is-joined");
+          // Already joined when the page opens: no hit for that.
+          if (!first) {
+            card.classList.add("is-hit");
+            setTimeout(() => card.classList.remove("is-hit"), 600);
+          }
         }
-      }
-    }
-    first = false;
+      });
+      first = false;
+    };
   });
   addEventListener("scroll", place, { passive: true });
-  addEventListener("resize", place);
+  addEventListener("resize", place, { passive: true });
   place();
 }
 
@@ -183,6 +442,45 @@ const onScreen =
     }
   });
 
+// A clip is fetched only once its picture is near the window, a screen and a half ahead, and not before the page has
+// loaded, so it never takes the network from what the first view needs.
+const whenNear = new Map();
+const near =
+  hasObserver &&
+  new IntersectionObserver(
+    (entries) => {
+      for (const { target, isIntersecting } of entries) {
+        if (!isIntersecting) continue;
+        near.unobserve(target);
+        whenNear.get(target)();
+        whenNear.delete(target);
+      }
+    },
+    { rootMargin: "150% 0px" },
+  );
+const loaded = new Promise((done) => (document.readyState === "complete" ? done() : addEventListener("load", done, { once: true })));
+
+// Two pictures share a clip: the hero's is shown again beside its frame sheet. The second waits until the first has
+// stopped fetching ("suspend": the file is in, or enough of it for now; at most 15 s) and then takes it from the
+// browser's cache, so one clip is never downloaded twice at once.
+const fetching = new Map();
+const fetchClip = (video, src) => {
+  const turn = (fetching.get(src) || Promise.resolve()).then(
+    () =>
+      new Promise((done) => {
+        video.addEventListener("suspend", done, { once: true });
+        video.addEventListener("error", done, { once: true });
+        setTimeout(done, 15000);
+        video.src = src;
+      }),
+  );
+  fetching.set(src, turn);
+};
+
+// A clip comes in AV1 (data-video-av1), half the bytes, where the browser says for sure that it plays it, and in H.264
+// (data-video), which every browser plays, elsewhere (Safari on most Apple devices) or when the AV1 file fails.
+const playsAV1 = document.createElement("video").canPlayType('video/mp4; codecs="av01.0.05M.08"') === "probably";
+
 for (const art of document.querySelectorAll(".art[data-slot]")) {
   const img = art.querySelector("img");
 
@@ -190,35 +488,43 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
     art.classList.add("is-missing");
     art.insertAdjacentHTML(
       "beforeend",
-      `<span class="tag t-generate"><svg class="icon" width="12" height="12"><use href="#i-spark"/></svg>Needs generating</span>
+      `<span class="tag t-generate" lang="en"><svg class="icon" width="12" height="12"><use href="#i-spark"/></svg>Needs generating</span>
        <span class="art-slot">${art.dataset.slot}</span>
        <span class="art-hint">${img.alt.replace(/^(Pixel art|Piksel-art): /, "")}</span>`,
     );
   };
 
   const ready = () => {
-    const src = art.dataset.video;
-    if (!src || reducedMotion) return;
+    if (!art.dataset.video || reducedMotion) return;
+    const sources = [playsAV1 && art.dataset.videoAv1, art.dataset.video].filter(Boolean);
     const video = document.createElement("video");
     Object.assign(video, { muted: true, loop: true, autoplay: true, playsInline: true, poster: img.currentSrc || img.src });
     // The still stays until the clip can really play; with no clip, it stays for good.
     video.addEventListener(
       "canplay",
       () => {
-        // The clip takes over the picture's description, and its mark, so i18n.js keeps it in the page's language.
+        // The clip takes over the picture's description.
         video.setAttribute("aria-label", img.alt);
-        if (img.dataset.i18nAlt) video.setAttribute("data-i18n-aria-label", img.dataset.i18nAlt);
         img.replaceWith(video);
         if (onScreen) onScreen.observe(video);
       },
       { once: true },
     );
-    video.src = src;
+    video.addEventListener("error", () => {
+      if (sources.length > 1) {
+        sources.shift();
+        fetchClip(video, sources[0]);
+      }
+    });
+    const fetchNow = () => loaded.then(() => fetchClip(video, sources[0]));
+    if (!near) return fetchNow();
+    whenNear.set(art, fetchNow);
+    near.observe(art);
   };
 
+  // A picture below the fold keeps loading="lazy": the browser fetches it as it comes near, and then load or error follows.
   if (img.complete) img.naturalWidth ? ready() : missing();
   else {
-    img.loading = "eager";
     img.addEventListener("load", ready, { once: true });
     img.addEventListener("error", missing, { once: true });
   }
@@ -266,11 +572,14 @@ if (finePointer) {
 
   const apply = oncePerFrame(() => {
     if (!(over instanceof Element)) return;
-    for (let el = over.closest(LIT); el; el = el.parentElement && el.parentElement.closest(LIT)) {
-      const r = el.getBoundingClientRect();
-      el.style.setProperty("--mx", `${Math.round(x - r.left)}px`);
-      el.style.setProperty("--my", `${Math.round(y - r.top)}px`);
-    }
+    const lit = [];
+    for (let el = over.closest(LIT); el; el = el.parentElement && el.parentElement.closest(LIT)) lit.push([el, el.getBoundingClientRect()]);
+    return () => {
+      for (const [el, r] of lit) {
+        el.style.setProperty("--mx", `${Math.round(x - r.left)}px`);
+        el.style.setProperty("--my", `${Math.round(y - r.top)}px`);
+      }
+    };
   });
 
   document.addEventListener(
@@ -413,7 +722,7 @@ if (hub) {
     if (wasFloating && !floating) {
       for (const node of nodes) {
         node.dy = 0;
-        node.li.style.transform = "";
+        node.li.style.transform = node.bob = "";
       }
     }
     svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
@@ -429,7 +738,7 @@ if (hub) {
         const t = rects.get(node);
         if (!t) {
           node.rest = node.pts = null;
-          node.wire.setAttribute("points", "");
+          node.wire.setAttribute("points", (node.drawn = ""));
           continue;
         }
         // Measured while bobbing: take the bob out.
@@ -460,16 +769,20 @@ if (hub) {
     const [a, b, ...rest] = node.rest;
     const dy = floating ? Math.round(node.dy) : 0;
     node.pts = [[a[0], a[1] + dy], [b[0], b[1] + dy], ...rest];
-    node.wire.setAttribute("points", node.pts.map((q) => q.join(",")).join(" "));
-    if (node.shadow) node.shadow.setAttribute("y", (node.sy + dy).toFixed(1));
+    // Written only when it has changed: in most frames the bob has not moved a whole pixel.
+    const points = node.pts.map((q) => q.join(",")).join(" ");
+    if (points !== node.drawn) node.wire.setAttribute("points", (node.drawn = points));
+    if (node.shadow) {
+      const y = (node.sy + dy).toFixed(1);
+      if (y !== node.shadowY) node.shadow.setAttribute("y", (node.shadowY = y));
+    }
   }
 
   layout();
-  new ResizeObserver(layout).observe(hub);
+  if ("ResizeObserver" in window) new ResizeObserver(layout).observe(hub);
+  else addEventListener("resize", layout, { passive: true });
   if (document.fonts) document.fonts.ready.then(layout);
   addEventListener("load", layout);
-  // Another language moves the folder without always changing the hub's size.
-  document.addEventListener("langchange", layout);
 
   if (!reducedMotion) {
     const SPEED = 760; // px per second, before easing
@@ -524,6 +837,7 @@ if (hub) {
     }
 
     let running = false;
+    let routeDrawn = "";
     let ticking = false;
     let looping = false;
     let count = 0;
@@ -571,17 +885,27 @@ if (hub) {
       }
       node.rx += (rx - node.rx) * 0.09;
       node.ry += (ry - node.ry) * 0.09;
-      node.body.style.transform = `perspective(${PERSPECTIVE}px) rotateX(${node.rx.toFixed(2)}deg) rotateY(${node.ry.toFixed(2)}deg)`;
+      // Once a cube has come to rest, the same turn is not written again.
+      const turn = `perspective(${PERSPECTIVE}px) rotateX(${node.rx.toFixed(2)}deg) rotateY(${node.ry.toFixed(2)}deg)`;
+      if (turn !== node.turn) node.body.style.transform = node.turn = turn;
     }
 
-    function frame(now) {
+    /** A frame of the hub, in the frame's jobs: the hub is measured with everything else, then drawn. Not ticking until
+        the drawing asks for the next one, so a frame that throws leaves the hub to start again at the next wake(). */
+    const frame = (now) => {
+      ticking = false;
+      const box = running && hub.getBoundingClientRect();
+      return () => draw(now, box);
+    };
+
+    function draw(now, box) {
       if (running) {
-        const box = hub.getBoundingClientRect();
         for (const node of nodes) {
           if (!node.rest) continue;
           if (floating) {
             node.dy = Math.sin((now / node.period) * Math.PI * 2 + node.phase) * BOB;
-            node.li.style.transform = `translate3d(0,${node.dy.toFixed(2)}px,0)`;
+            const bob = `translate3d(0,${node.dy.toFixed(2)}px,0)`;
+            if (bob !== node.bob) node.li.style.transform = node.bob = bob;
             place(node);
           }
           face(node, box);
@@ -608,15 +932,18 @@ if (hub) {
         const pts = trip && trip.back ? out.reverse() : out;
         const total = lengthOf(pts);
         const points = pts.map((q) => q.join(",")).join(" ");
-        route.setAttribute("points", points);
+        if (points !== routeDrawn) route.setAttribute("points", (routeDrawn = points));
         if (trip) {
           const k = Math.min((now - trip.start) / trip.time(total), 1);
           // The head runs a tail's length past the end, so the whole thread arrives.
           const head = ease(k) * (total + TAIL);
-          for (const { line, length } of layers) {
-            line.setAttribute("points", points);
-            line.setAttribute("stroke-dasharray", `${length} ${total + 400}`);
-            line.setAttribute("stroke-dashoffset", length - Math.min(head, total + length));
+          for (const layer of layers) {
+            const { line, length } = layer;
+            if (points !== layer.drawn) line.setAttribute("points", (layer.drawn = points));
+            const dash = `${length} ${total + 400}`;
+            if (dash !== layer.dash) line.setAttribute("stroke-dasharray", (layer.dash = dash));
+            const offset = String(length - Math.min(head, total + length));
+            if (offset !== layer.offset) line.setAttribute("stroke-dashoffset", (layer.offset = offset));
           }
           // On the way out the thread is the agent's until it has passed the folder, then yours.
           const folder = lengthOf(trip.back ? pair.gen.pts : pair.agent.pts);
@@ -629,8 +956,8 @@ if (hub) {
           }
           if (head < total) {
             const [x, y] = pointAt(pts, head);
-            spark.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
-            load.style.transform = spark.style.transform;
+            const at = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+            if (at !== spark.at) spark.style.transform = load.style.transform = spark.at = at;
           }
           // The folder answers as the thread goes through it, and the cube at the far end as the thread enters its glass.
           if (!trip.passed && head >= folder) {
@@ -651,14 +978,13 @@ if (hub) {
           }
         }
       }
-      if (running || trip) requestAnimationFrame(frame);
-      else ticking = false;
+      if (running || trip) wake();
     }
 
     function wake() {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(frame);
+      inFrame(frame);
     }
 
     /** Puts class names on an element for a moment, to play an animation once. */
@@ -743,8 +1069,8 @@ if (hub) {
     async function loop() {
       if (looping) return;
       looping = true;
-      // The first round waits for the hero's entrance to finish.
-      if (!count) await wait(1900);
+      // The first round waits for the hero's entrance to finish; after a change of language there is none.
+      if (!count && !switched) await wait(1900);
       while (running) {
         // Agent and generator are drawn at random, each from its own shuffled bag.
         await round(nextAgent(), nextGen());
@@ -762,7 +1088,9 @@ if (hub) {
       }
     }
 
-    new IntersectionObserver(([entry]) => setRunning(entry.isIntersecting && !document.hidden), { threshold: 0.05 }).observe(hub);
+    if (hasObserver) {
+      new IntersectionObserver(([entry]) => setRunning(entry.isIntersecting && !document.hidden), { threshold: 0.05 }).observe(hub);
+    } else setRunning(true);
     document.addEventListener("visibilitychange", () => setRunning(!document.hidden && hub.getBoundingClientRect().bottom > 0));
   }
 }

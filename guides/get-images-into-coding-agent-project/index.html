@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="g.ways.title">5 ways to get AI images into a coding agent's project</title>
+    <meta name="description" data-i18n-content="g.ways.description" content="Built-in tools, MCP servers, a paid API, copy-paste or a shared folder: what each costs, who presses Generate, and when you don&#x27;t need Asset Prompter." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Đorđe Novaković" />
+    <!-- A guide sits two folders down, so every address in it starts at the root, as in 404.html. Its Serbian copy,
+         when there is one, is the same path under /sr/ and is named by a third hreflang link. -->
+    <link rel="canonical" href="https://assetprompter.com/guides/get-images-into-coding-agent-project/" />
+    <link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/get-images-into-coding-agent-project/" />
+    <link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/get-images-into-coding-agent-project/" />
+    <!-- The language. A reader who chose Serbian (with the language link of a guide, or the menu of the home page; both
+         keep the choice in localStorage) and opens an English guide goes on to its Serbian copy, which the hreflang
+         link above names, before anything is fetched or drawn; ?lang=en keeps English, as on the home page. A guide that
+         has no Serbian copy yet has no such link, and stays. The guides load no other script. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var asked = (/[?&]lang=([a-z]+)/.exec(location.search) || [])[1];
+        var saved = null;
+        try {
+          saved = localStorage.getItem("lang");
+        } catch (e) {}
+        var other = document.querySelector('link[rel="alternate"][hreflang="' + (root.lang === "en" ? "sr" : "en") + '"]');
+        if (other) {
+          var path = new URL(other.href).pathname;
+          if (root.lang === "en" && (asked === "sr" || (saved === "sr" && asked !== "en"))) location.replace(path + location.hash);
+          else if (root.lang !== "en" && asked === "en") location.replace(path + "?lang=en" + location.hash);
+        }
+        // Following a language link keeps that choice, as the menu of the home page does.
+        document.addEventListener("click", function (event) {
+          var link = event.target.closest && event.target.closest("a[data-lang]");
+          if (!link) return;
+          try {
+            localStorage.setItem("lang", link.getAttribute("data-lang"));
+          } catch (e) {}
+        });
+      })();
+    </script>
+    <meta name="theme-color" content="#19171d" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Asset Prompter" />
+    <meta property="og:locale" data-i18n-content="og.locale" content="en_US" />
+    <meta property="og:title" data-i18n-content="g.ways.title" content="5 ways to get AI images into a coding agent&#x27;s project" />
+    <meta property="og:description" data-i18n-content="g.ways.description" content="Built-in tools, MCP servers, a paid API, copy-paste or a shared folder: what each costs, who presses Generate, and when you don&#x27;t need Asset Prompter." />
+    <meta property="og:url" content="https://assetprompter.com/guides/get-images-into-coding-agent-project/" />
+    <meta property="og:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <meta property="article:published_time" content="2026-10-08" />
+    <meta property="article:modified_time" content="2026-10-08" />
+    <meta property="article:author" content="https://github.com/Djordje1998" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" data-i18n-content="g.ways.title" content="5 ways to get AI images into a coding agent&#x27;s project" />
+    <meta name="twitter:description" data-i18n-content="g.ways.description" content="Built-in tools, MCP servers, a paid API, copy-paste or a shared folder: what each costs, who presses Generate, and when you don&#x27;t need Asset Prompter." />
+    <meta name="twitter:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
+    <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=w2-044" />
+    <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
+         the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
+         site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebPage",
+            "@id": "https://assetprompter.com/guides/get-images-into-coding-agent-project/#webpage",
+            "url": "https://assetprompter.com/guides/get-images-into-coding-agent-project/",
+            "name": "5 ways to get AI images into a coding agent's project",
+            "description": "Built-in tools, MCP servers, a paid API, copy-paste or a shared folder: what each costs, who presses Generate, and when you don't need Asset Prompter.",
+            "inLanguage": "en",
+            "isPartOf": {
+              "@id": "https://assetprompter.com/#website"
+            },
+            "about": {
+              "@id": "https://assetprompter.com/#app"
+            },
+            "breadcrumb": {
+              "@id": "https://assetprompter.com/guides/get-images-into-coding-agent-project/#breadcrumb"
+            },
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://assetprompter.com/assets/art/problem-courier.webp",
+              "width": 1280,
+              "height": 714
+            },
+            "datePublished": "2026-10-08",
+            "dateModified": "2026-10-08"
+          },
+          {
+            "@type": "TechArticle",
+            "@id": "https://assetprompter.com/guides/get-images-into-coding-agent-project/#article",
+            "headline": "Five ways to get generated images and video into your coding agent's project",
+            "description": "Built-in tools, MCP servers, a paid API, copy-paste or a shared folder: what each costs, who presses Generate, and when you don't need Asset Prompter.",
+            "inLanguage": "en",
+            "mainEntityOfPage": {
+              "@id": "https://assetprompter.com/guides/get-images-into-coding-agent-project/#webpage"
+            },
+            "isPartOf": {
+              "@id": "https://assetprompter.com/#website"
+            },
+            "author": {
+              "@id": "https://assetprompter.com/#author"
+            },
+            "publisher": {
+              "@id": "https://assetprompter.com/#author"
+            },
+            "about": {
+              "@id": "https://assetprompter.com/#app"
+            },
+            "image": "https://assetprompter.com/assets/og.jpg",
+            "datePublished": "2026-10-08",
+            "dateModified": "2026-10-08",
+            "mentions": [
+              {
+                "@type": "Thing",
+                "name": "Claude Code",
+                "sameAs": "https://www.wikidata.org/wiki/Q138457287"
+              },
+              {
+                "@type": "Thing",
+                "name": "Codex",
+                "sameAs": "https://www.wikidata.org/wiki/Q138940795"
+              },
+              {
+                "@type": "Thing",
+                "name": "Cursor",
+                "sameAs": "https://www.wikidata.org/wiki/Q131980386"
+              },
+              {
+                "@type": "Thing",
+                "name": "Antigravity",
+                "sameAs": "https://www.wikidata.org/wiki/Q136827654"
+              },
+              {
+                "@type": "Thing",
+                "name": "Gemini CLI"
+              },
+              {
+                "@type": "Thing",
+                "name": "Model Context Protocol (MCP)",
+                "sameAs": "https://www.wikidata.org/wiki/Q133436854"
+              },
+              {
+                "@type": "Thing",
+                "name": "Midjourney",
+                "sameAs": "https://www.wikidata.org/wiki/Q113070628"
+              },
+              {
+                "@type": "Thing",
+                "name": "Google Flow",
+                "sameAs": "https://www.wikidata.org/wiki/Q140560557"
+              }
+            ]
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://assetprompter.com/guides/get-images-into-coding-agent-project/#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Asset Prompter",
+                "item": "https://assetprompter.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Guides",
+                "item": "https://assetprompter.com/guides/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Images into an agent's project"
+              }
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://assetprompter.com/#author",
+            "name": "Đorđe Novaković",
+            "url": "https://github.com/Djordje1998",
+            "sameAs": [
+              "https://github.com/Djordje1998",
+              "https://www.linkedin.com/in/dj-nov"
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
+      <symbol id="logo" viewBox="0 0 16 16"><rect x="12" y="1" width="1" height="1" fill="#c08ab5"/><rect x="11" y="2" width="3" height="1" fill="#c08ab5"/><rect x="1" y="3" width="9" height="1" fill="#4a4652"/><rect x="12" y="3" width="1" height="1" fill="#c08ab5"/><rect x="1" y="4" width="1" height="1" fill="#4a4652"/><rect x="9" y="4" width="1" height="1" fill="#4a4652"/><rect x="1" y="5" width="1" height="1" fill="#4a4652"/><rect x="4" y="5" width="11" height="1" fill="#6e6878"/><rect x="1" y="6" width="1" height="1" fill="#4a4652"/><rect x="4" y="6" width="1" height="1" fill="#6e6878"/><rect x="14" y="6" width="1" height="1" fill="#6e6878"/><rect x="1" y="7" width="1" height="1" fill="#4a4652"/><rect x="4" y="7" width="1" height="1" fill="#6e6878"/><rect x="6" y="7" width="2" height="1" fill="#d9a441"/><rect x="14" y="7" width="1" height="1" fill="#6e6878"/><rect x="1" y="8" width="1" height="1" fill="#4a4652"/><rect x="4" y="8" width="1" height="1" fill="#6e6878"/><rect x="6" y="8" width="2" height="1" fill="#d9a441"/><rect x="14" y="8" width="1" height="1" fill="#6e6878"/><rect x="1" y="9" width="3" height="1" fill="#4a4652"/><rect x="4" y="9" width="1" height="1" fill="#6e6878"/><rect x="12" y="9" width="1" height="1" fill="#6cc4b8"/><rect x="14" y="9" width="1" height="1" fill="#6e6878"/><rect x="4" y="10" width="1" height="1" fill="#6e6878"/><rect x="11" y="10" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="10" width="1" height="1" fill="#6e6878"/><rect x="4" y="11" width="1" height="1" fill="#6e6878"/><rect x="7" y="11" width="1" height="1" fill="#6cc4b8"/><rect x="10" y="11" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="11" width="1" height="1" fill="#6e6878"/><rect x="4" y="12" width="1" height="1" fill="#6e6878"/><rect x="6" y="12" width="3" height="1" fill="#6cc4b8"/><rect x="9" y="12" width="1" height="1" fill="#4f9e94"/><rect x="10" y="12" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="12" width="1" height="1" fill="#6e6878"/><rect x="4" y="13" width="1" height="1" fill="#6e6878"/><rect x="5" y="13" width="4" height="1" fill="#6cc4b8"/><rect x="9" y="13" width="3" height="1" fill="#4f9e94"/><rect x="12" y="13" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="13" width="1" height="1" fill="#6e6878"/><rect x="4" y="14" width="11" height="1" fill="#6e6878"/></symbol>
+      <symbol id="i-star" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM4 2h4v1h-4zM4 3h4v1h-4zM0 4h12v1h-12zM1 5h10v1h-10zM2 6h8v1h-8zM3 7h6v1h-6zM2 8h8v1h-8zM2 9h3v1h-3zM7 9h3v1h-3zM1 10h2v1h-2zM9 10h2v1h-2z"/></symbol>
+      <symbol id="i-download" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM5 2h2v1h-2zM5 3h2v1h-2zM2 4h2v1h-2zM5 4h2v1h-2zM8 4h2v1h-2zM3 5h6v1h-6zM4 6h4v1h-4zM5 7h2v1h-2zM1 9h2v1h-2zM9 9h2v1h-2zM1 10h10v1h-10z"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 12 12"><path d="M5 0h1v1h-1zM5 1h1v1h-1zM4 2h3v1h-3zM2 3h7v1h-7zM4 4h3v1h-3zM5 5h1v1h-1zM10 5h1v1h-1zM5 6h1v1h-1zM9 6h3v1h-3zM10 7h1v1h-1zM3 8h1v1h-1zM2 9h3v1h-3zM3 10h1v1h-1z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 12 12"><path d="M10 1h2v1h-2zM9 2h3v1h-3zM8 3h3v1h-3zM1 4h2v1h-2zM7 4h3v1h-3zM1 5h3v1h-3zM6 5h3v1h-3zM2 6h5v1h-5zM3 7h3v1h-3zM4 8h1v1h-1z"/></symbol>
+      <symbol id="i-info" viewBox="0 0 12 12"><path d="M3 0h6v1h-6zM2 1h1v1h-1zM9 1h1v1h-1zM1 2h1v1h-1zM5 2h2v1h-2zM10 2h1v1h-1zM1 3h1v1h-1zM10 3h1v1h-1zM1 4h1v1h-1zM5 4h2v1h-2zM10 4h1v1h-1zM1 5h1v1h-1zM5 5h2v1h-2zM10 5h1v1h-1zM1 6h1v1h-1zM5 6h2v1h-2zM10 6h1v1h-1zM1 7h1v1h-1zM5 7h2v1h-2zM10 7h1v1h-1zM2 8h1v1h-1zM9 8h1v1h-1zM3 9h6v1h-6z"/></symbol>
+    </svg>
+
+    <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+    <header class="bar">
+      <a class="brand" href="/">
+        <svg class="logo" width="24" height="24" aria-hidden="true"><use href="#logo" /></svg>
+        Asset Prompter
+      </a>
+      <!-- The home page's sections, and the guides. The language link (a.btn.lang-btn, data-lang) goes first in
+           .bar-right once the guide has a Serbian copy. -->
+      <nav class="bar-links" aria-label="Site" data-i18n-aria-label="g.nav.label">
+        <a href="/#loop" data-i18n="nav.loop">The loop</a>
+        <a href="/#mcp" data-i18n="nav.mcp">Compared with MCP</a>
+        <a href="/#questions" data-i18n="nav.questions">Questions</a>
+        <a href="/guides/" aria-current="true" data-i18n="foot.guides">Guides</a>
+      </nav>
+      <div class="bar-right">
+        <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star on GitHub: Asset Prompter" data-i18n-aria-label="star.label">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-star" /></svg>
+          <span class="bar-github-text" data-i18n="star">Star<span class="bar-github-on"> on GitHub</span></span>
+        </a>
+        <a class="btn btn-primary" href="/#install" data-i18n-text="install">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-download" /></svg>
+          Install
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="section guide-top">
+        <div class="wrap">
+          <nav class="crumbs" aria-label="Breadcrumb" data-i18n-aria-label="g.crumbs.label">
+            <ol>
+              <li><a href="/" data-i18n="g.crumbs.home">Asset Prompter</a></li>
+              <li><a href="/guides/" data-i18n="foot.guides">Guides</a></li>
+              <li aria-current="page" data-i18n="g.ways.crumb">Images into an agent's project</li>
+            </ol>
+          </nav>
+          <div class="head">
+            <h1 data-i18n="g.ways.h1">Five ways to get generated images and video into your coding agent's project</h1>
+            <p class="lead" data-i18n="g.ways.lead">Claude Code, Codex and Cursor know which pictures a project needs. How the files get there depends on your generator. Here are the five ways, honestly compared.</p>
+            <p class="guide-meta" data-i18n="g.byline">
+              By <a href="https://github.com/Djordje1998" target="_blank" rel="noopener author">Đorđe Novaković</a>, who makes Asset Prompter ·
+              Updated <time datetime="2026-10-08">8 October 2026</time>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band guide-sec" aria-labelledby="short">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="short" data-i18n="g.ways.short.h">The short answer</h2>
+            <p data-i18n="g.ways.short.p">
+              If your agent has an image tool built in and its model is good enough, use that. If your generator has an official MCP
+              server on your plan, connect it. If it has only an API, you can pay for it per image. If it has none, as with
+              Midjourney and Google Flow, you carry the files yourself: by hand, or through a shared folder like Asset Prompter's.
+              The ways below go from the least of your own work to the most; the facts behind each are in the
+              <a href="/guides/image-generators-api-mcp/">table of generators and agents</a>, checked on 8 October 2026.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section guide-sec" aria-labelledby="builtin">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="builtin" data-i18n="g.ways.1.h">1. The agent's own image tool</h2>
+            <p data-i18n="g.ways.1.p">Codex has a built-in <code>image_gen</code> tool, Cursor's agent has generated images since version 2.4, Antigravity's agent decides by itself when to call an image model, and Gemini CLI has the <code>nanobanana</code> extension.</p>
+            <dl class="guide-facts">
+              <dt data-i18n="g.ways.facts.1">Who presses Generate</dt>
+              <dd data-i18n="g.ways.1.1">The agent.</dd>
+              <dt data-i18n="g.ways.facts.2">What you pay on top</dt>
+              <dd data-i18n="g.ways.1.2">On Codex, nothing: it uses the ChatGPT plan's Codex limits, which image turns use faster. Gemini CLI's extension needs a Gemini API key, so API billing. Cursor and Antigravity don't say.</dd>
+              <dt data-i18n="g.ways.facts.3">What the agent sees</dt>
+              <dd data-i18n="g.ways.1.3">The picture it made.</dd>
+              <dt data-i18n="g.ways.facts.4">Where the versions live</dt>
+              <dd data-i18n="g.ways.1.4">Where the tool saves them. Cursor saves to the project's <code>assets/</code> folder by default. Codex keeps them under <code>$CODEX_HOME/generated_images/</code>, and its image skill tells the agent to copy what the project uses into it, as a new file such as <code>hero-v2.png</code> rather than over the old one.</dd>
+              <dt data-i18n="g.ways.facts.5">Pick it when</dt>
+              <dd data-i18n="g.ways.1.5">The agent's model is good enough for the picture, and you don't need a particular generator.</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band guide-sec" aria-labelledby="mcp">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="mcp" data-i18n="g.ways.2.h">2. An official MCP server</h2>
+            <p data-i18n="g.ways.2.p">Higgsfield, Ideogram, Krea, Kling and Runway have MCP servers you sign in to with your account; Leonardo.Ai and Luma have ones that run on their API.</p>
+            <dl class="guide-facts">
+              <dt data-i18n="g.ways.facts.1">Who presses Generate</dt>
+              <dd data-i18n="g.ways.2.1">The agent.</dd>
+              <dt data-i18n="g.ways.facts.2">What you pay on top</dt>
+              <dd data-i18n="g.ways.2.2">Higgsfield, Ideogram and Runway draw on your plan or its credits, and Krea on your workspace's compute units when you sign in. Leonardo's and Luma's servers need an API key, and use API credits.</dd>
+              <dt data-i18n="g.ways.facts.3">What the agent sees</dt>
+              <dd data-i18n="g.ways.2.3">What the server gives back.</dd>
+              <dt data-i18n="g.ways.facts.4">Where the versions live</dt>
+              <dd data-i18n="g.ways.2.4">Wherever the server or the agent saves them.</dd>
+              <dt data-i18n="g.ways.facts.5">Pick it when</dt>
+              <dd data-i18n="g.ways.2.5">You want batches that run while you are away. As the home page says: for those, pick a generator with an API or an MCP server.</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="section guide-sec" aria-labelledby="api">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="api" data-i18n="g.ways.3.h">3. Paying for an API</h2>
+            <p data-i18n="g.ways.3.p">OpenAI's image API, Google's Gemini API (Nano Banana for images, Veo for video), xAI's Grok Imagine, Leonardo.Ai and Luma: the agent writes a script against the API and runs it.</p>
+            <dl class="guide-facts">
+              <dt data-i18n="g.ways.facts.1">Who presses Generate</dt>
+              <dd data-i18n="g.ways.3.1">The agent, through the script.</dd>
+              <dt data-i18n="g.ways.facts.2">What you pay on top</dt>
+              <dd data-i18n="g.ways.3.2">Each generation, billed apart from any app plan you already pay for.</dd>
+              <dt data-i18n="g.ways.facts.3">What the agent sees</dt>
+              <dd data-i18n="g.ways.3.3">The files the script saves.</dd>
+              <dt data-i18n="g.ways.facts.4">Where the versions live</dt>
+              <dd data-i18n="g.ways.3.4">Where the script saves them; ask for the project folder, with a new name per version.</dd>
+              <dt data-i18n="g.ways.facts.5">Pick it when</dt>
+              <dd data-i18n="g.ways.3.5">You want a pipeline you can run again, many sizes at once, or batches. Keep the API key out of the repository.</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band guide-sec" aria-labelledby="byhand">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="byhand" data-i18n="g.ways.4.h">4. Copy and paste by hand</h2>
+            <p data-i18n="g.ways.4.p">Any generator: you take the prompt from the chat to the generator, and the file back to the project.</p>
+            <dl class="guide-facts">
+              <dt data-i18n="g.ways.facts.1">Who presses Generate</dt>
+              <dd data-i18n="g.ways.4.1">You.</dd>
+              <dt data-i18n="g.ways.facts.2">What you pay on top</dt>
+              <dd data-i18n="g.ways.4.2">Nothing.</dd>
+              <dt data-i18n="g.ways.facts.3">What the agent sees</dt>
+              <dd data-i18n="g.ways.4.3">Nothing, unless you attach the file or describe it.</dd>
+              <dt data-i18n="g.ways.facts.4">Where the versions live</dt>
+              <dd data-i18n="g.ways.4.4">Wherever you saved them.</dd>
+              <dt data-i18n="g.ways.facts.5">Pick it when</dt>
+              <dd data-i18n="g.ways.4.5">You need one or two pictures, once. Then this is fine, and you need nothing else.</dd>
+            </dl>
+            <p data-i18n="g.ways.4.more">Past a few pictures, it goes the way the home page draws it in <a href="/#why">"Without it, you are the courier"</a>:</p>
+            <ul>
+              <li data-i18n="why.1">You copy a prompt out of the chat, paste it into the generator, download the result, rename it and move it into the repo.</li>
+              <li data-i18n="why.2">The agent never sees what came out, so you describe the picture back to it in words.</li>
+              <li data-i18n="why.3">Three rounds later nobody knows which file was the good one, or which prompt made it.</li>
+            </ul>
+          </div>
+          <figure class="guide-wide guide-fig is-small">
+            <div class="art">
+              <img src="/assets/art/problem-courier.webp" data-i18n-alt="why.alt" alt="Pixel art: a person runs between a chat bubble and a pile of pictures, papers flying, while a robot waits and sees none of it." width="1280" height="714" loading="lazy" />
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section guide-sec" aria-labelledby="folder">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="folder" data-i18n="g.ways.5.h">5. A shared folder: Asset Prompter</h2>
+            <p data-i18n="g.ways.5.p">A small local app that carries prompts and results between the agent and any generator you use by hand, including Midjourney and Google Flow. It works with any agent that can read and write files in the project folder.</p>
+            <dl class="guide-facts">
+              <dt data-i18n="g.ways.facts.1">Who presses Generate</dt>
+              <dd data-i18n="g.ways.5.1">You, every time, in your own generator.</dd>
+              <dt data-i18n="g.ways.facts.2">What you pay on top</dt>
+              <dd data-i18n="g.ways.5.2">Nothing: the app is free, under the MIT licence. You pay for your generator and your agent, as now.</dd>
+              <dt data-i18n="g.ways.facts.3">What the agent sees</dt>
+              <dd data-i18n="g.ways.5.3">Every result. It reviews each one, and reads a clip through its frame sheets and motion map.</dd>
+              <dt data-i18n="g.ways.facts.4">Where the versions live</dt>
+              <dd data-i18n="g.ways.5.4">In the slot folder, as plain files: every version, result, change request and review. Your approval is final.</dd>
+              <dt data-i18n="g.ways.facts.5">Pick it when</dt>
+              <dd data-i18n="g.ways.5.5">Your generator has no API, or you want the last word on every picture.</dd>
+            </dl>
+            <p data-i18n="g.ways.5.more">
+              Setup covers Windows and Linux; on macOS you install Bun yourself. The <a href="/#loop">six steps on the home page</a>
+              show one picture going through it.
+            </p>
+          </div>
+          <figure class="guide-wide guide-fig">
+            <div class="appshot">
+            <picture>
+              <source media="(max-width: 640px)" srcset="/assets/app/2-result-narrow-440.webp 440w, /assets/app/2-result-narrow.webp 880w" sizes="(max-width: 472px) calc(100vw - 32px), 440px" width="880" height="1638" />
+              <img src="/assets/app/2-result.webp" srcset="/assets/app/2-result-800.webp 800w, /assets/app/2-result.webp 1600w" sizes="(max-width: 832px) calc(100vw - 32px), 800px" data-i18n-alt="turn.3.alt" alt="The same card with your picture in it, a dining room on a space station. The card is now marked Agent's turn, with the buttons Approve v1 and Request changes." width="1600" height="750" loading="lazy" />
+            </picture>
+            </div>
+            <figcaption data-i18n="g.ways.5.caption">A slot's card after you dropped your result on it: now it is the agent's turn.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section band guide-sec" aria-labelledby="side">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="side" data-i18n="g.ways.cmp.h">Side by side</h2>
+            <p data-i18n="g.ways.cmp.p">"Depends" means it is up to the tool or to what you ask the agent for.</p>
+          </div>
+          <section class="table-wrap guide-wide" aria-labelledby="cmp-caption" tabindex="0">
+            <table class="guide-table">
+              <caption id="cmp-caption" data-i18n="g.ways.cmp.caption">The five ways compared, from the facts in the table of generators, checked 8 October 2026.</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="g.ways.cmp.h0">Way</th>
+                  <th scope="col" data-i18n="g.ways.cmp.h1">Who presses Generate</th>
+                  <th scope="col" data-i18n="g.ways.cmp.h2">Extra cost</th>
+                  <th scope="col" data-i18n="g.ways.cmp.h3">Runs while you're away</th>
+                  <th scope="col" data-i18n="g.ways.cmp.h4">Agent sees the result</th>
+                  <th scope="col" data-i18n="g.ways.cmp.h5">Versions kept as files</th>
+                  <th scope="col" data-i18n="g.ways.cmp.h6">Works with Midjourney and Flow</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" data-i18n="g.ways.cmp.1">The agent's own tool</th>
+                  <td data-i18n="g.ways.cmp.1.1">The agent</td>
+                  <td data-i18n="g.ways.cmp.1.2">Depends on the agent</td>
+                  <td data-i18n="g.ways.cmp.1.3"><span class="tag t-approved">Yes</span></td>
+                  <td data-i18n="g.ways.cmp.1.4"><span class="tag t-approved">Yes</span></td>
+                  <td data-i18n="g.ways.cmp.1.5"><span class="tag t-review">Depends</span></td>
+                  <td data-i18n="g.ways.cmp.1.6"><span class="tag t-generate">No</span></td>
+                </tr>
+                <tr>
+                  <th scope="row" data-i18n="g.ways.cmp.2">An official MCP server</th>
+                  <td data-i18n="g.ways.cmp.2.1">The agent</td>
+                  <td data-i18n="g.ways.cmp.2.2">Your plan, or API credits</td>
+                  <td data-i18n="g.ways.cmp.2.3"><span class="tag t-approved">Yes</span></td>
+                  <td data-i18n="g.ways.cmp.2.4"><span class="tag t-approved">Yes</span></td>
+                  <td data-i18n="g.ways.cmp.2.5"><span class="tag t-review">Depends</span></td>
+                  <td data-i18n="g.ways.cmp.2.6"><span class="tag t-generate">No</span></td>
+                </tr>
+                <tr>
+                  <th scope="row" data-i18n="g.ways.cmp.3">An API</th>
+                  <td data-i18n="g.ways.cmp.3.1">The agent</td>
+                  <td data-i18n="g.ways.cmp.3.2">Each generation</td>
+                  <td data-i18n="g.ways.cmp.3.3"><span class="tag t-approved">Yes</span></td>
+                  <td data-i18n="g.ways.cmp.3.4"><span class="tag t-approved">Yes</span></td>
+                  <td data-i18n="g.ways.cmp.3.5"><span class="tag t-review">Depends</span></td>
+                  <td data-i18n="g.ways.cmp.3.6"><span class="tag t-generate">No</span></td>
+                </tr>
+                <tr>
+                  <th scope="row" data-i18n="g.ways.cmp.4">By hand</th>
+                  <td data-i18n="g.ways.cmp.4.1">You</td>
+                  <td data-i18n="g.ways.cmp.4.2">Nothing</td>
+                  <td data-i18n="g.ways.cmp.4.3"><span class="tag t-generate">No</span></td>
+                  <td data-i18n="g.ways.cmp.4.4">Only what you show it</td>
+                  <td data-i18n="g.ways.cmp.4.5">Only what you keep</td>
+                  <td data-i18n="g.ways.cmp.4.6"><span class="tag t-approved">Yes</span></td>
+                </tr>
+                <tr>
+                  <th scope="row" data-i18n="g.ways.cmp.5">Asset Prompter</th>
+                  <td data-i18n="g.ways.cmp.5.1">You</td>
+                  <td data-i18n="g.ways.cmp.5.2">Nothing</td>
+                  <td data-i18n="g.ways.cmp.5.3"><span class="tag t-generate">No</span></td>
+                  <td data-i18n="g.ways.cmp.5.4"><span class="tag t-approved">Yes</span></td>
+                  <td data-i18n="g.ways.cmp.5.5"><span class="tag t-approved">Yes</span></td>
+                  <td data-i18n="g.ways.cmp.5.6"><span class="tag t-approved">Yes</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <div class="prose guide-wide">
+            <aside class="guide-note" aria-labelledby="automation">
+              <h3 id="automation" data-i18n="g.ways.note.h">And driving a web app that has no API?</h3>
+              <p data-i18n="g.ways.note.p">
+                Some third-party tools drive Midjourney's or Flow's web page for an agent. It works until it doesn't: Midjourney's
+                Terms of Service forbid automated access to it, and a tool that clicks through a web page breaks whenever the page
+                changes. The sources are in the <a href="/guides/image-generators-api-mcp/">table of generators</a>.
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section guide-sec" aria-labelledby="need">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="need" data-i18n="g.ways.need.h">When you don't need Asset Prompter, and when it helps</h2>
+            <p data-i18n="g.ways.need.p">It doesn't generate anything. You press Generate in your own tool, every time, so it is not the answer to every case.</p>
+          </div>
+          <div class="guide-fit guide-wide">
+            <div class="fit-col t-generate">
+              <h3 data-i18n-text="g.ways.need.no"><svg class="icon" width="15" height="15" aria-hidden="true"><use href="#i-info" /></svg>You don't need it if</h3>
+              <ul>
+                <li data-i18n="g.ways.need.no.1">Your agent's own image tool, or a generator's MCP server on your plan, does the job, and you are happy to let the agent pick the results.</li>
+                <li data-i18n="g.ways.need.no.2">You need batches that run while you are away.</li>
+                <li data-i18n="g.ways.need.no.3">You need one or two pictures, once.</li>
+                <li data-i18n="fit.know.2">Your agent has to work with files. A chat window in a browser can't.</li>
+                <li data-i18n="g.ways.need.no.5">You are on macOS and won't install Bun yourself.</li>
+              </ul>
+            </div>
+            <div class="fit-col t-approved">
+              <h3 data-i18n-text="fit.yes"><svg class="icon" width="15" height="15" aria-hidden="true"><use href="#i-check" /></svg>A good fit if</h3>
+              <ul>
+                <li data-i18n="fit.yes.1">Your generator has no API, and you want your agent to see the results.</li>
+                <li data-i18n="fit.yes.2">You already pay for a generator plan and want no API bills on top.</li>
+                <li data-i18n="fit.yes.3">You want the last word. Nothing is done until you approve it.</li>
+                <li data-i18n="fit.yes.4">You want it on your machine: plain files in a folder, no account.</li>
+                <li data-i18n="g.ways.need.yes.5">You want the agent to check your video clips, through frame sheets and a motion map.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="prose guide-wide">
+            <p data-i18n="g.ways.next">
+              Next: <a href="/guides/how-this-site-was-made/">how this site's pictures were made</a> with it, step by step, and
+              <a href="/#install">the two ways to install it</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band closing">
+        <div class="wrap">
+          <div class="head">
+            <h2 data-i18n="closing.h2">Give your agent a way to ask for pictures.</h2>
+            <p class="lead" data-i18n="closing.lead">Download the folder, run setup, paste one message.</p>
+          </div>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip" data-i18n-text="download">
+              <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#i-download" /></svg>
+              Download ZIP
+            </a>
+            <a class="btn btn-lg" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" data-i18n="github">View on GitHub</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-row">
+        <span class="brand">
+          <svg class="logo" width="20" height="20" aria-hidden="true"><use href="#logo" /></svg>
+          Asset Prompter
+        </span>
+        <span data-i18n="foot.art">Illustrations generated by hand in Google Flow, through Asset Prompter.</span>
+        <span class="foot-links">
+          <a href="/guides/" data-i18n="foot.guides">Guides</a>
+          <a href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener">github.com/Djordje1998/asset-prompter</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

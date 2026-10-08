@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="g.api.title">Image and video generators with an API or MCP server (2026)</title>
+    <meta name="description" data-i18n-content="g.api.description" content="Which image and video generators have a public API or an official MCP server, and what that means for Claude Code, Codex or Cursor. Checked 8 Oct 2026." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Đorđe Novaković" />
+    <!-- A guide sits two folders down, so every address in it starts at the root, as in 404.html. Its Serbian copy,
+         when there is one, is the same path under /sr/ and is named by a third hreflang link. -->
+    <link rel="canonical" href="https://assetprompter.com/guides/image-generators-api-mcp/" />
+    <link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/image-generators-api-mcp/" />
+    <link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/image-generators-api-mcp/" />
+    <!-- The language. A reader who chose Serbian (with the language link of a guide, or the menu of the home page; both
+         keep the choice in localStorage) and opens an English guide goes on to its Serbian copy, which the hreflang
+         link above names, before anything is fetched or drawn; ?lang=en keeps English, as on the home page. A guide that
+         has no Serbian copy yet has no such link, and stays. The guides load no other script. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var asked = (/[?&]lang=([a-z]+)/.exec(location.search) || [])[1];
+        var saved = null;
+        try {
+          saved = localStorage.getItem("lang");
+        } catch (e) {}
+        var other = document.querySelector('link[rel="alternate"][hreflang="' + (root.lang === "en" ? "sr" : "en") + '"]');
+        if (other) {
+          var path = new URL(other.href).pathname;
+          if (root.lang === "en" && (asked === "sr" || (saved === "sr" && asked !== "en"))) location.replace(path + location.hash);
+          else if (root.lang !== "en" && asked === "en") location.replace(path + "?lang=en" + location.hash);
+        }
+        // Following a language link keeps that choice, as the menu of the home page does.
+        document.addEventListener("click", function (event) {
+          var link = event.target.closest && event.target.closest("a[data-lang]");
+          if (!link) return;
+          try {
+            localStorage.setItem("lang", link.getAttribute("data-lang"));
+          } catch (e) {}
+        });
+      })();
+    </script>
+    <meta name="theme-color" content="#19171d" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Asset Prompter" />
+    <meta property="og:locale" data-i18n-content="og.locale" content="en_US" />
+    <meta property="og:title" data-i18n-content="g.api.title" content="Image and video generators with an API or MCP server (2026)" />
+    <meta property="og:description" data-i18n-content="g.api.description" content="Which image and video generators have a public API or an official MCP server, and what that means for Claude Code, Codex or Cursor. Checked 8 Oct 2026." />
+    <meta property="og:url" content="https://assetprompter.com/guides/image-generators-api-mcp/" />
+    <meta property="og:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <meta property="article:published_time" content="2026-10-08" />
+    <meta property="article:modified_time" content="2026-10-08" />
+    <meta property="article:author" content="https://github.com/Djordje1998" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" data-i18n-content="g.api.title" content="Image and video generators with an API or MCP server (2026)" />
+    <meta name="twitter:description" data-i18n-content="g.api.description" content="Which image and video generators have a public API or an official MCP server, and what that means for Claude Code, Codex or Cursor. Checked 8 Oct 2026." />
+    <meta name="twitter:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
+    <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=w2-044" />
+    <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
+         the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
+         site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebPage",
+            "@id": "https://assetprompter.com/guides/image-generators-api-mcp/#webpage",
+            "url": "https://assetprompter.com/guides/image-generators-api-mcp/",
+            "name": "Image and video generators with an API or MCP server (2026)",
+            "description": "Which image and video generators have a public API or an official MCP server, and what that means for Claude Code, Codex or Cursor. Checked 8 Oct 2026.",
+            "inLanguage": "en",
+            "isPartOf": {
+              "@id": "https://assetprompter.com/#website"
+            },
+            "about": {
+              "@id": "https://assetprompter.com/#app"
+            },
+            "breadcrumb": {
+              "@id": "https://assetprompter.com/guides/image-generators-api-mcp/#breadcrumb"
+            },
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://assetprompter.com/assets/art/you-are-the-server.webp",
+              "width": 960,
+              "height": 716
+            },
+            "datePublished": "2026-10-08",
+            "dateModified": "2026-10-08"
+          },
+          {
+            "@type": "TechArticle",
+            "@id": "https://assetprompter.com/guides/image-generators-api-mcp/#article",
+            "headline": "Which image and video generators have an API or an MCP server",
+            "description": "Which image and video generators have a public API or an official MCP server, and what that means for Claude Code, Codex or Cursor. Checked 8 Oct 2026.",
+            "inLanguage": "en",
+            "mainEntityOfPage": {
+              "@id": "https://assetprompter.com/guides/image-generators-api-mcp/#webpage"
+            },
+            "isPartOf": {
+              "@id": "https://assetprompter.com/#website"
+            },
+            "author": {
+              "@id": "https://assetprompter.com/#author"
+            },
+            "publisher": {
+              "@id": "https://assetprompter.com/#author"
+            },
+            "about": {
+              "@id": "https://assetprompter.com/#app"
+            },
+            "image": "https://assetprompter.com/assets/og.jpg",
+            "datePublished": "2026-10-08",
+            "dateModified": "2026-10-08",
+            "mentions": [
+              {
+                "@type": "Thing",
+                "name": "Model Context Protocol (MCP)",
+                "sameAs": "https://www.wikidata.org/wiki/Q133436854"
+              },
+              {
+                "@type": "CreativeWork",
+                "name": "ChatGPT Images",
+                "isPartOf": {
+                  "@type": "CreativeWork",
+                  "name": "ChatGPT",
+                  "sameAs": "https://www.wikidata.org/wiki/Q115564437"
+                }
+              },
+              {
+                "@type": "Thing",
+                "name": "Midjourney",
+                "sameAs": "https://www.wikidata.org/wiki/Q113070628"
+              },
+              {
+                "@type": "Thing",
+                "name": "Google Flow",
+                "sameAs": "https://www.wikidata.org/wiki/Q140560557"
+              },
+              {
+                "@type": "Thing",
+                "name": "Dreamina"
+              },
+              {
+                "@type": "Thing",
+                "name": "Grok Imagine"
+              },
+              {
+                "@type": "Thing",
+                "name": "Leonardo.Ai",
+                "sameAs": "https://www.wikidata.org/wiki/Q124157014"
+              },
+              {
+                "@type": "Thing",
+                "name": "Luma AI"
+              },
+              {
+                "@type": "Thing",
+                "name": "Higgsfield"
+              },
+              {
+                "@type": "Thing",
+                "name": "Ideogram"
+              },
+              {
+                "@type": "Thing",
+                "name": "Krea"
+              },
+              {
+                "@type": "Thing",
+                "name": "Kling"
+              },
+              {
+                "@type": "Thing",
+                "name": "Runway"
+              },
+              {
+                "@type": "Thing",
+                "name": "Codex",
+                "sameAs": "https://www.wikidata.org/wiki/Q138940795"
+              },
+              {
+                "@type": "Thing",
+                "name": "Cursor",
+                "sameAs": "https://www.wikidata.org/wiki/Q131980386"
+              },
+              {
+                "@type": "Thing",
+                "name": "Antigravity",
+                "sameAs": "https://www.wikidata.org/wiki/Q136827654"
+              },
+              {
+                "@type": "Thing",
+                "name": "Gemini CLI"
+              },
+              {
+                "@type": "Thing",
+                "name": "Claude Code",
+                "sameAs": "https://www.wikidata.org/wiki/Q138457287"
+              }
+            ]
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://assetprompter.com/guides/image-generators-api-mcp/#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Asset Prompter",
+                "item": "https://assetprompter.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Guides",
+                "item": "https://assetprompter.com/guides/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Generators with an API or MCP"
+              }
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://assetprompter.com/#author",
+            "name": "Đorđe Novaković",
+            "url": "https://github.com/Djordje1998",
+            "sameAs": [
+              "https://github.com/Djordje1998",
+              "https://www.linkedin.com/in/dj-nov"
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
+      <symbol id="logo" viewBox="0 0 16 16"><rect x="12" y="1" width="1" height="1" fill="#c08ab5"/><rect x="11" y="2" width="3" height="1" fill="#c08ab5"/><rect x="1" y="3" width="9" height="1" fill="#4a4652"/><rect x="12" y="3" width="1" height="1" fill="#c08ab5"/><rect x="1" y="4" width="1" height="1" fill="#4a4652"/><rect x="9" y="4" width="1" height="1" fill="#4a4652"/><rect x="1" y="5" width="1" height="1" fill="#4a4652"/><rect x="4" y="5" width="11" height="1" fill="#6e6878"/><rect x="1" y="6" width="1" height="1" fill="#4a4652"/><rect x="4" y="6" width="1" height="1" fill="#6e6878"/><rect x="14" y="6" width="1" height="1" fill="#6e6878"/><rect x="1" y="7" width="1" height="1" fill="#4a4652"/><rect x="4" y="7" width="1" height="1" fill="#6e6878"/><rect x="6" y="7" width="2" height="1" fill="#d9a441"/><rect x="14" y="7" width="1" height="1" fill="#6e6878"/><rect x="1" y="8" width="1" height="1" fill="#4a4652"/><rect x="4" y="8" width="1" height="1" fill="#6e6878"/><rect x="6" y="8" width="2" height="1" fill="#d9a441"/><rect x="14" y="8" width="1" height="1" fill="#6e6878"/><rect x="1" y="9" width="3" height="1" fill="#4a4652"/><rect x="4" y="9" width="1" height="1" fill="#6e6878"/><rect x="12" y="9" width="1" height="1" fill="#6cc4b8"/><rect x="14" y="9" width="1" height="1" fill="#6e6878"/><rect x="4" y="10" width="1" height="1" fill="#6e6878"/><rect x="11" y="10" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="10" width="1" height="1" fill="#6e6878"/><rect x="4" y="11" width="1" height="1" fill="#6e6878"/><rect x="7" y="11" width="1" height="1" fill="#6cc4b8"/><rect x="10" y="11" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="11" width="1" height="1" fill="#6e6878"/><rect x="4" y="12" width="1" height="1" fill="#6e6878"/><rect x="6" y="12" width="3" height="1" fill="#6cc4b8"/><rect x="9" y="12" width="1" height="1" fill="#4f9e94"/><rect x="10" y="12" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="12" width="1" height="1" fill="#6e6878"/><rect x="4" y="13" width="1" height="1" fill="#6e6878"/><rect x="5" y="13" width="4" height="1" fill="#6cc4b8"/><rect x="9" y="13" width="3" height="1" fill="#4f9e94"/><rect x="12" y="13" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="13" width="1" height="1" fill="#6e6878"/><rect x="4" y="14" width="11" height="1" fill="#6e6878"/></symbol>
+      <symbol id="i-star" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM4 2h4v1h-4zM4 3h4v1h-4zM0 4h12v1h-12zM1 5h10v1h-10zM2 6h8v1h-8zM3 7h6v1h-6zM2 8h8v1h-8zM2 9h3v1h-3zM7 9h3v1h-3zM1 10h2v1h-2zM9 10h2v1h-2z"/></symbol>
+      <symbol id="i-download" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM5 2h2v1h-2zM5 3h2v1h-2zM2 4h2v1h-2zM5 4h2v1h-2zM8 4h2v1h-2zM3 5h6v1h-6zM4 6h4v1h-4zM5 7h2v1h-2zM1 9h2v1h-2zM9 9h2v1h-2zM1 10h10v1h-10z"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 12 12"><path d="M5 0h1v1h-1zM5 1h1v1h-1zM4 2h3v1h-3zM2 3h7v1h-7zM4 4h3v1h-3zM5 5h1v1h-1zM10 5h1v1h-1zM5 6h1v1h-1zM9 6h3v1h-3zM10 7h1v1h-1zM3 8h1v1h-1zM2 9h3v1h-3zM3 10h1v1h-1z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 12 12"><path d="M10 1h2v1h-2zM9 2h3v1h-3zM8 3h3v1h-3zM1 4h2v1h-2zM7 4h3v1h-3zM1 5h3v1h-3zM6 5h3v1h-3zM2 6h5v1h-5zM3 7h3v1h-3zM4 8h1v1h-1z"/></symbol>
+      <symbol id="i-info" viewBox="0 0 12 12"><path d="M3 0h6v1h-6zM2 1h1v1h-1zM9 1h1v1h-1zM1 2h1v1h-1zM5 2h2v1h-2zM10 2h1v1h-1zM1 3h1v1h-1zM10 3h1v1h-1zM1 4h1v1h-1zM5 4h2v1h-2zM10 4h1v1h-1zM1 5h1v1h-1zM5 5h2v1h-2zM10 5h1v1h-1zM1 6h1v1h-1zM5 6h2v1h-2zM10 6h1v1h-1zM1 7h1v1h-1zM5 7h2v1h-2zM10 7h1v1h-1zM2 8h1v1h-1zM9 8h1v1h-1zM3 9h6v1h-6z"/></symbol>
+    </svg>
+
+    <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+    <header class="bar">
+      <a class="brand" href="/">
+        <svg class="logo" width="24" height="24" aria-hidden="true"><use href="#logo" /></svg>
+        Asset Prompter
+      </a>
+      <!-- The home page's sections, and the guides. The language link (a.btn.lang-btn, data-lang) goes first in
+           .bar-right once the guide has a Serbian copy. -->
+      <nav class="bar-links" aria-label="Site" data-i18n-aria-label="g.nav.label">
+        <a href="/#loop" data-i18n="nav.loop">The loop</a>
+        <a href="/#mcp" data-i18n="nav.mcp">Compared with MCP</a>
+        <a href="/#questions" data-i18n="nav.questions">Questions</a>
+        <a href="/guides/" aria-current="true" data-i18n="foot.guides">Guides</a>
+      </nav>
+      <div class="bar-right">
+        <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star on GitHub: Asset Prompter" data-i18n-aria-label="star.label">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-star" /></svg>
+          <span class="bar-github-text" data-i18n="star">Star<span class="bar-github-on"> on GitHub</span></span>
+        </a>
+        <a class="btn btn-primary" href="/#install" data-i18n-text="install">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-download" /></svg>
+          Install
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="section guide-top">
+        <div class="wrap">
+          <nav class="crumbs" aria-label="Breadcrumb" data-i18n-aria-label="g.crumbs.label">
+            <ol>
+              <li><a href="/" data-i18n="g.crumbs.home">Asset Prompter</a></li>
+              <li><a href="/guides/" data-i18n="foot.guides">Guides</a></li>
+              <li aria-current="page" data-i18n="g.api.crumb">Generators with an API or MCP</li>
+            </ol>
+          </nav>
+          <div class="head">
+            <h1 data-i18n="g.api.h1">Which image and video generators have an API or an MCP server</h1>
+            <p class="lead" data-i18n="g.api.lead">A coding agent can only press Generate where a generator gives it a way in: an API or an MCP server. Here is which ones do, what it costs, and the source for each, checked on 8 October 2026.</p>
+            <p class="guide-meta" data-i18n="g.byline">
+              By <a href="https://github.com/Djordje1998" target="_blank" rel="noopener author">Đorđe Novaković</a>, who makes Asset Prompter ·
+              Updated <time datetime="2026-10-08">8 October 2026</time>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band guide-sec" aria-labelledby="short">
+        <div class="wrap">
+          <div class="split">
+            <div class="art is-4x3">
+              <img src="/assets/art/you-are-the-server.webp" data-i18n-alt="mcp.alt" alt="Pixel art: the person in the gold hoodie sits at their own desk and holds up a finished picture. The robot is inside the monitor and holds a prompt sheet out of the screen toward them." width="960" height="716" />
+            </div>
+            <div class="prose">
+              <h2 id="short" data-i18n="g.api.short.h">The short answer</h2>
+              <p data-i18n="g.api.short.1">
+                <strong>Midjourney and Google Flow have no public API.</strong> Midjourney's rules forbid automating it; Flow's models,
+                Veo and Nano Banana, are in Google's Gemini API, billed apart from a Google AI plan.
+              </p>
+              <p data-i18n="g.api.short.2">
+                <strong>ChatGPT Images, Grok Imagine, Leonardo.Ai and Luma have APIs</strong>, billed apart from the app's plan where
+                the vendor says how; Leonardo and Luma also have MCP servers, which run on that API billing.
+              </p>
+              <p data-i18n="g.api.short.3">
+                <strong>Higgsfield, Ideogram, Krea, Kling and Runway have official MCP servers</strong> you sign in to with your
+                account; Ideogram and Runway say MCP use draws on the same plan or credits as their app.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section guide-sec" aria-labelledby="table">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="table" data-i18n="g.api.table.h">The seven generators Asset Prompter has presets for</h2>
+            <p data-i18n="g.api.table.p">
+              <a href="/#questions">Presets ship</a> for these seven. "Not found" means no first-party statement was found either way,
+              not that the thing does not exist.
+            </p>
+          </div>
+          <section class="table-wrap guide-wide" aria-labelledby="t-presets" tabindex="0">
+            <table class="guide-table">
+              <caption id="t-presets" data-i18n="g.api.a.caption">The seven generators with presets, checked 8 October 2026. Plans and APIs change often; each row links its sources.</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="g.api.a.h0">Generator</th>
+                  <th scope="col" data-i18n="g.api.a.h1">Public API</th>
+                  <th scope="col" data-i18n="g.api.a.h2">API billing</th>
+                  <th scope="col" data-i18n="g.api.a.h3">Official MCP server</th>
+                  <th scope="col" data-i18n="g.api.a.h4">Sources</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">ChatGPT Images (OpenAI)</th>
+                  <td data-i18n="g.api.a.1.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> OpenAI's image generation API.</td>
+                  <td data-i18n="g.api.a.1.2">Billed apart. OpenAI's help centre lists the API under what ChatGPT Plus does not include: <q>API usage is separate and billed independently.</q></td>
+                  <td data-i18n="g.api.a.1.3"><span class="tag t-review">Not found</span> None from OpenAI.</td>
+                  <td data-i18n="g.api.a.1.4"><span class="src"><a href="https://developers.openai.com/api/docs/guides/image-generation" target="_blank" rel="noopener">OpenAI: image generation</a>; <a href="https://help.openai.com/en/articles/6950777" target="_blank" rel="noopener">OpenAI help: ChatGPT Plus</a>; <a href="https://help.openai.com/en/articles/9039756" target="_blank" rel="noopener">billing</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Midjourney</th>
+                  <td data-i18n="g.api.a.2.1"><span class="tag t-generate">No</span> Its Community Guidelines: <q>Midjourney does not provide an API, nor provide third-party apps or scripts, and automating interactions with Midjourney service is strictly prohibited</q>, with rare exceptions it grants explicitly.</td>
+                  <td data-i18n="g.api.a.2.2">No API to bill.</td>
+                  <td data-i18n="g.api.a.2.3"><span class="tag t-generate">No</span> Third-party "Midjourney API" and MCP wrappers drive your account by automation, which its Terms of Service forbid.</td>
+                  <td data-i18n="g.api.a.2.4"><span class="src"><a href="https://docs.midjourney.com/hc/en-us/articles/32013696484109-Community-Guidelines" target="_blank" rel="noopener">Midjourney: Community Guidelines</a>; <a href="https://docs.midjourney.com/hc/en-us/articles/32083055291277-Terms-of-Service" target="_blank" rel="noopener">Terms of Service</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Google Flow</th>
+                  <td data-i18n="g.api.a.3.1"><span class="tag t-generate">No</span> No API for Flow itself. Its models, Veo 3.1 for video and Nano Banana for images, are in Google's Gemini API and on Vertex AI.</td>
+                  <td data-i18n="g.api.a.3.2">Billed apart. Google: the benefits of a Google AI plan apply in the AI Studio web app; using the Gemini API with an API key is billed separately.</td>
+                  <td data-i18n="g.api.a.3.3"><span class="tag t-review">Not found</span> None for Flow. Google's list of its MCP servers names Genmedia (Gemini image models, Veo) on Google Cloud, whose README says <q>This is not an officially supported Google product.</q></td>
+                  <td data-i18n="g.api.a.3.4"><span class="src"><a href="https://ai.google.dev/gemini-api/docs/veo" target="_blank" rel="noopener">Gemini API: Veo</a>; <a href="https://ai.google.dev/gemini-api/docs/google-ai-plans" target="_blank" rel="noopener">Google AI plans</a>; <a href="https://github.com/google/mcp" target="_blank" rel="noopener">google/mcp</a>; <a href="https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia" target="_blank" rel="noopener">Genmedia README</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Dreamina (CapCut)</th>
+                  <td data-i18n="g.api.a.4.1"><span class="tag t-review">Not found</span> No public Dreamina API. ByteDance's Seedance (video) and Seedream (image) models are offered to developers through BytePlus ModelArk.</td>
+                  <td data-i18n="g.api.a.4.2">ModelArk is a separate BytePlus account with its own API keys and billing.</td>
+                  <td data-i18n="g.api.a.4.3"><span class="tag t-review">Not found</span></td>
+                  <td data-i18n="g.api.a.4.4"><span class="src"><a href="https://docs.byteplus.com/en/docs/ModelArk/1631633" target="_blank" rel="noopener">BytePlus ModelArk docs</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Grok Imagine (xAI)</th>
+                  <td data-i18n="g.api.a.5.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> xAI's API has Grok Imagine image and video generation.</td>
+                  <td data-i18n="g.api.a.5.2">Through xAI's developer console. Whether a Grok subscription covers any API use: not found in xAI's own pages.</td>
+                  <td data-i18n="g.api.a.5.3"><span class="tag t-review">Not found</span> Only community servers.</td>
+                  <td data-i18n="g.api.a.5.4"><span class="src"><a href="https://docs.x.ai/developers/model-capabilities/video/generation" target="_blank" rel="noopener">xAI docs: video generation</a>; <a href="https://x.ai/news/grok-imagine-api" target="_blank" rel="noopener">xAI: Grok Imagine API</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Leonardo.Ai</th>
+                  <td data-i18n="g.api.a.6.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> The Leonardo.Ai API.</td>
+                  <td data-i18n="g.api.a.6.2">Billed apart. Its quick start: <q>API access is separate from free or web app subscriptions.</q></td>
+                  <td data-i18n="g.api.a.6.3"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> The Leonardo.Ai MCP server. It needs an API key and an API plan, so it runs on the API's billing, not the web plan's.</td>
+                  <td data-i18n="g.api.a.6.4"><span class="src"><a href="https://docs.leonardo.ai/docs/getting-started" target="_blank" rel="noopener">Leonardo: getting started</a>; <a href="https://docs.leonardo.ai/docs/connect-to-leonardoai-mcp" target="_blank" rel="noopener">Leonardo: MCP server</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Luma (Dream Machine)</th>
+                  <td data-i18n="g.api.a.7.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> The Luma API.</td>
+                  <td data-i18n="g.api.a.7.2">Billed apart. Luma: <q>Dream Machine subscriptions and API are separate—credits do not transfer between them.</q></td>
+                  <td data-i18n="g.api.a.7.3"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> <code>luma-api-mcp</code>, in Luma's GitHub organisation. It is set up with an API key from Luma's API keys page, so it runs on API credits; its README lists the Photon image and Ray video models.</td>
+                  <td data-i18n="g.api.a.7.4"><span class="src"><a href="https://lumalabs.ai/learning-hub/dream-machine-credit-system" target="_blank" rel="noopener">Luma: credit system</a>; <a href="https://github.com/lumalabs/luma-api-mcp" target="_blank" rel="noopener">lumalabs/luma-api-mcp</a></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <div class="prose">
+            <h2 id="mcp-plan" data-i18n="g.api.b.h">Generators with an official MCP server on your account</h2>
+            <p data-i18n="g.api.b.p">
+              With these, an agent can generate by itself on what you already pay for. The home page names them in
+              <a href="/#mcp">"To your agent, the same steps as an MCP server"</a>.
+            </p>
+          </div>
+          <section class="table-wrap guide-wide" aria-labelledby="t-mcp" tabindex="0">
+            <table class="guide-table is-narrow">
+              <caption id="t-mcp" data-i18n="g.api.b.caption">Official MCP servers you sign in to, checked 8 October 2026.</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="g.api.b.h0">Generator</th>
+                  <th scope="col" data-i18n="g.api.b.h1">The MCP server</th>
+                  <th scope="col" data-i18n="g.api.b.h2">What it draws on</th>
+                  <th scope="col" data-i18n="g.api.b.h3">Sources</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Higgsfield</th>
+                  <td data-i18n="g.api.b.1.1"><code>https://mcp.higgsfield.ai/mcp</code>, added to Claude as a custom connector; you sign in with your Higgsfield account, no API key.</td>
+                  <td data-i18n="g.api.b.1.2">A paid Higgsfield plan, and its credits.</td>
+                  <td data-i18n="g.api.b.1.3"><span class="src"><a href="https://higgsfield.ai/creator-hub/help-center/mcp-cli/how-do-i-connect-higgsfield-to-claude" target="_blank" rel="noopener">Higgsfield help centre</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Ideogram</th>
+                  <td data-i18n="g.api.b.2.1"><code>https://mcp.ideogram.ai/mcp</code>; you sign in with your Ideogram account (OAuth), no API key.</td>
+                  <td data-i18n="g.api.b.2.2">Your plan. Ideogram: <q>Usage through the MCP draw from the same subscription as the web app.</q></td>
+                  <td data-i18n="g.api.b.2.3"><span class="src"><a href="https://ideogram.ai/features/mcp/" target="_blank" rel="noopener">Ideogram MCP</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Krea</th>
+                  <td data-i18n="g.api.b.3.1"><code>https://api.krea.ai/mcp</code>; you sign in with your Krea account (OAuth), or use an API token.</td>
+                  <td data-i18n="g.api.b.3.2">Signed in: the compute units of the workspace you pick, as the app uses. With a token: the workspace's API balance in USD, which is separate.</td>
+                  <td data-i18n="g.api.b.3.3"><span class="src"><a href="https://www.krea.ai/docs/developers/mcp" target="_blank" rel="noopener">Krea: MCP</a>; <a href="https://www.krea.ai/docs/developers/api-keys-and-billing" target="_blank" rel="noopener">Krea: API keys and billing</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Kling</th>
+                  <td data-i18n="g.api.b.4.1">The Kling AI plugin for Claude Code: a remote MCP at <code>https://kling.ai/mcp/plugin</code>; you sign in (OAuth), no API key.</td>
+                  <td data-i18n="g.api.b.4.2">Credits; the README does not say whether they are the app's or the API's.</td>
+                  <td data-i18n="g.api.b.4.3"><span class="src"><a href="https://github.com/klingai-tech/claude-plugin" target="_blank" rel="noopener">klingai-tech/claude-plugin</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Runway</th>
+                  <td data-i18n="g.api.b.5.1">Runway MCP, for Claude, ChatGPT, Cursor and other agents; you sign in with your Runway account, no API key.</td>
+                  <td data-i18n="g.api.b.5.2">Your plan. Runway: <q>MCP uses your Runway credits, just like the Runway app</q>, and the models you get depend on the plan.</td>
+                  <td data-i18n="g.api.b.5.3"><span class="src"><a href="https://runway.com/mcp" target="_blank" rel="noopener">Runway MCP</a>; <a href="https://help.runwayml.com/hc/en-us/articles/51931843164691" target="_blank" rel="noopener">Runway help centre</a></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <div class="prose">
+            <h2 id="agents" data-i18n="g.api.c.h">Image generation built into coding agents</h2>
+            <p data-i18n="g.api.c.p">Some agents need no generator at all for a picture, as long as their own model is good enough for it.</p>
+          </div>
+          <section class="table-wrap guide-wide" aria-labelledby="t-agents" tabindex="0">
+            <table class="guide-table is-narrow">
+              <caption id="t-agents" data-i18n="g.api.c.caption">Image generation in coding agents, checked 8 October 2026.</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="g.api.c.h0">Agent</th>
+                  <th scope="col" data-i18n="g.api.c.h1">What it has</th>
+                  <th scope="col" data-i18n="g.api.c.h2">What it costs</th>
+                  <th scope="col" data-i18n="g.api.c.h3">Sources</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Codex (OpenAI)</th>
+                  <td data-i18n="g.api.c.1.1">A built-in <code>image_gen</code> tool. Its image skill: <q>Does not require <code>OPENAI_API_KEY</code>.</q> It saves under <code>$CODEX_HOME/generated_images/</code>, and the skill tells the agent to copy what the project uses into the workspace.</td>
+                  <td data-i18n="g.api.c.1.2">The ChatGPT plan's Codex limits, which image turns use <q>3-5x faster on average</q>; not on the Free plan. With an API key, API prices.</td>
+                  <td data-i18n="g.api.c.1.3"><span class="src"><a href="https://github.com/openai/codex/blob/main/codex-rs/skills/src/assets/samples/imagegen/SKILL.md" target="_blank" rel="noopener">Codex imagegen skill</a>; <a href="https://developers.openai.com/codex/pricing" target="_blank" rel="noopener">Codex pricing</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Cursor</th>
+                  <td data-i18n="g.api.c.2.1">Since 2.4 the agent can generate images, with Nano Banana Pro; they are <q>saved to your project's assets/ folder by default</q>.</td>
+                  <td data-i18n="g.api.c.2.2">Not stated in the changelog.</td>
+                  <td data-i18n="g.api.c.2.3"><span class="src"><a href="https://cursor.com/changelog/2-4" target="_blank" rel="noopener">Cursor 2.4 changelog</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Antigravity (Google)</th>
+                  <td data-i18n="g.api.c.3.1"><q>The Agent has the ability to decide when to use an image generation model when it deems appropriate</q>, for example a mockup of a new front end.</td>
+                  <td data-i18n="g.api.c.3.2">Not found.</td>
+                  <td data-i18n="g.api.c.3.3"><span class="src"><a href="https://antigravity.google/blog/nano-banana-pro" target="_blank" rel="noopener">Antigravity blog</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Gemini CLI</th>
+                  <td data-i18n="g.api.c.4.1">The <code>nanobanana</code> extension, which contains an MCP server; its default model is Nano Banana 2 (<code>gemini-3.1-flash-image-preview</code>).</td>
+                  <td data-i18n="g.api.c.4.2">It needs a Gemini API key, so the Gemini API's billing.</td>
+                  <td data-i18n="g.api.c.4.3"><span class="src"><a href="https://github.com/gemini-cli-extensions/nanobanana" target="_blank" rel="noopener">gemini-cli-extensions/nanobanana</a></span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Claude Code (Anthropic)</th>
+                  <td data-i18n="g.api.c.5.1">No image generation of its own. Anthropic's help centre: Claude isn't built to produce photos or illustrations the way image tools are; it can view the images you give it.</td>
+                  <td data-i18n="g.api.c.5.2">Nothing to bill.</td>
+                  <td data-i18n="g.api.c.5.3"><span class="src"><a href="https://support.claude.com/en/articles/9002504-can-claude-produce-images" target="_blank" rel="noopener">Claude help centre</a></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+      </section>
+
+      <section class="section band guide-sec" aria-labelledby="means">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="means" data-i18n="g.api.means.h">What this means for your coding agent</h2>
+            <h3 data-i18n="g.api.means.1.h">The generator has an official MCP server on your plan</h3>
+            <p data-i18n="g.api.means.1.p">
+              Higgsfield, Ideogram and Runway, and Krea when you sign in: the agent can generate by itself. Asset Prompter is
+              optional there. As the home page's answer puts it, it still helps if you want to choose and approve every result
+              yourself and keep each version in the folder, or if you use features the tool keeps to its own app.
+            </p>
+            <h3 data-i18n="g.api.means.2.h">It has an API, billed apart from your plan</h3>
+            <p data-i18n="g.api.means.2.p">
+              ChatGPT Images, the Gemini API (Veo, Nano Banana), Grok Imagine, Leonardo.Ai and Luma: the agent can generate through a
+              script or an MCP server with an API key, and you pay per generation on top of any plan you already have.
+            </p>
+            <h3 data-i18n="g.api.means.3.h">It has no API</h3>
+            <p data-i18n="g.api.means.3.p">
+              Midjourney and Google Flow: the agent can't press Generate. Automating the web app breaks Midjourney's terms. What is
+              left is to carry prompts and files by hand, or through a shared folder like Asset Prompter's; the
+              <a href="/guides/get-images-into-coding-agent-project/">five ways to get images into your agent's project</a> compares
+              them, and <a href="/guides/how-this-site-was-made/">how this site's pictures were made</a> shows the folder with Flow.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section guide-sec" aria-labelledby="checked">
+        <div class="wrap">
+          <div class="prose">
+            <h2 id="checked" data-i18n="g.api.how.h">How this was checked</h2>
+            <p data-i18n="g.api.how.p1">
+              Each row was checked on 8 October 2026 against the vendor's own documentation, help centre or GitHub repository,
+              linked in the row. Where no first-party statement was found, the cell says so. Prices are left out: they change
+              more often than this page.
+            </p>
+            <p data-i18n="g.api.how.p2">
+              Product names belong to their owners. Asset Prompter is an independent project, not affiliated with or endorsed by
+              any of them. A correction? <a href="https://github.com/Djordje1998/asset-prompter/issues" target="_blank" rel="noopener">Open an issue on GitHub</a>.
+            </p>
+            <h2 id="changes" data-i18n="g.api.log.h">What changed</h2>
+            <ul data-i18n="g.api.log.list">
+              <li><time datetime="2026-10-08">8 October 2026</time>: first version.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band closing">
+        <div class="wrap">
+          <div class="head">
+            <h2 data-i18n="closing.h2">Give your agent a way to ask for pictures.</h2>
+            <p class="lead" data-i18n="closing.lead">Download the folder, run setup, paste one message.</p>
+          </div>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip" data-i18n-text="download">
+              <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#i-download" /></svg>
+              Download ZIP
+            </a>
+            <a class="btn btn-lg" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" data-i18n="github">View on GitHub</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-row">
+        <span class="brand">
+          <svg class="logo" width="20" height="20" aria-hidden="true"><use href="#logo" /></svg>
+          Asset Prompter
+        </span>
+        <span data-i18n="foot.art">Illustrations generated by hand in Google Flow, through Asset Prompter.</span>
+        <span class="foot-links">
+          <a href="/guides/" data-i18n="foot.guides">Guides</a>
+          <a href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener">github.com/Djordje1998/asset-prompter</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -3,32 +3,320 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title data-i18n="title">Asset Prompter: your agent writes the prompt, you make the picture</title>
+    <!-- Each language is a page of its own: English in index.html, Serbian in sr/index.html (made from index.html by
+         tools/build-sr.mjs, with this same script). It runs first, before anything is fetched or drawn: a reader who
+         chose Serbian in the menu and opens the English page goes on to the Serbian one, and an old link with ?lang=
+         goes to its language.
+         ?lang=en keeps the English page even for that reader, so no address sends back to the one it came from. With
+         the script the language menu shows (.i18n); main.js runs it, so without main.js the menu goes again. A page
+         opened by the menu (main.js keeps the reader's place for it) plays no entrance (.lang-switched) and holds its
+         transitions until main.js has set it as it was (.lang-settling), as when the text changed in place. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var asked = (/[?&]lang=([a-z]+)/.exec(location.search) || [])[1];
+        var saved = null;
+        try {
+          saved = localStorage.getItem("lang");
+        } catch (e) {}
+        // A page opened from a file has no folder index.
+        var index = location.protocol === "file:" ? "index.html" : "";
+        if (root.lang === "en" && (asked === "sr" || (saved === "sr" && asked !== "en"))) {
+          location.replace("sr/" + index + location.hash);
+        } else if (root.lang !== "en" && asked === "en") {
+          location.replace("../" + index + "?lang=en" + location.hash);
+        }
+        root.classList.add("i18n");
+        try {
+          var place = JSON.parse(sessionStorage.getItem("lang-place"));
+          if (place && Date.now() - place.at < 10000) root.classList.add("lang-switched", "lang-settling");
+        } catch (e) {}
+        document.addEventListener("DOMContentLoaded", function () {
+          if (!root.classList.contains("js")) root.classList.remove("i18n", "lang-settling");
+        });
+      })();
+    </script>
+    <title data-i18n="title">Asset Prompter: image &amp; video prompts from your coding agent</title>
     <meta
       name="description"
       data-i18n-content="description"
-      content="A small local app that carries prompts and results between your coding agent and the image or video generator you use by hand."
+      content="Free local app for Windows and Linux. Claude Code, Codex or Cursor writes the image or video prompt; you make it in Midjourney, Google Flow or ChatGPT Images."
     />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Đorđe Novaković" />
+    <!-- One address per language. The Serbian page, sr/index.html, has the same three alternates and its own canonical. -->
+    <link rel="canonical" href="https://assetprompter.com/" />
+    <link rel="alternate" hreflang="en" href="https://assetprompter.com/" />
+    <link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/" />
+    <link rel="alternate" hreflang="x-default" href="https://assetprompter.com/" />
     <meta name="theme-color" content="#19171d" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- Link previews need absolute addresses. Their texts have keys, so the Serbian page gets Serbian previews, and so
+         has the picture (og.image: the Serbian page shows assets/og-sr.jpg, its words in Serbian). -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Asset Prompter" />
-    <meta property="og:description" content="Your agent writes the prompt. You make the picture. A small local app for the hand-off between the two." />
-    <!-- Link previews need absolute addresses. Change both when the page moves to its own domain. -->
+    <meta property="og:site_name" content="Asset Prompter" />
+    <meta property="og:locale" data-i18n-content="og.locale" content="en_US" />
+    <meta property="og:locale:alternate" data-i18n-content="og.locale.alt" content="sr_RS" />
+    <meta property="og:title" data-i18n-content="og.title" content="Asset Prompter: your agent writes the prompt, you make the picture" />
+    <meta
+      property="og:description"
+      data-i18n-content="og.description"
+      content="A free local app for Windows and Linux that carries prompts and results between your coding agent and the image or video generator you use by hand."
+    />
     <meta property="og:url" content="https://assetprompter.com/" />
-    <meta property="og:image" content="https://assetprompter.com/assets/og.png" />
+    <meta property="og:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <meta property="og:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
+    <meta name="twitter:title" data-i18n-content="og.title" content="Asset Prompter: your agent writes the prompt, you make the picture" />
+    <meta
+      name="twitter:description"
+      data-i18n-content="og.description"
+      content="A free local app for Windows and Linux that carries prompts and results between your coding agent and the image or video generator you use by hand."
     />
-    <link rel="stylesheet" href="./styles.css?v=w2-030" />
-    <script src="./i18n.js?v=w2-027"></script>
+    <meta name="twitter:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
+    <!-- Two facts Slack shows under a link (X ignores them). -->
+    <meta name="twitter:label1" data-i18n-content="og.label1" content="Price" />
+    <meta name="twitter:data1" data-i18n-content="og.data1" content="Free" />
+    <meta name="twitter:label2" data-i18n-content="og.label2" content="Runs on" />
+    <meta name="twitter:data2" content="Windows, Linux" />
+    <!-- The icon is favicon.svg; the others are drawn from it for browsers and places that take no SVG. The 192 px PNG
+         is the square raster icon search results ask for (at least 48 px). -->
+    <link rel="icon" href="./favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./site.webmanifest" />
+    <!-- The page as Markdown, and its short summary, for AI assistants and agents (llms-full.txt, llms.txt). Both are
+         English, so the Serbian page keeps only describedby (tools/build-sr.mjs leaves the alternate out). -->
+    <link rel="alternate" type="text/markdown" href="https://assetprompter.com/llms-full.txt" title="Asset Prompter as Markdown" />
+    <link rel="describedby" type="text/markdown" href="https://assetprompter.com/llms.txt" />
+    <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
+    <!-- The fonts the hero is drawn in; the rest are found in styles.css. A font is fetched in CORS mode, so a preload
+         needs crossorigin to be used. The Serbian page preloads the Serbian file of each as well (-sr.woff2, its
+         letters with marks; tools/build-sr.mjs adds them). -->
+    <link rel="preload" href="assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="./styles.css?v=w2-044" />
+    <!-- What search engines and AI answers read about the page. Its texts are copies of the page's: the page's name and
+         description are the title and the description above, the app's description is hero.sub, the questions and answers
+         are faq.1.q to faq.7.a word for word, without markup. Only the features, the app's subcategory, its requirements,
+         its audience, its keywords and the names of its about topics have no element; their Serbian is ld.feature.1 to
+         ld.feature.8, ld.subcategory, ld.requirements, ld.audience, ld.keywords and ld.about.1 to ld.about.5 in i18n.js. The agents and generators the page names are in mentions, with their Wikidata item
+         where there is one. Change it together with those texts. tools/build-sr.mjs writes the Serbian block of
+         sr/index.html from this one and stops if a text here is no longer the page's. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://assetprompter.com/#website",
+            "url": "https://assetprompter.com/",
+            "name": "Asset Prompter",
+            "alternateName": ["AssetPrompter", "assetprompter.com"],
+            "inLanguage": ["en", "sr-Latn"],
+            "image": {
+              "@type": "ImageObject",
+              "@id": "https://assetprompter.com/#icon",
+              "url": "https://assetprompter.com/icon-512.png",
+              "contentUrl": "https://assetprompter.com/icon-512.png",
+              "width": 512,
+              "height": 512
+            },
+            "publisher": { "@id": "https://assetprompter.com/#author" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://assetprompter.com/#webpage",
+            "url": "https://assetprompter.com/",
+            "name": "Asset Prompter: image & video prompts from your coding agent",
+            "description": "Free local app for Windows and Linux. Claude Code, Codex or Cursor writes the image or video prompt; you make it in Midjourney, Google Flow or ChatGPT Images.",
+            "inLanguage": "en",
+            "isPartOf": { "@id": "https://assetprompter.com/#website" },
+            "about": { "@id": "https://assetprompter.com/#app" },
+            "mainEntity": { "@id": "https://assetprompter.com/#app" },
+            "mentions": [
+              { "@type": "Thing", "name": "Claude Code", "sameAs": "https://www.wikidata.org/wiki/Q138457287" },
+              { "@type": "Thing", "name": "Codex", "sameAs": "https://www.wikidata.org/wiki/Q138940795" },
+              { "@type": "Thing", "name": "Cursor", "sameAs": "https://www.wikidata.org/wiki/Q131980386" },
+              { "@type": "Thing", "name": "Gemini CLI" },
+              { "@type": "Thing", "name": "GitHub Copilot", "sameAs": "https://www.wikidata.org/wiki/Q107435063" },
+              { "@type": "Thing", "name": "OpenCode" },
+              { "@type": "Thing", "name": "Antigravity", "sameAs": "https://www.wikidata.org/wiki/Q136827654" },
+              {
+                "@type": "CreativeWork",
+                "name": "ChatGPT Images",
+                "isPartOf": { "@type": "CreativeWork", "name": "ChatGPT", "sameAs": "https://www.wikidata.org/wiki/Q115564437" }
+              },
+              { "@type": "Thing", "name": "Dreamina" },
+              { "@type": "Thing", "name": "Google Flow", "sameAs": "https://www.wikidata.org/wiki/Q140560557" },
+              { "@type": "Thing", "name": "Grok Imagine" },
+              { "@type": "Thing", "name": "Leonardo.Ai", "sameAs": "https://www.wikidata.org/wiki/Q124157014" },
+              { "@type": "Thing", "name": "Luma AI" },
+              { "@type": "Thing", "name": "Midjourney", "sameAs": "https://www.wikidata.org/wiki/Q113070628" },
+              { "@type": "Thing", "name": "Model Context Protocol (MCP)", "sameAs": "https://www.wikidata.org/wiki/Q133436854" }
+            ],
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://assetprompter.com/assets/og.jpg",
+              "width": 1200,
+              "height": 630
+            },
+            "dateModified": "2026-10-08"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://assetprompter.com/#app",
+            "name": "Asset Prompter",
+            "url": "https://assetprompter.com/",
+            "description": "Asset Prompter is a small local app that carries prompts and results between your coding agent and the image or video generator you use by hand.",
+            "applicationCategory": "DeveloperApplication",
+            "applicationSubCategory": "Prompt and result handoff between coding agents and image or video generators",
+            "operatingSystem": "Windows, Linux",
+            "softwareRequirements": "Bun; ffmpeg for the frame sheets and motion map of video clips. Setup installs both on Windows and Linux; on macOS you install Bun yourself.",
+            "isAccessibleForFree": true,
+            "license": "https://opensource.org/license/mit",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "downloadUrl": "https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip",
+            "installUrl": "https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md",
+            "releaseNotes": "https://github.com/Djordje1998/asset-prompter/blob/master/CHANGELOG.md",
+            "softwareHelp": { "@type": "CreativeWork", "url": "https://github.com/Djordje1998/asset-prompter/blob/master/README.md" },
+            "image": { "@id": "https://assetprompter.com/#icon" },
+            "screenshot": [
+              "https://assetprompter.com/assets/app/2-result.webp",
+              "https://assetprompter.com/assets/app/7-approved.webp",
+              "https://assetprompter.com/assets/shots/variants-dialog.webp"
+            ],
+            "audience": {
+              "@type": "Audience",
+              "audienceType": "People who build websites, apps and other projects with a coding agent and make the images and video for them by hand in a generator such as Midjourney, Google Flow or ChatGPT Images"
+            },
+            "keywords": [
+              "coding agent image prompts",
+              "coding agent video prompts",
+              "Claude Code images",
+              "Codex images",
+              "Cursor images",
+              "Midjourney",
+              "Google Flow",
+              "ChatGPT Images",
+              "image prompt handoff",
+              "AI image and video assets for a website",
+              "no API key",
+              "MCP server alternative for generators without an API",
+              "local app",
+              "Windows",
+              "Linux",
+              "free"
+            ],
+            "about": [
+              { "@type": "Thing", "name": "Generative artificial intelligence", "sameAs": "https://www.wikidata.org/wiki/Q117246174" },
+              { "@type": "Thing", "name": "Text-to-image model", "sameAs": "https://www.wikidata.org/wiki/Q113940039" },
+              { "@type": "Thing", "name": "Text-to-video model", "sameAs": "https://www.wikidata.org/wiki/Q115517227" },
+              { "@type": "Thing", "name": "Prompt engineering", "sameAs": "https://www.wikidata.org/wiki/Q108941486" },
+              { "@type": "Thing", "name": "AI agent", "sameAs": "https://www.wikidata.org/wiki/Q132451509" }
+            ],
+            "featureList": [
+              "Your coding agent writes each image or video prompt into a slot, with its settings",
+              "You generate by hand in any tool and drop the result on the slot's card",
+              "Works with Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode and Antigravity, and any agent that works with files",
+              "Presets for ChatGPT Images, Dreamina, Google Flow, Grok Imagine, Leonardo.Ai, Luma and Midjourney",
+              "Every version, result, change request and review stays in the slot folder as plain files",
+              "One click approves a result and makes it final; from that file the agent exports the sizes and formats it needs",
+              "Turns each video clip into frame sheets and a motion map the agent can read",
+              "Runs on your machine and listens on 127.0.0.1 only, with no account and no API key"
+            ],
+            "author": { "@id": "https://assetprompter.com/#author" },
+            "sameAs": ["https://github.com/Djordje1998/asset-prompter"]
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "@id": "https://assetprompter.com/#source",
+            "codeRepository": "https://github.com/Djordje1998/asset-prompter",
+            "programmingLanguage": "TypeScript",
+            "runtimePlatform": "Bun",
+            "license": "https://opensource.org/license/mit",
+            "targetProduct": { "@id": "https://assetprompter.com/#app" },
+            "author": { "@id": "https://assetprompter.com/#author" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://assetprompter.com/#author",
+            "name": "Đorđe Novaković",
+            "alternateName": ["Djordje Novaković", "Djordje1998"],
+            "url": "https://github.com/Djordje1998",
+            "sameAs": ["https://github.com/Djordje1998", "https://www.linkedin.com/in/dj-nov"]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://assetprompter.com/#questions",
+            "inLanguage": "en",
+            "isPartOf": { "@id": "https://assetprompter.com/#website" },
+            "about": { "@id": "https://assetprompter.com/#app" },
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Which agents does it work with?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Any agent that can read and write files in the project folder and follow a written guide. The app writes that guide, HOW-TO-USE.md, into every project. If the agent can also run a command in the background and is woken when it ends, Notify agent wakes it. If not, you tell it \"done\" in the chat."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which generators?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Any tool you can paste a prompt into and get a file out of. A preset tells the agent which models, modes, aspect ratios and lengths a tool offers, and the app warns you when a result doesn't match. Presets for ChatGPT Images, Dreamina, Google Flow, Grok Imagine, Leonardo.Ai, Luma and Midjourney are included, and a slot can use any of them, so one project can mix tools. Each preset is a short text file you can copy and edit for another tool."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "My generator has an MCP server. Do I still need this?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Maybe not. Several generators now offer an official MCP server that lets an agent generate on your plan, among them Higgsfield, Ideogram, Krea and Runway. Asset Prompter still helps there if you want to choose and approve every result yourself and keep each version in the folder, or if you use features the tool keeps to its own app."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do I need an agent at all?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. New slot lets you write prompts yourself. You still get versions, results side by side and a shelf of approved files."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does anything leave my machine?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The app listens on 127.0.0.1 only, has no account, and keeps everything in your project folder. Two things do go out: the interface loads its fonts from Google Fonts, and whatever you paste into your generator goes to that generator."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What does it cost?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Nothing. You pay for your generator and your agent, as you do now." }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I change an asset after I approved it?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Remove the approval in Details to reopen the slot, or clone the slot to try another direction and keep the original."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body id="top">
     <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
@@ -67,27 +355,29 @@
         <a href="#questions" data-i18n="nav.questions">Questions</a>
       </nav>
       <div class="bar-right">
-        <!-- The language menu. i18n.js switches the page; without the script the menu is not shown. -->
+        <!-- The language menu. Each language is a page of its own, and the items are links to them; main.js opens the
+             menu and keeps the reader's place on the other page. Without main.js the menu is not shown.
+             The button's label holds the code it shows (Language: EN), so the name a reader hears contains what is seen. -->
         <div class="lang">
-          <button type="button" class="btn lang-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu" aria-label="Language" data-i18n-aria-label="lang.label">
+          <button type="button" class="btn lang-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu" aria-label="Language: EN" data-i18n-aria-label="lang.label">
             <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
             <span class="lang-code">EN</span>
             <svg class="icon lang-caret" width="10" height="10" aria-hidden="true"><use href="#i-chevron" /></svg>
           </button>
           <ul class="lang-menu" id="lang-menu" role="menu" hidden>
             <li role="none">
-              <button type="button" role="menuitemradio" aria-checked="true" data-lang="en" lang="en">
+              <a href="./" hreflang="en" role="menuitemradio" aria-checked="true" data-lang="en" lang="en">
                 English<svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>
-              </button>
+              </a>
             </li>
             <li role="none">
-              <button type="button" role="menuitemradio" aria-checked="false" data-lang="sr" lang="sr-Latn">
+              <a href="sr/" hreflang="sr" role="menuitemradio" aria-checked="false" data-lang="sr" lang="sr-Latn">
                 Srpski<svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>
-              </button>
+              </a>
             </li>
           </ul>
         </div>
-        <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star Asset Prompter on GitHub" data-i18n-aria-label="star.label">
+        <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star on GitHub: Asset Prompter" data-i18n-aria-label="star.label">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-star" /></svg>
           <span class="bar-github-text" data-i18n="star">Star<span class="bar-github-on"> on GitHub</span></span>
         </a>
@@ -137,7 +427,7 @@
                 <p class="ask-bar" data-i18n-text="ask.hero">
                   <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-robot" /></svg>
                   Paste this into your agent to install it
-                  <button type="button" class="btn btn-sm copy-btn" data-copy="#ask-hero">
+                  <button type="button" class="btn btn-sm copy-btn" data-copy="#ask-hero" aria-describedby="ask-hero">
                     <svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-clipboard" /></svg><span class="copy-label" data-i18n="copy">Copy</span>
                   </button>
                 </p>
@@ -161,11 +451,12 @@
               <div class="hero-stage">
                 <i class="port port-agent" aria-hidden="true"></i>
                 <i class="port port-you" aria-hidden="true"></i>
-                <div class="art hero-art" data-slot="loop-relay" data-video="assets/art/loop-relay.mp4">
+                <div class="art hero-art" data-slot="loop-relay" data-video-av1="assets/art/loop-relay-av1.mp4" data-video="assets/art/loop-relay.mp4">
                   <img
                     src="assets/art/loop-relay.webp"
                     alt="Pixel art: a robot puts a prompt sheet into a shared folder from one side, and a person puts a finished picture in from the other."
                     data-i18n-alt="hero.alt"
+                    fetchpriority="high"
                     width="1280"
                     height="714"
                   />
@@ -177,12 +468,12 @@
               <p class="hub-label" data-i18n="hero.gen">Your generator</p>
               <ul aria-label="Generators you use by hand" data-i18n-aria-label="hero.gens">
                 <li style="--x: 0.78; --y: 5%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Ch"><img src="assets/logos/chatgpt.svg" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">ChatGPT Images</span></li>
-                <li style="--x: 0.14; --y: 16.5%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Dr"><img src="assets/logos/dreamina.png" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Dreamina</span></li>
-                <li style="--x: 0.86; --y: 29%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Fl"><img src="assets/logos/google-flow.png" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Google Flow</span></li>
-                <li style="--x: 0.2; --y: 41.5%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Gr"><img src="assets/logos/grok.png" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Grok Imagine</span></li>
-                <li style="--x: 0.9; --y: 54%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Le"><img src="assets/logos/leonardo.png" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Leonardo.Ai</span></li>
+                <li style="--x: 0.14; --y: 16.5%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Dr"><img src="assets/logos/dreamina.webp" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Dreamina</span></li>
+                <li style="--x: 0.86; --y: 29%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Fl"><img src="assets/logos/google-flow.webp" alt="" width="40" height="32" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Google Flow</span></li>
+                <li style="--x: 0.2; --y: 41.5%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Gr"><img src="assets/logos/grok.webp" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Grok Imagine</span></li>
+                <li style="--x: 0.9; --y: 54%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Le"><img src="assets/logos/leonardo.webp" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Leonardo.Ai</span></li>
                 <li style="--x: 0.1; --y: 66.5%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Lu"><img src="assets/logos/luma.svg" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Luma AI</span></li>
-                <li style="--x: 0.72; --y: 79%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Mj"><img src="assets/logos/midjourney.png" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Midjourney</span></li>
+                <li style="--x: 0.72; --y: 79%"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" data-letters="Mj"><img src="assets/logos/midjourney.webp" alt="" width="40" height="40" /></span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name">Midjourney</span></li>
                 <li class="is-any"><span class="cube"><span class="cube-body"><i class="f f-back"></i><i class="f f-bottom"></i><i class="f f-left"></i><i class="f f-right"></i><i class="cube-glow"></i><span class="cube-core" aria-hidden="true">+</span><i class="f f-top"></i><i class="f f-front"></i></span></span><span class="hub-name" data-i18n="hero.anyGen">any tool you paste a prompt into</span></li>
               </ul>
             </div>
@@ -249,8 +540,8 @@
 
                 <figure class="appshot" data-reveal>
                   <picture>
-                    <source media="(max-width: 640px)" srcset="assets/app/1-asked-narrow.webp" width="880" height="1384" />
-                    <img src="assets/app/1-asked.webp" data-i18n-alt="turn.1.alt" alt="The slot's card in Asset Prompter, marked Needs generating: an empty drop area, the settings to choose, and the prompt with a Copy prompt button." width="1600" height="656" loading="lazy" />
+                    <source media="(max-width: 640px)" srcset="assets/app/1-asked-narrow-440.webp 440w, assets/app/1-asked-narrow.webp 880w" sizes="(max-width: 497px) calc(100vw - 58px), 440px" width="880" height="1384" />
+                    <img src="assets/app/1-asked.webp" srcset="assets/app/1-asked-800.webp 800w, assets/app/1-asked.webp 1600w" sizes="800px" data-i18n-alt="turn.1.alt" alt="The slot's card in Asset Prompter, marked Needs generating: an empty drop area, the settings to choose, and the prompt with a Copy prompt button." width="1600" height="656" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -265,8 +556,8 @@
 
                 <figure class="appshot is-part" data-reveal>
                   <picture>
-                    <source media="(max-width: 640px)" srcset="assets/app/2-copied-narrow.webp" width="836" height="394" />
-                    <img src="assets/app/2-copied.webp" data-i18n-alt="turn.2.alt" alt="The prompt box on the card after Copy prompt was pressed: the settings Image, 16:9 and Nano Banana Pro, the prompt, and the button now reading Copied." width="1046" height="394" loading="lazy" />
+                    <source media="(max-width: 640px)" srcset="assets/app/2-copied-narrow-418.webp 418w, assets/app/2-copied-narrow.webp 836w" sizes="(max-width: 475px) calc(100vw - 58px), 416px" width="836" height="394" />
+                    <img src="assets/app/2-copied.webp" srcset="assets/app/2-copied-523.webp 523w, assets/app/2-copied.webp 1046w" sizes="522px" data-i18n-alt="turn.2.alt" alt="The prompt box on the card after Copy prompt was pressed: the settings Image, 16:9 and Nano Banana Pro, the prompt, and the button now reading Copied." width="1046" height="394" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -282,8 +573,8 @@
 
                 <figure class="appshot" data-reveal>
                   <picture>
-                    <source media="(max-width: 640px)" srcset="assets/app/2-result-narrow.webp" width="880" height="1638" />
-                    <img src="assets/app/2-result.webp" data-i18n-alt="turn.3.alt" alt="The same card with your picture in it, a dining room on a space station. The card is now marked Agent's turn, with the buttons Approve v1 and Request changes." width="1600" height="750" loading="lazy" />
+                    <source media="(max-width: 640px)" srcset="assets/app/2-result-narrow-440.webp 440w, assets/app/2-result-narrow.webp 880w" sizes="(max-width: 497px) calc(100vw - 58px), 440px" width="880" height="1638" />
+                    <img src="assets/app/2-result.webp" srcset="assets/app/2-result-800.webp 800w, assets/app/2-result.webp 1600w" sizes="800px" data-i18n-alt="turn.3.alt" alt="The same card with your picture in it, a dining room on a space station. The card is now marked Agent's turn, with the buttons Approve v1 and Request changes." width="1600" height="750" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -299,7 +590,7 @@
 
                 <figure class="appshot is-part" data-reveal>
                   <picture>
-                    <img src="assets/app/4-notify-narrow.webp" data-i18n-alt="turn.4.alt" alt="The row above the cards: one slot under Agent's turn, and the Notify agent button with a green dot, which means the agent is listening." width="880" height="382" loading="lazy" />
+                    <img src="assets/app/4-notify-narrow.webp" srcset="assets/app/4-notify-narrow-440.webp 440w, assets/app/4-notify-narrow.webp 880w" sizes="(max-width: 497px) calc(100vw - 58px), 440px" data-i18n-alt="turn.4.alt" alt="The row above the cards: one slot under Agent's turn, and the Notify agent button with a green dot, which means the agent is listening." width="880" height="382" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -316,8 +607,8 @@
 
                 <figure class="appshot" data-reveal>
                   <picture>
-                    <source media="(max-width: 640px)" srcset="assets/app/3-change-request-narrow.webp" width="880" height="1710" />
-                    <img src="assets/app/3-change-request.webp" data-i18n-alt="turn.5.alt" alt="The card with your change request typed under the prompt: Too cold and empty. Make the booths warm cognac leather, add warm ceiling lights, and let the sun rise over the horizon." width="1600" height="750" loading="lazy" />
+                    <source media="(max-width: 640px)" srcset="assets/app/3-change-request-narrow-440.webp 440w, assets/app/3-change-request-narrow.webp 880w" sizes="(max-width: 497px) calc(100vw - 58px), 440px" width="880" height="1710" />
+                    <img src="assets/app/3-change-request.webp" srcset="assets/app/3-change-request-800.webp 800w, assets/app/3-change-request.webp 1600w" sizes="800px" data-i18n-alt="turn.5.alt" alt="The card with your change request typed under the prompt: Too cold and empty. Make the booths warm cognac leather, add warm ceiling lights, and let the sun rise over the horizon." width="1600" height="750" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -333,8 +624,8 @@
 
                 <figure class="appshot" data-reveal>
                   <picture>
-                    <source media="(max-width: 640px)" srcset="assets/app/7-approved-narrow.webp" width="880" height="2190" />
-                    <img src="assets/app/7-approved.webp" data-i18n-alt="turn.6.alt" alt="The card of the second version, marked Approved: the warm dining room with the sunrise, three results with yours picked, the agent's review, and your earlier change request folded below." width="1600" height="1042" loading="lazy" />
+                    <source media="(max-width: 640px)" srcset="assets/app/7-approved-narrow-440.webp 440w, assets/app/7-approved-narrow.webp 880w" sizes="(max-width: 497px) calc(100vw - 58px), 440px" width="880" height="2190" />
+                    <img src="assets/app/7-approved.webp" srcset="assets/app/7-approved-800.webp 800w, assets/app/7-approved.webp 1600w" sizes="800px" data-i18n-alt="turn.6.alt" alt="The card of the second version, marked Approved: the warm dining room with the sunrise, three results with yours picked, the agent's review, and your earlier change request folded below." width="1600" height="1042" loading="lazy" />
                   </picture>
                 </figure>
               </article>
@@ -459,7 +750,7 @@
           <div class="rows">
             <article class="row">
               <figure class="row-pic" data-reveal>
-                <img src="assets/shots/version-results.webp" data-i18n-alt="versions.alt" alt="Part of the approved slot's details in the app: the three results of version 2 with 2.png picked, the agent's verdict, Agent approves, picks 2.png, and the note on what changed from version 1." width="1320" height="894" loading="lazy" />
+                <img src="assets/shots/version-results.webp" srcset="assets/shots/version-results-660.webp 660w, assets/shots/version-results.webp 1320w" sizes="(max-width: 900px) calc(100vw - 32px), 616px" data-i18n-alt="versions.alt" alt="Part of the approved slot's details in the app: the three results of version 2 with 2.png picked, the agent's verdict, Agent approves, picks 2.png, and the note on what changed from version 1." width="1320" height="894" loading="lazy" />
               </figure>
               <div class="row-text" data-reveal-group>
                 <h3 data-i18n="versions.h">It sees every version</h3>
@@ -469,7 +760,7 @@
 
             <article class="row is-flip">
               <figure class="row-pic" data-reveal>
-                <img src="assets/shots/variants-dialog.webp" data-i18n-alt="variants.alt" alt="The variants of one approved picture, as the app shows them: a 1920 by 1080 WebP, a 1200 by 630 JPG for social cards and a square crop, each with a Copy image button." width="1640" height="762" loading="lazy" />
+                <img src="assets/shots/variants-dialog.webp" srcset="assets/shots/variants-dialog-820.webp 820w, assets/shots/variants-dialog.webp 1640w" sizes="(max-width: 900px) calc(100vw - 32px), 496px" data-i18n-alt="variants.alt" alt="The variants of one approved picture, as the app shows them: a 1920 by 1080 WebP, a 1200 by 630 JPG for social cards and a square crop, each with a Copy image button." width="1640" height="762" loading="lazy" />
               </figure>
               <div class="row-text" data-reveal-group>
                 <h3 data-i18n="variants.h">It makes variants of the final picture</h3>
@@ -487,7 +778,7 @@
               <div class="pipe" data-reveal-group>
                 <figure class="pipe-step">
                   <div class="pipe-pic">
-                    <div class="art" data-slot="loop-relay" data-video="assets/art/loop-relay.mp4">
+                    <div class="art" data-slot="loop-relay" data-video-av1="assets/art/loop-relay-av1.mp4" data-video="assets/art/loop-relay.mp4">
                       <img src="assets/art/loop-relay.webp" data-i18n-alt="clip.alt" alt="The clip from the top of this page: the robot holds a prompt sheet toward the shared folder and the person lifts a picture out of it." width="1280" height="714" loading="lazy" />
                     </div>
                   </div>
@@ -518,14 +809,14 @@
           </div>
           <ul class="uses">
             <li class="use">
-              <div class="use-pic"><img src="assets/demo/hero-space-diner.webp" data-i18n-alt="use.1.alt" alt="A generated photo of a diner on a space station, Earth in the windows." width="880" height="491" loading="lazy" /></div>
+              <div class="use-pic"><img src="assets/demo/hero-space-diner.webp" data-i18n-alt="use.1.alt" alt="A generated photo of a diner on a space station, Earth in the windows." width="880" height="492" loading="lazy" /></div>
               <div class="use-text">
                 <h3 data-i18n="use.1.h">Images for a site your agent is building</h3>
                 <p data-i18n="use.1.p">Hero banners, section photos, backgrounds. The agent knows where each one goes and what it has to do there, and writes that into the slot.</p>
               </div>
             </li>
             <li class="use">
-              <div class="use-pic"><img src="assets/demo/signature-orbital-burger.webp" data-i18n-alt="use.2.alt" alt="A generated product photo of a burger on a slate plate." width="880" height="491" loading="lazy" /></div>
+              <div class="use-pic"><img src="assets/demo/signature-orbital-burger.webp" data-i18n-alt="use.2.alt" alt="A generated product photo of a burger on a slate plate." width="880" height="658" loading="lazy" /></div>
               <div class="use-text">
                 <h3 data-i18n="use.2.h">One product across many assets</h3>
                 <p data-i18n="use.2.p">Approve a master image first, and later slots take it as their reference. A slot that depends on another waits until that one is approved.</p>
@@ -540,8 +831,8 @@
             </li>
             <li class="use">
               <div class="use-pic use-icons-art">
-                <img class="px" src="assets/demo/app-icon-256.png" data-i18n-alt="use.4.alt" alt="The Asset Prompter app icon, large." width="128" height="128" loading="lazy" />
-                <img class="px" src="assets/demo/app-icon-256.png" alt="" width="64" height="64" loading="lazy" />
+                <img class="px" src="assets/demo/app-icon-256.webp" data-i18n-alt="use.4.alt" alt="The Asset Prompter app icon, large." width="128" height="128" loading="lazy" />
+                <img class="px" src="assets/demo/app-icon-256.webp" alt="" width="64" height="64" loading="lazy" />
                 <img class="px" src="assets/demo/app-icon-48.png" alt="" width="32" height="32" loading="lazy" />
               </div>
               <div class="use-text">
@@ -632,7 +923,7 @@
                 <p class="ask-bar" data-i18n-text="ask.install">
                   <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-robot" /></svg>
                   Message for your agent
-                  <button type="button" class="btn btn-sm copy-btn" data-copy="#ask-install">
+                  <button type="button" class="btn btn-sm copy-btn" data-copy="#ask-install" aria-describedby="ask-install">
                     <svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-clipboard" /></svg><span class="copy-label" data-i18n="copy">Copy</span>
                   </button>
                 </p>
@@ -735,8 +1026,8 @@
 
       <section class="section band closing">
         <div class="wrap">
-          <div class="art closing-art" data-slot="gallery-full" data-video="assets/art/gallery-full.mp4" data-reveal>
-            <img src="assets/art/gallery-full.webp" data-i18n-alt="closing.alt" alt="Pixel art: a gallery wall full of finished pictures, with a robot and a person standing in front of it." loading="lazy" />
+          <div class="art closing-art" data-slot="gallery-full" data-video-av1="assets/art/gallery-full-av1.mp4" data-video="assets/art/gallery-full.mp4" data-reveal>
+            <img src="assets/art/gallery-full.webp" data-i18n-alt="closing.alt" alt="Pixel art: a gallery wall full of finished pictures, with a robot and a person standing in front of it." width="1280" height="714" loading="lazy" />
           </div>
           <div class="head" data-reveal-group>
             <h2 data-i18n="closing.h2">Give your agent a way to ask for pictures.</h2>
@@ -760,11 +1051,14 @@
           Asset Prompter
         </span>
         <span data-i18n="foot.art">Illustrations generated by hand in Google Flow, through Asset Prompter.</span>
-        <a href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener">github.com/Djordje1998/asset-prompter</a>
+        <span class="foot-links">
+          <a href="guides/" data-i18n="foot.guides">Guides</a>
+          <a href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener">github.com/Djordje1998/asset-prompter</a>
+        </span>
       </div>
     </footer>
 
     <script src="./assets/vendor/lenis.min.js?v=1.3.26" defer></script>
-    <script src="./main.js?v=w2-030" defer></script>
+    <script src="./main.js?v=w2-043" defer></script>
   </body>
 </html>
