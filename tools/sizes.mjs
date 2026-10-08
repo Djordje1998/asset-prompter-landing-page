@@ -1,10 +1,11 @@
 // The smaller copies of the screenshots in assets/app/ and assets/shots/, which index.html offers in srcset beside the
-// full picture, as <name>-<width>.webp: about half and three quarters of its width. A phone or a screen of normal
-// density takes one of them; a sharper screen still gets the full picture. A copy keeps the exact shape of the full
-// picture (width and height divided by the same number), because the page lays a picture out by the shape of the file
-// it got: a copy a fraction of a pixel taller would move everything under it. A picture whose shape allows no such
-// size near three quarters gets only the half, or only the full picture. WebP at quality 90, scaled in the browser at
-// its best quality. The illustrations and the clips are pixel art and are never scaled or encoded again.
+// full picture, as <name>-<width>.webp: half its width. A screen that needs no more device pixels than that takes it;
+// any other still gets the full picture. Only the half: a copy at three quarters saved less than a fifth of the bytes,
+// and a phone of two device pixels per px would have taken it instead of the full picture. A copy keeps the exact shape of the full picture
+// (width and height divided by the same number), because the page lays a picture out by the shape of the file it got:
+// a copy a fraction of a pixel taller would move everything under it. A picture whose shape allows no such size near
+// the half gets no copy. WebP at quality 90, scaled in the browser at its best quality. The illustrations and the clips
+// are pixel art and are never scaled or encoded again.
 // Needs playwright-core and a Chromium or Edge (CHROME, or EDGE, overrides the path). Run it again after retaking a picture.
 import { chromium } from "playwright-core";
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -14,7 +15,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BROWSER = process.env.CHROME ?? process.env.EDGE ?? "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 const FOLDERS = ["assets/app", "assets/shots"];
-const SHARES = [0.5, 0.75];
+const SHARES = [0.5];
 const QUALITY = 0.9;
 
 const browser = await chromium.launch({ executablePath: BROWSER });
