@@ -10,9 +10,11 @@
 // - every marked text takes its Serbian: data-i18n the element's whole content (it may hold markup), data-i18n-text
 //   the element's own text (its first text that is more than space), data-i18n-alt, -aria-label and -content the
 //   attribute. A mark with no Serbian stays English.
-// - <html lang> is sr-Latn, the language button shows SR, and the menu checks Srpski.
+// - <html lang> is sr-Latn, the language button shows SR, and the menu checks Srpski. What stays English on purpose,
+//   the message for the agent (.ask-text) and the app's status tags (.tag), says lang="en".
 // - addresses inside the site are written from sr/ (../styles.css, ../assets/...); #anchors and full addresses stay.
 // - the canonical address and og:url are https://assetprompter.com/sr/. The hreflang links stay: both pages name both.
+//   An address with a mark (og.image) takes its Serbian, in the JSON-LD too (primaryImageOfPage).
 // - the link to the page as Markdown (rel="alternate" type="text/markdown") is left out: that text is English only.
 // - the fonts' latin-ext files are preloaded with the latin ones, for the letters with marks.
 // - the JSON-LD takes the Serbian of every text it copies from the page, of the features (ld.feature.N), the keywords
@@ -141,6 +143,8 @@ function* walk(node) {
 
 const attr = (el, name) => el.attrs.find((a) => a.name === name);
 const hasClass = (el, name) => (attr(el, "class")?.value ?? "").split(/\s+/).includes(name);
+/** Whether an element or anything in it has a mark, and so takes Serbian. */
+const marked = (el) => el.attrs.some((a) => a.name.startsWith("data-i18n")) || [...walk(el)].some(marked);
 
 /* ---- texts ---- */
 
@@ -213,6 +217,8 @@ function translateLd(json, english, SR) {
     const type = owner["@type"];
     if (key === "inLanguage" && PAGE_TYPES.has(type)) return TAG;
     if (key === "url" && value === SITE && PAGE_TYPES.has(type)) return PAGE;
+    // An address the page gives in Serbian as well: the picture of the link previews (og.image).
+    if (value.startsWith(SITE) && english.has(value)) return english.get(value);
     if (key in LD_KEYS) {
       if (SR[LD_KEYS[key]] === undefined) left.push(`${type} ${key}: ${value}`);
       return SR[LD_KEYS[key]] ?? value;
@@ -293,6 +299,7 @@ function build() {
     const rel = attr(el, "rel")?.value;
     const property = attr(el, "property")?.value;
     if (el.name === "html") setAttr(el, "lang", TAG);
+    if ((hasClass(el, "ask-text") || hasClass(el, "tag")) && !marked(el)) setAttr(el, "lang", "en");
     if (hasClass(el, "lang-code")) edit(el.contentStart, el.contentEnd, CODE);
     if (attr(el, "data-lang") && attr(el, "aria-checked")) setAttr(el, "aria-checked", String(attr(el, "data-lang").value === "sr"));
     if (el.name === "link" && rel === "canonical") setAttr(el, "href", PAGE);

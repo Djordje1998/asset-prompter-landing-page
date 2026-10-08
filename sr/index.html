@@ -4,9 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Each language is a page of its own: English here, Serbian in sr/index.html (made from this file by
+    <!-- Each language is a page of its own: English in index.html, Serbian in sr/index.html (made from index.html by
          tools/build-sr.mjs, with this same script). It runs first, before anything is fetched or drawn: a reader who
-         chose Serbian in the menu goes from here to the Serbian page, and an old link with ?lang= goes to its language.
+         chose Serbian in the menu and opens the English page goes on to the Serbian one, and an old link with ?lang=
+         goes to its language.
          ?lang=en keeps the English page even for that reader, so no address sends back to the one it came from. With
          the script the language menu shows (.i18n); main.js runs it, so without main.js the menu goes again. A page
          opened by the menu (main.js keeps the reader's place for it) plays no entrance (.lang-switched) and holds its
@@ -52,7 +53,8 @@
     <meta name="theme-color" content="#19171d" />
     <meta name="color-scheme" content="dark" />
     <meta name="format-detection" content="telephone=no" />
-    <!-- Link previews need absolute addresses. Their texts have keys, so the Serbian page gets Serbian previews. -->
+    <!-- Link previews need absolute addresses. Their texts have keys, so the Serbian page gets Serbian previews, and so
+         has the picture (og.image: the Serbian page shows assets/og-sr.jpg, its words in Serbian). -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Asset Prompter" />
     <meta property="og:locale" data-i18n-content="og.locale" content="sr_RS" />
@@ -64,7 +66,7 @@
       content="Besplatna lokalna aplikacija za Windows i Linux koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno."
     />
     <meta property="og:url" content="https://assetprompter.com/sr/" />
-    <meta property="og:image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta property="og:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og-sr.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -76,7 +78,7 @@
       data-i18n-content="og.description"
       content="Besplatna lokalna aplikacija za Windows i Linux koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno."
     />
-    <meta name="twitter:image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta name="twitter:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og-sr.jpg" />
     <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: tvoj agent piše prompt, ti praviš sliku. Robot i osoba sa dve strane zajedničkog foldera." />
     <!-- Two facts Slack shows under a link (X ignores them). -->
     <meta name="twitter:label1" data-i18n-content="og.label1" content="Cena" />
@@ -104,9 +106,9 @@
     <link rel="stylesheet" href="../styles.css?v=w2-038" />
     <!-- What search engines and AI answers read about the page. Its texts are copies of the page's: the page's name and
          description are the title and the description above, the app's description is hero.sub, the questions and answers
-         are faq.1.q to faq.7.a word for word, without markup. Only the features, the app's subcategory, its requirements
-         and its audience have no element; their Serbian is ld.feature.1 to ld.feature.8, ld.subcategory, ld.requirements
-         and ld.audience in i18n.js. The agents and generators the page names are in mentions, with their Wikidata item
+         are faq.1.q to faq.7.a word for word, without markup. Only the features, the app's subcategory, its requirements,
+         its audience, its keywords and the names of its about topics have no element; their Serbian is ld.feature.1 to
+         ld.feature.8, ld.subcategory, ld.requirements, ld.audience, ld.keywords and ld.about.1 to ld.about.5 in i18n.js. The agents and generators the page names are in mentions, with their Wikidata item
          where there is one. Change it together with those texts. tools/build-sr.mjs writes the Serbian block of
          sr/index.html from this one and stops if a text here is no longer the page's. -->
     <script type="application/ld+json">
@@ -232,7 +234,7 @@
             ],
             "primaryImageOfPage": {
               "@type": "ImageObject",
-              "url": "https://assetprompter.com/assets/og.jpg",
+              "url": "https://assetprompter.com/assets/og-sr.jpg",
               "width": 1200,
               "height": 630
             },
@@ -544,7 +546,7 @@
                     <svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-clipboard" /></svg><span class="copy-label" data-i18n="copy">Kopiraj</span>
                   </button>
                 </p>
-                <p class="ask-text" id="ask-hero">Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md</p>
+                <p class="ask-text" id="ask-hero" lang="en">Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md</p>
               </div>
               <div class="cta">
                 <a class="btn btn-primary btn-lg" href="https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip" data-i18n-text="download">
@@ -609,7 +611,7 @@
               <div class="rail-box" data-lit>
                 <p class="pane-label" data-i18n="rail.label">Folder slota</p>
                 <div class="rail-state" aria-hidden="true">
-                  <span class="tag t-approved rail-tag"><svg class="icon" width="12" height="12"><use href="#i-check" /></svg><span>Approved</span></span>
+                  <span class="tag t-approved rail-tag" lang="en"><svg class="icon" width="12" height="12"><use href="#i-check" /></svg><span>Approved</span></span>
                   <span class="chip rail-chip">v2</span>
                   <span class="pips">
                     <i class="by-agent is-done"></i><i class="by-you is-done"></i><i class="by-you is-done"></i><i class="by-you is-done"></i><i class="by-agent is-done"></i><i class="by-you is-done"></i>
@@ -953,14 +955,14 @@
                     <svg class="icon" width="13" height="13" aria-hidden="true"><use href="#i-folder" /></svg><span class="f-name">night-courier/</span>
                   </li>
                   <li data-by="agent"><span class="f-name">script.md</span><span class="f-note" data-i18n="film.script">scenario, kadar po kadar</span></li>
-                  <li class="t-approved"><span class="f-name">cast/mara/</span><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
-                  <li class="t-approved"><span class="f-name">cast/bag/</span><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
-                  <li class="t-approved"><span class="f-name">cast/street/</span><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
-                  <li class="t-approved"><span class="f-name">shots/01-wait/</span><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
-                  <li class="t-review"><span class="f-name">shots/01-wait-clip/</span><span class="tag t-review"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-eye" /></svg>Needs your approval</span></li>
-                  <li class="t-generate"><span class="f-name">shots/02-handover/</span><span class="tag t-generate"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>Needs generating</span></li>
+                  <li class="t-approved"><span class="f-name">cast/mara/</span><span class="tag t-approved" lang="en"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
+                  <li class="t-approved"><span class="f-name">cast/bag/</span><span class="tag t-approved" lang="en"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
+                  <li class="t-approved"><span class="f-name">cast/street/</span><span class="tag t-approved" lang="en"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
+                  <li class="t-approved"><span class="f-name">shots/01-wait/</span><span class="tag t-approved" lang="en"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Approved</span></li>
+                  <li class="t-review"><span class="f-name">shots/01-wait-clip/</span><span class="tag t-review" lang="en"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-eye" /></svg>Needs your approval</span></li>
+                  <li class="t-generate"><span class="f-name">shots/02-handover/</span><span class="tag t-generate" lang="en"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>Needs generating</span></li>
                   <li class="is-future"><span class="f-name">shots/02-handover-clip/</span><span class="f-note" data-i18n="film.waits">čeka 02-handover</span></li>
-                  <li class="t-generate"><span class="f-name">shots/03-ride/</span><span class="tag t-generate"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>Needs generating</span></li>
+                  <li class="t-generate"><span class="f-name">shots/03-ride/</span><span class="tag t-generate" lang="en"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-spark" /></svg>Needs generating</span></li>
                 </ul>
               </div>
               <div class="use-text">
@@ -1032,7 +1034,7 @@
                     <svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-clipboard" /></svg><span class="copy-label" data-i18n="copy">Kopiraj</span>
                   </button>
                 </p>
-                <p class="ask-text" id="ask-install">Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md</p>
+                <p class="ask-text" id="ask-install" lang="en">Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md</p>
               </div>
               <ul class="way-does">
                 <li data-i18n="way.agent.1">Preuzima folder i pokreće setup.</li>
@@ -1136,6 +1138,6 @@
 
     <script src="../assets/vendor/lenis.min.js?v=1.3.26" defer></script>
     <script type="application/json" id="say">{"copied":"Kopirano","copy.byHand":"Označi i kopiraj","copy":"Kopiraj"}</script>
-    <script src="../main.js?v=w2-038" defer></script>
+    <script src="../main.js?v=w2-039" defer></script>
   </body>
 </html>

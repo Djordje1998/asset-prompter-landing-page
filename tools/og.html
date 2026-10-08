@@ -2,11 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <!-- A tool, published with the site but not a page of it: open it at 1200 by 630 and save a screenshot as assets/og.png. -->
+    <!-- A tool, published with the site but not a page of it: open it at 1200 by 630 and save a screenshot as assets/og.png,
+         and with ?lang=sr as assets/og-sr.png, the picture of the Serbian page. -->
     <meta name="robots" content="noindex" />
     <title>Link preview picture (tool)</title>
     <style>
-      /* The page's own font files (see the top of section 2 of styles.css); the picture uses only latin letters. */
+      /* The page's own font files (see the top of section 2 of styles.css): latin, and latin-ext for the Serbian letters
+         with marks. */
       @font-face {
         font-family: "Bricolage Grotesque";
         font-style: normal;
@@ -22,6 +24,24 @@
         font-stretch: 100%;
         font-display: swap;
         src: url("../assets/fonts/instrument-sans-v4-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Bricolage Grotesque";
+        font-style: normal;
+        font-weight: 400 800;
+        font-stretch: 100%;
+        font-display: swap;
+        src: url("../assets/fonts/bricolage-grotesque-v9-latin-ext.woff2") format("woff2");
+        unicode-range: U+0100-024F;
+      }
+      @font-face {
+        font-family: "Instrument Sans";
+        font-style: normal;
+        font-weight: 400 600;
+        font-stretch: 100%;
+        font-display: swap;
+        src: url("../assets/fonts/instrument-sans-v4-latin-ext.woff2") format("woff2");
+        unicode-range: U+0100-024F;
       }
       :root {
         --page: #1d1b21;
@@ -141,5 +161,14 @@
           <div class="pic"><img src="../assets/art/loop-relay.webp" alt="" /></div>
         </div>
     </div>
+    <script>
+      // ?lang=sr: the same picture in Serbian, in the words of the page (hero.h1, and hero.sub made short as here).
+      if (/[?&]lang=sr\b/.test(location.search)) {
+        document.documentElement.lang = "sr-Latn";
+        document.querySelector("h1").innerHTML =
+          '<span><b class="agent">Tvoj agent</b> piše prompt.</span> <span><b class="you">Ti</b> praviš sliku.</span>';
+        document.querySelector("p").textContent = "Mala lokalna aplikacija između tvog agenta za programiranje i generatora koji koristiš ručno.";
+      }
+    </script>
   </body>
 </html>

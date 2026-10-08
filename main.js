@@ -458,7 +458,7 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
     art.classList.add("is-missing");
     art.insertAdjacentHTML(
       "beforeend",
-      `<span class="tag t-generate"><svg class="icon" width="12" height="12"><use href="#i-spark"/></svg>Needs generating</span>
+      `<span class="tag t-generate" lang="en"><svg class="icon" width="12" height="12"><use href="#i-spark"/></svg>Needs generating</span>
        <span class="art-slot">${art.dataset.slot}</span>
        <span class="art-hint">${img.alt.replace(/^(Pixel art|Piksel-art): /, "")}</span>`,
     );

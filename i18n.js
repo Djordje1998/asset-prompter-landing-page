@@ -22,6 +22,7 @@ const SR = {
   "og.title": "Asset Prompter: tvoj agent piše prompt, ti praviš sliku",
   "og.description":
     "Besplatna lokalna aplikacija za Windows i Linux koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno.",
+  "og.image": "https://assetprompter.com/assets/og-sr.jpg",
   "og.alt": "Asset Prompter: tvoj agent piše prompt, ti praviš sliku. Robot i osoba sa dve strane zajedničkog foldera.",
   "og.label1": "Cena",
   "og.data1": "Besplatno",
