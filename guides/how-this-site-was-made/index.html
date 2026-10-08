@@ -126,7 +126,7 @@
     <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-045" />
+    <link rel="stylesheet" href="/styles.css?v=w2-046" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -310,7 +310,7 @@
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="slots-caption" tabindex="0">
             <table class="guide-table">
-              <caption id="slots-caption" data-i18n="g.made.t.caption">The slots behind the files on the home page, and where those files are. Sizes measured from the files on 8 October 2026.</caption>
+              <caption id="slots-caption"><span data-i18n="g.made.t.caption">The slots behind the files on the home page, and where those files are. Sizes measured from the files on 8 October 2026.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.made.t.slot">Slot</th>
@@ -329,31 +329,31 @@
                 <tr>
                   <th scope="row"><code>loop-relay-clip</code></th>
                   <td data-i18n="g.made.t.2.kind">A video slot: the hero's clip</td>
-                  <td data-i18n="g.made.t.2.where">The top of the page, and <a href="/#agent">"It checks a clip it can't play"</a> with frame sheet 003 and the motion map of its version 2</td>
+                  <td data-i18n="g.made.t.2.where">The top of the page, and <a href="/#agent">“It checks a clip it can't play”</a> with frame sheet 003 and the motion map of its version 2</td>
                   <td data-i18n="g.made.t.2.file"><code>assets/art/loop-relay.mp4</code> and <code>loop-relay-av1.mp4</code>; <code>assets/demo/clip-loop-relay-frames.webp</code>, 1280 × 720; <code>clip-loop-relay-motion.webp</code>, 640 × 360</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>you-are-the-server</code></th>
                   <td data-i18n="g.made.t.3.kind">A picture</td>
-                  <td data-i18n="g.made.t.3.where"><a href="/#mcp">"To your agent, the same steps as an MCP server"</a></td>
+                  <td data-i18n="g.made.t.3.where"><a href="/#mcp">“To your agent, the same steps as an MCP server”</a></td>
                   <td><code>assets/art/you-are-the-server.webp</code>, 960 × 716</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>problem-courier</code></th>
                   <td data-i18n="g.made.t.4.kind">A picture</td>
-                  <td data-i18n="g.made.t.4.where"><a href="/#why">"Without it, you are the courier"</a></td>
+                  <td data-i18n="g.made.t.4.where"><a href="/#why">“Without it, you are the courier”</a></td>
                   <td><code>assets/art/problem-courier.webp</code>, 1280 × 714</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>you-press-generate</code></th>
                   <td data-i18n="g.made.t.5.kind">A picture</td>
-                  <td data-i18n="g.made.t.5.where"><a href="/#tradeoffs">"It doesn't generate anything"</a></td>
+                  <td data-i18n="g.made.t.5.where"><a href="/#tradeoffs">“It doesn't generate anything”</a></td>
                   <td><code>assets/art/you-press-generate.webp</code>, 960 × 716</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>gallery-full</code></th>
                   <td data-i18n="g.made.t.6.kind">A picture, and the clip that starts on it (its video slot is not recorded here)</td>
-                  <td data-i18n="g.made.t.6.where">The closing section, "Give your agent a way to ask for pictures."</td>
+                  <td data-i18n="g.made.t.6.where">The closing section, “Give your agent a way to ask for pictures.”</td>
                   <td data-i18n="g.made.t.6.file"><code>assets/art/gallery-full.webp</code>, 1280 × 714; <code>gallery-full.mp4</code> and <code>gallery-full-av1.mp4</code></td>
                 </tr>
               </tbody>
@@ -362,7 +362,7 @@
           <div class="prose">
             <p data-i18n="g.made.1.p2">
               The page was built slot first. Until a slot's file exists, the page draws the place it will take as a dashed
-              frame with the slot's name and what the picture should show, under the same "Needs generating" the app puts on a
+              frame with the slot's name and what the picture should show, under the same “Needs generating” the app puts on a
               card that waits for you:
             </p>
           </div>
@@ -425,9 +425,9 @@
               <a href="https://github.com/Djordje1998/asset-prompter/blob/master/presets/google-flow.md" target="_blank" rel="noopener">Google Flow preset</a> (checked 6 October 2026) tells it, among other things:
             </p>
             <ul data-i18n="g.made.2.flow.list">
-              <li>Flow has no negative prompt and no seed, so what should be left out goes into the prompt itself ("no people, no text").</li>
+              <li>Flow has no negative prompt and no seed, so what should be left out goes into the prompt itself (“no people, no text”).</li>
               <li>A video from the prompt alone is the mode <code>frames</code> with no start frame.</li>
-              <li>Videos come with generated sound, and Flow has no switch for it per clip: describe the sound in the prompt, or write "no sound".</li>
+              <li>Videos come with generated sound, and Flow has no switch for it per clip: describe the sound in the prompt, or write “no sound”.</li>
               <li>Every account gets 50 credits a day; Veo 3.1 Lite costs 10 per generation, Quality 100.</li>
             </ul>
             <p data-i18n="g.made.2.p2">
@@ -507,7 +507,7 @@
             <p data-i18n="g.made.4.p2">
               The AV1 copies are about half the bytes: <code>loop-relay</code> is 365 KiB against 776 KiB in H.264, and
               <code>gallery-full</code> 245 KiB against 536 KiB. The lowest frame SSIM of the two was 0.9956. The page takes the AV1
-              file only where the browser answers "probably" when asked whether it plays it, and the H.264 file everywhere else.
+              file only where the browser answers “probably” when asked whether it plays it, and the H.264 file everywhere else.
             </p>
             <h3 data-i18n="g.made.4.exports.h">Sizes and crops come from the approved file</h3>
             <p data-i18n="g.made.4.p3">
