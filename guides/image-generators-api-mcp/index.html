@@ -148,7 +148,7 @@
     <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-049" />
+    <link rel="stylesheet" href="/styles.css?v=w2-051" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -166,9 +166,23 @@
             "isPartOf": {
               "@id": "https://assetprompter.com/#website"
             },
-            "about": {
-              "@id": "https://assetprompter.com/#app"
-            },
+            "about": [
+              {
+                "@type": "Thing",
+                "name": "Text-to-image model",
+                "sameAs": "https://www.wikidata.org/wiki/Q113940039"
+              },
+              {
+                "@type": "Thing",
+                "name": "Text-to-video model",
+                "sameAs": "https://www.wikidata.org/wiki/Q115517227"
+              },
+              {
+                "@type": "Thing",
+                "name": "Model Context Protocol (MCP)",
+                "sameAs": "https://www.wikidata.org/wiki/Q133436854"
+              }
+            ],
             "breadcrumb": {
               "@id": "https://assetprompter.com/guides/image-generators-api-mcp/#breadcrumb"
             },
@@ -199,17 +213,29 @@
             "publisher": {
               "@id": "https://assetprompter.com/#author"
             },
-            "about": {
-              "@id": "https://assetprompter.com/#app"
-            },
+            "about": [
+              {
+                "@type": "Thing",
+                "name": "Text-to-image model",
+                "sameAs": "https://www.wikidata.org/wiki/Q113940039"
+              },
+              {
+                "@type": "Thing",
+                "name": "Text-to-video model",
+                "sameAs": "https://www.wikidata.org/wiki/Q115517227"
+              },
+              {
+                "@type": "Thing",
+                "name": "Model Context Protocol (MCP)",
+                "sameAs": "https://www.wikidata.org/wiki/Q133436854"
+              }
+            ],
             "image": ["https://assetprompter.com/assets/art/you-are-the-server.webp", "https://assetprompter.com/assets/og.jpg"],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
               {
-                "@type": "Thing",
-                "name": "Model Context Protocol (MCP)",
-                "sameAs": "https://www.wikidata.org/wiki/Q133436854"
+                "@id": "https://assetprompter.com/#app"
               },
               {
                 "@type": "CreativeWork",
@@ -357,7 +383,7 @@
       </nav>
       <div class="bar-right">
         <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
-             without a script. It names the language it leads to, as a word where the bar has room and as its code on a phone. The script at the top keeps the choice and the reader's place. -->
+             without a script. It names the language it leads to, as a word where the bar has room and as its code after the globe on a phone. The script at the top keeps the choice and the reader's place. -->
         <a class="btn lang-btn" href="/sr/guides/image-generators-api-mcp/" hreflang="sr" lang="sr-Latn" data-lang="sr" aria-label="Srpski, SR: ova stranica na srpskom">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
           <span class="lang-name">Srpski</span>
@@ -431,7 +457,7 @@
             </p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-presets" tabindex="0">
-            <table class="guide-table">
+            <table class="guide-table is-long">
               <caption id="t-presets"><span data-i18n="g.api.a.caption">The seven generators with presets, checked 8 October 2026. Plans and APIs change often; each row links its sources.</span></caption>
               <thead>
                 <tr>
@@ -467,7 +493,7 @@
                 <tr>
                   <th scope="row">Dreamina (CapCut)</th>
                   <td data-i18n="g.api.a.4.1"><span class="tag t-review">Separately</span> None found for the Dreamina app itself. BytePlus sells its models as an API on ModelArk: <q>Dreamina Seedance 2.0 is now available through ModelArk on BytePlus, giving businesses and developers API access</q>, and ModelArk's image generation API has the Seedream image models.</td>
-                  <td data-i18n="g.api.a.4.2">ModelArk is a separate BytePlus account with its own API keys and billing. BytePlus: <q>BytePlus is not available in the United States.</q></td>
+                  <td data-i18n="g.api.a.4.2">ModelArk is a separate BytePlus account with its own API keys and billing.</td>
                   <td data-i18n="g.api.a.4.3"><span class="tag t-review">Not found</span></td>
                   <td data-i18n="g.api.a.4.4"><span class="src"><a href="https://www.byteplus.com/en/blog/dreamina-seedance2-0" target="_blank" rel="noopener">BytePlus: Dreamina Seedance 2.0</a>; <a href="https://docs.byteplus.com/en/docs/ModelArk/1541523" target="_blank" rel="noopener">ModelArk: image generation API</a></span></td>
                 </tr>
@@ -504,7 +530,7 @@
             </p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-mcp" tabindex="0">
-            <table class="guide-table is-narrow">
+            <table class="guide-table is-narrow is-long">
               <caption id="t-mcp"><span data-i18n="g.api.b.caption">Official MCP servers you sign in to, checked 8 October 2026.</span></caption>
               <thead>
                 <tr>
@@ -553,7 +579,7 @@
             <p data-i18n="g.api.c.p">Some agents need no generator at all for a picture, as long as their own model is good enough for it.</p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-agents" tabindex="0">
-            <table class="guide-table is-narrow">
+            <table class="guide-table is-narrow is-long">
               <caption id="t-agents"><span data-i18n="g.api.c.caption">Image generation in coding agents, checked 8 October 2026.</span></caption>
               <thead>
                 <tr>

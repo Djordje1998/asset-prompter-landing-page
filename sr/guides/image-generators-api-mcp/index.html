@@ -151,7 +151,7 @@
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-sr.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-sr.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-049" />
+    <link rel="stylesheet" href="/styles.css?v=w2-051" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -169,9 +169,23 @@
             "isPartOf": {
               "@id": "https://assetprompter.com/#website"
             },
-            "about": {
-              "@id": "https://assetprompter.com/#app"
-            },
+            "about": [
+              {
+                "@type": "Thing",
+                "name": "Model za generisanje slika iz teksta",
+                "sameAs": "https://www.wikidata.org/wiki/Q113940039"
+              },
+              {
+                "@type": "Thing",
+                "name": "Model za generisanje videa iz teksta",
+                "sameAs": "https://www.wikidata.org/wiki/Q115517227"
+              },
+              {
+                "@type": "Thing",
+                "name": "Model Context Protocol (MCP)",
+                "sameAs": "https://www.wikidata.org/wiki/Q133436854"
+              }
+            ],
             "breadcrumb": {
               "@id": "https://assetprompter.com/sr/guides/image-generators-api-mcp/#breadcrumb"
             },
@@ -202,9 +216,23 @@
             "publisher": {
               "@id": "https://assetprompter.com/#author"
             },
-            "about": {
-              "@id": "https://assetprompter.com/#app"
-            },
+            "about": [
+              {
+                "@type": "Thing",
+                "name": "Model za generisanje slika iz teksta",
+                "sameAs": "https://www.wikidata.org/wiki/Q113940039"
+              },
+              {
+                "@type": "Thing",
+                "name": "Model za generisanje videa iz teksta",
+                "sameAs": "https://www.wikidata.org/wiki/Q115517227"
+              },
+              {
+                "@type": "Thing",
+                "name": "Model Context Protocol (MCP)",
+                "sameAs": "https://www.wikidata.org/wiki/Q133436854"
+              }
+            ],
             "image": [
               "https://assetprompter.com/assets/art/you-are-the-server.webp",
               "https://assetprompter.com/assets/og-sr.jpg"
@@ -213,9 +241,7 @@
             "dateModified": "2026-10-08",
             "mentions": [
               {
-                "@type": "Thing",
-                "name": "Model Context Protocol (MCP)",
-                "sameAs": "https://www.wikidata.org/wiki/Q133436854"
+                "@id": "https://assetprompter.com/#app"
               },
               {
                 "@type": "CreativeWork",
@@ -363,7 +389,7 @@
       </nav>
       <div class="bar-right">
         <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
-             without a script. It names the language it leads to, as a word where the bar has room and as its code on a phone. The script at the top keeps the choice and the reader's place. -->
+             without a script. It names the language it leads to, as a word where the bar has room and as its code after the globe on a phone. The script at the top keeps the choice and the reader's place. -->
         <a class="btn lang-btn" href="/guides/image-generators-api-mcp/" hreflang="en" lang="en" data-lang="en" aria-label="English, EN: this page in English">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
           <span class="lang-name">English</span>
@@ -421,7 +447,7 @@
             <p data-i18n="g.api.table.p"><a href="/sr/#questions">Preseti stižu</a> uz aplikaciju za ovih sedam. „Nije pronađeno” znači da izjava samog proizvođača nije pronađena ni u jednom smeru, a ne da ta stvar ne postoji.</p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-presets" tabindex="0">
-            <table class="guide-table">
+            <table class="guide-table is-long">
               <caption id="t-presets"><span data-i18n="g.api.a.caption">Sedam generatora sa presetima, provereno 8. oktobra 2026. Pretplate i API-ji se često menjaju; svaki red navodi svoje izvore.</span></caption>
               <thead>
                 <tr>
@@ -457,7 +483,7 @@
                 <tr>
                   <th scope="row">Dreamina (CapCut)</th>
                   <td data-i18n="g.api.a.4.1"><span class="tag t-review">Odvojeno</span> Za samu aplikaciju Dreamina nije pronađen. BytePlus prodaje njene modele kao API na platformi ModelArk: <q lang="en">Dreamina Seedance 2.0 is now available through ModelArk on BytePlus, giving businesses and developers API access</q>, a ModelArk-ov API za generisanje slika ima modele Seedream.</td>
-                  <td data-i18n="g.api.a.4.2">ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom. BytePlus: <q lang="en">BytePlus is not available in the United States.</q></td>
+                  <td data-i18n="g.api.a.4.2">ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom.</td>
                   <td data-i18n="g.api.a.4.3"><span class="tag t-review">Nije pronađeno</span></td>
                   <td data-i18n="g.api.a.4.4"><span class="src"><a href="https://www.byteplus.com/en/blog/dreamina-seedance2-0" target="_blank" rel="noopener">BytePlus: Dreamina Seedance 2.0</a>; <a href="https://docs.byteplus.com/en/docs/ModelArk/1541523" target="_blank" rel="noopener">ModelArk: API za generisanje slika</a></span></td>
                 </tr>
@@ -490,7 +516,7 @@
             <p data-i18n="g.api.b.p">Sa njima agent može sam da generiše, uglavnom u okviru onoga što već plaćaš (vidi svaki red). Početna stranica navodi Higgsfield, Kling i Runway u <a href="/sr/#mcp">„Za tvog agenta, isti koraci kao sa MCP serverom”</a>, a Higgsfield, Ideogram, Krea i Runway u <a href="/sr/#questions">„Pre nego što probaš”</a>.</p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-mcp" tabindex="0">
-            <table class="guide-table is-narrow">
+            <table class="guide-table is-narrow is-long">
               <caption id="t-mcp"><span data-i18n="g.api.b.caption">Zvanični MCP serveri na koje se prijavljuješ, provereno 8. oktobra 2026.</span></caption>
               <thead>
                 <tr>
@@ -539,7 +565,7 @@
             <p data-i18n="g.api.c.p">Nekim agentima za sliku uopšte ne treba generator, sve dok je njihov model dovoljno dobar za nju.</p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-agents" tabindex="0">
-            <table class="guide-table is-narrow">
+            <table class="guide-table is-narrow is-long">
               <caption id="t-agents"><span data-i18n="g.api.c.caption">Generisanje slika u agentima za programiranje, provereno 8. oktobra 2026.</span></caption>
               <thead>
                 <tr>

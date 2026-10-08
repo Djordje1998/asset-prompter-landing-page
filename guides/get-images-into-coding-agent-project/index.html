@@ -148,7 +148,7 @@
     <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-049" />
+    <link rel="stylesheet" href="/styles.css?v=w2-051" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -166,9 +166,23 @@
             "isPartOf": {
               "@id": "https://assetprompter.com/#website"
             },
-            "about": {
-              "@id": "https://assetprompter.com/#app"
-            },
+            "about": [
+              {
+                "@type": "Thing",
+                "name": "Text-to-image model",
+                "sameAs": "https://www.wikidata.org/wiki/Q113940039"
+              },
+              {
+                "@type": "Thing",
+                "name": "Text-to-video model",
+                "sameAs": "https://www.wikidata.org/wiki/Q115517227"
+              },
+              {
+                "@type": "Thing",
+                "name": "AI agent",
+                "sameAs": "https://www.wikidata.org/wiki/Q132451509"
+              }
+            ],
             "breadcrumb": {
               "@id": "https://assetprompter.com/guides/get-images-into-coding-agent-project/#breadcrumb"
             },
@@ -199,13 +213,30 @@
             "publisher": {
               "@id": "https://assetprompter.com/#author"
             },
-            "about": {
-              "@id": "https://assetprompter.com/#app"
-            },
+            "about": [
+              {
+                "@type": "Thing",
+                "name": "Text-to-image model",
+                "sameAs": "https://www.wikidata.org/wiki/Q113940039"
+              },
+              {
+                "@type": "Thing",
+                "name": "Text-to-video model",
+                "sameAs": "https://www.wikidata.org/wiki/Q115517227"
+              },
+              {
+                "@type": "Thing",
+                "name": "AI agent",
+                "sameAs": "https://www.wikidata.org/wiki/Q132451509"
+              }
+            ],
             "image": ["https://assetprompter.com/assets/art/problem-courier.webp", "https://assetprompter.com/assets/og.jpg"],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
+              {
+                "@id": "https://assetprompter.com/#app"
+              },
               {
                 "@type": "Thing",
                 "name": "Claude Code",
@@ -311,7 +342,7 @@
       </nav>
       <div class="bar-right">
         <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
-             without a script. It names the language it leads to, as a word where the bar has room and as its code on a phone. The script at the top keeps the choice and the reader's place. -->
+             without a script. It names the language it leads to, as a word where the bar has room and as its code after the globe on a phone. The script at the top keeps the choice and the reader's place. -->
         <a class="btn lang-btn" href="/sr/guides/get-images-into-coding-agent-project/" hreflang="sr" lang="sr-Latn" data-lang="sr" aria-label="Srpski, SR: ova stranica na srpskom">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
           <span class="lang-name">Srpski</span>
@@ -373,7 +404,7 @@
               <dt data-i18n="g.ways.facts.1">Who presses Generate</dt>
               <dd data-i18n="g.ways.1.1">The agent.</dd>
               <dt data-i18n="g.ways.facts.2">What you pay on top</dt>
-              <dd data-i18n="g.ways.1.2">On Codex, nothing on top of a ChatGPT Plus, Pro or Business plan: image turns use its Codex limits, faster than other turns; image generation is not on the Free plan. Gemini CLI's extension needs a Gemini API key, so API billing. Cursor and Antigravity don't say.</dd>
+              <dd data-i18n="g.ways.1.2">On Codex, nothing on top of a ChatGPT Plus, Pro or Business plan until its Codex limits run out: image turns use them faster than other turns, and after that image generation draws on credits. Image generation is not on the Free plan. Gemini CLI's extension needs a Gemini API key, so API billing. Cursor and Antigravity don't say.</dd>
               <dt data-i18n="g.ways.facts.3">What the agent sees</dt>
               <dd data-i18n="g.ways.1.3">The picture it made.</dd>
               <dt data-i18n="g.ways.facts.4">Where the versions live</dt>
@@ -388,7 +419,7 @@
       <section class="section band guide-sec" aria-labelledby="mcp">
         <div class="wrap">
           <div class="prose">
-            <h2 id="mcp" data-i18n="g.ways.2.h">2. An official MCP server</h2>
+            <h2 id="mcp" data-i18n="g.ways.2.h">2. A generator's MCP server</h2>
             <p data-i18n="g.ways.2.p">Higgsfield, Ideogram, Krea, Kling and Runway have MCP servers you sign in to with your account; Leonardo.Ai has one that runs on its API, and Luma's GitHub organisation has one that runs on Luma's.</p>
             <dl class="guide-facts">
               <dt data-i18n="g.ways.facts.1">Who presses Generate</dt>
@@ -524,7 +555,7 @@
                   <td data-i18n="g.ways.cmp.1.6"><span class="tag t-generate">No</span></td>
                 </tr>
                 <tr>
-                  <th scope="row" data-i18n="g.ways.cmp.2">An official MCP server</th>
+                  <th scope="row" data-i18n="g.ways.cmp.2">A generator's MCP server</th>
                   <td data-i18n="g.ways.cmp.2.1">The agent</td>
                   <td data-i18n="g.ways.cmp.2.2">Your plan, or API credits</td>
                   <td data-i18n="g.ways.cmp.2.3"><span class="tag t-approved">Yes</span></td>

@@ -14,6 +14,8 @@
 //   the element's own text (its first text that is more than space), data-i18n-alt, -aria-label and -content the
 //   attribute. A mark with no Serbian stays English, and --check fails on it. The Serbian of a key is in i18n.js or in
 //   i18n-guides.js.
+// - a date in a Serbian text is written <time></time>, and takes the date of the English text's <time datetime>, in
+//   Serbian ("8. oktobra 2026."): one text can be shared by pages with different dates.
 // - <html lang> is sr-Latn, the language button shows SR, and the menu checks Srpski. What stays English on purpose,
 //   the message for the agent (.ask-text) and the app's status tags (.tag), says lang="en". A guide's language link
 //   (a[data-lang] that is not a menu item) leads back to the English guide, and says English (EN on a phone).
@@ -26,10 +28,10 @@
 // - the link to the page as Markdown (rel="alternate" type="text/markdown") is left out: that text is English only.
 // - the Serbian file of each preloaded font (-sr, the letters with marks; see tools/sr-fonts.mjs) is preloaded too.
 // - the JSON-LD takes the Serbian of every text it copies from the page, of the features (ld.feature.N), the keywords
-//   (ld.keywords), the names of the app's topics (ld.about.N) and the other texts no element shows (LD_KEYS); the
-//   page's own nodes (WebPage, FAQPage, a guide's Article and breadcrumb) move to its Serbian address, as do the
-//   guides it names, and say "inLanguage": "sr-Latn". It stops if one of the texts it should copy is not on the page
-//   any more.
+//   (ld.keywords), the names of the app's topics (ld.about.N, also where a guide names one as its own) and the other
+//   texts no element shows (LD_KEYS); the page's own nodes (WebPage, FAQPage, a guide's Article and breadcrumb) move to
+//   its Serbian address, as do the guides it names, and say "inLanguage": "sr-Latn". It stops if one of the texts it
+//   should copy is not on the page any more.
 // - the few texts main.js writes itself (say("key", ...)) go in as a small JSON block, #say, on a page that loads it.
 //
 // tools/sr-english.json keeps, for every marked text, a short hash of its English and of its Serbian as they were when
@@ -232,6 +234,23 @@ function toSerbianPage(url, page) {
 /** The links in a Serbian text, pointed as the page's own are. */
 const localize = (markup, page) => markup.replace(/(\shref=")([^"]*)(")/g, (all, before, url, after) => before + (toSerbianPage(url, page) ?? fromSr(url, page)) + after);
 
+const MONTHS = ["januara", "februara", "marta", "aprila", "maja", "juna", "jula", "avgusta", "septembra", "oktobra", "novembra", "decembra"];
+const TIME_RE = /<time datetime="(\d{4})-(\d{2})-(\d{2})">[\s\S]*?<\/time>/g;
+/** A date in a Serbian text is written <time></time>: it takes the datetime of the English text's <time> in the same
+ *  place and says it in Serbian ("8. oktobra 2026."), so a text that pages with different dates share (g.byline,
+ *  g.updated) holds only the words around it. */
+function dated(key, sr, en) {
+  const dates = [...en.matchAll(TIME_RE)];
+  const empty = sr.match(/<time><\/time>/g)?.length ?? 0;
+  if (/<time\s/.test(sr)) throw new Error(`${key}: write its dates as <time></time>; the build takes them from the English`);
+  if (empty !== dates.length) throw new Error(`${key}: the English has ${dates.length} <time datetime="YYYY-MM-DD">, the Serbian ${empty} <time></time>`);
+  let n = 0;
+  return sr.replace(/<time><\/time>/g, () => {
+    const [, y, m, d] = dates[n++];
+    return `<time datetime="${y}-${m}-${d}">${Number(d)}. ${MONTHS[m - 1]} ${y}.</time>`;
+  });
+}
+
 /* ---- the JSON-LD ---- */
 
 function translateLd(json, english, SR, page) {
@@ -259,6 +278,10 @@ function translateLd(json, english, SR, page) {
       .map((key) => SR[key]);
   const features = numbered("feature");
   const topics = numbered("about");
+  // The English name of each of the app's topics (its about in index.html), and its Serbian.
+  const home = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(read("index.html"))[1]);
+  const app = (home["@graph"] ?? [home]).find((node) => node["@type"] === "SoftwareApplication");
+  const TOPICS = new Map((app?.about ?? []).map((item, n) => [item.name, topics[n]]));
 
   function visit(value, key, owner) {
     if (Array.isArray(value)) {
@@ -270,8 +293,10 @@ function translateLd(json, english, SR, page) {
         if (SR["ld.keywords"] === undefined) left.push(`${owner["@type"]} keywords`);
         return SR["ld.keywords"]?.split(/\s*,\s*/) ?? value;
       }
-      // The app's topics: each keeps its Wikidata item, and its name is in Serbian.
+      // The app's topics: each keeps its Wikidata item, and its name is in Serbian. A guide's topic that is one of the
+      // app's takes that one's Serbian; another (a name, as Model Context Protocol) stays as it is.
       if (key === "about" && value.every((item) => item?.["@type"] === "Thing")) {
+        if (owner["@type"] !== "SoftwareApplication") return value.map((item) => ({ ...item, name: TOPICS.get(item.name) ?? item.name }));
         if (value.length !== topics.length) throw new Error(`about has ${value.length} topics, i18n.js has ${topics.length} (ld.about.N)`);
         return value.map((item, n) => ({ ...item, name: topics[n] }));
       }
@@ -324,11 +349,12 @@ function build(page, SR, seen) {
   };
   // English and Serbian of every marked text, for the JSON-LD.
   const english = new Map();
-  const pair = (key, en) => {
-    if (SR[key] === undefined) return;
-    english.set(plain(en), plain(SR[key]));
+  // Its dates are left out of the English that tools/sr-english.json records: the build writes them (see dated()).
+  const pair = (key, en, sr = SR[key]) => {
+    if (sr === undefined) return;
+    english.set(plain(en), plain(sr));
     if (!seen.has(key)) seen.set(key, new Set());
-    seen.get(key).add(en.replace(/\s+/g, " ").trim());
+    seen.get(key).add(en.replace(TIME_RE, "<time></time>").replace(/\s+/g, " ").trim());
   };
   const unknown = new Set();
   const serbianOf = (key) => {
@@ -350,8 +376,10 @@ function build(page, SR, seen) {
   for (const el of elements) {
     const key = attr(el, "data-i18n")?.value;
     if (key === undefined || inside.has(el)) continue;
-    pair(key, html.slice(el.contentStart, el.contentEnd));
-    if (serbianOf(key) !== undefined) edit(el.contentStart, el.contentEnd, localize(SR[key], page));
+    const en = html.slice(el.contentStart, el.contentEnd);
+    const sr = serbianOf(key) === undefined ? undefined : dated(key, SR[key], en);
+    pair(key, en, sr);
+    if (sr !== undefined) edit(el.contentStart, el.contentEnd, localize(sr, page));
   }
   for (const el of elements) {
     const key = attr(el, "data-i18n-text")?.value;

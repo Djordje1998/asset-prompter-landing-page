@@ -4541,7 +4541,10 @@ li.is-pulse .f-front::after {
 }
 
 /* A guide's language link names the language it leads to: the word where the bar has room, its code on a phone, where
-   the home page's button shows only its code too. */
+   the home page's button shows only its code too. There the home page's code is the language of the page and the
+   guide's the other one, so on a phone the guide's keeps its globe, a little smaller, and reads as a way to the other
+   language. On a Serbian guide below 340 px the name in the bar takes the room the globe needs ("Instaliraj" is
+   longer than "Install"). */
 .lang-name + .lang-code {
   display: none;
 }
@@ -4553,6 +4556,34 @@ li.is-pulse .f-front::after {
 
   .lang-name + .lang-code {
     display: inline;
+  }
+
+  .bar-right > a.lang-btn {
+    gap: 3px;
+    padding-inline: 6px;
+  }
+
+  .bar-right > a.lang-btn .icon {
+    display: block;
+    width: 12px;
+    height: 12px;
+  }
+}
+
+@media (max-width: 339px) {
+  :root:lang(sr) .bar:has(> .bar-right > a.lang-btn) .brand {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 319px) {
+  .bar-right > a.lang-btn {
+    padding-inline: 4px;
+  }
+
+  :root:lang(sr) .bar:has(> .bar-right > a.lang-btn) .brand {
+    gap: 6px;
+    font-size: 13px;
   }
 }
 
@@ -4811,14 +4842,42 @@ li.is-pulse .f-front::after {
   }
 }
 
+/* On a phone the text of a table fades under the right edge while there is more to scroll: the fade is the last thing
+   in the frame, kept at its right edge (sticky), and once the end is in view it rests over the last column's wider
+   right padding, over no text. A table of long cells (.is-long) gives each column the room beside the row's name,
+   so a column is read whole at one place and its rows do not stand 300 to 600 px tall (at least 150 px, which a
+   phone under 320 px cannot show whole). */
 @media (max-width: 480px) {
+  .table-wrap {
+    display: flex;
+  }
+
+  .table-wrap::after {
+    content: "";
+    position: sticky;
+    right: 0;
+    flex: none;
+    width: 28px;
+    margin-left: -28px;
+    background: linear-gradient(to left, var(--card), transparent);
+    pointer-events: none;
+  }
+
   .guide-table {
     font-size: 14px;
+  }
+
+  .guide-table.is-long td {
+    min-width: max(150px, 100cqi - 8.5em - 16px);
   }
 
   .guide-table th,
   .guide-table td {
     padding: 10px 12px;
+  }
+
+  .guide-table :is(th, td):last-child {
+    padding-right: 32px;
   }
 
   .guide-table tbody th {
