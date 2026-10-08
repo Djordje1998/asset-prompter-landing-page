@@ -1,0 +1,5 @@
+# Every crawler is welcome: search engines, and the crawlers of AI search and assistants.
+User-agent: *
+Allow: /
+
+Sitemap: https://assetprompter.com/sitemap.xml

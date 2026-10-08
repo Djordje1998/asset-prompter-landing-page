@@ -2,7 +2,7 @@
 
 The landing page of [Asset Prompter](https://github.com/Djordje1998/asset-prompter). The app lives in its own repository; this one holds only the page.
 
-A static page: `index.html`, `styles.css`, `main.js`, `i18n.js` and the `assets/` folder. There is no build step and nothing here depends on the app's repository, so any static host can serve this folder as it is. Edit these files directly.
+A static page: `index.html`, `styles.css`, `main.js`, `i18n.js` and the `assets/` folder, with the files around it that search engines, browsers and link previews ask for (see "Search, previews and icons"). There is no build step and nothing here depends on the app's repository, so any static host can serve this folder as it is. Edit these files directly.
 
 The hero's logos sit in glass cubes, surfaces catch light under the pointer, and each section arrives once when it is first seen.
 
@@ -29,7 +29,26 @@ The page is in English and Serbian. English is the default; the menu in the top 
 - The Serbian text speaks to the reader as "ti" and avoids past-tense forms that would show the reader's gender. The terms it settled on: prompt, slot, preset, klip, frejm, aset, fajl, folder, pretplata (a generator's plan), zahtev za izmenu (change request), odobriti (approve).
 - `i18n.js` is loaded in the `<head>`, not deferred: for a reader who chose Serbian it keeps the page out of sight (`.lang-pending`) until the Serbian text is in, so the English never flashes. It puts the text in before `main.js` runs and sends `langchange` on `document` after every switch; `main.js` then draws the hub's wires again.
 - Another language: add its text and a line in `LANGS` in `i18n.js`, and an item in `.lang-menu` in `index.html`.
-- Link previews (`og:` tags) stay English: the sites that show them do not run scripts.
+- The `<head>` is marked too: the title, the description and the texts of the link previews (`og:` and `twitter:`) have keys, read with `data-i18n` and `data-i18n-content` like any other text. The sites that show previews do not run scripts, so a preview is in the language of the page's address: English for `/`, Serbian for `/sr/`.
+
+## Search, previews and icons
+
+All of it is in files, because GitHub Pages sends no headers of our own. Keep these in step with the page when it changes.
+
+- The `<head>` of `index.html`: the title (at most 60 characters) and the description (about 150) name what people search for, the agents and the generators, while the page's own text stays as it is. `robots` allows large image previews. The canonical address is `https://assetprompter.com/`, and three `hreflang` links name the English page (also `x-default`) and the Serbian one at `https://assetprompter.com/sr/`. `color-scheme` is dark, as in `styles.css`, so the page is dark before the stylesheet arrives. Link previews and the address in them need full addresses (`https://assetprompter.com/...`).
+- The Serbian page `sr/index.html` is made from `index.html` with the `SR` texts in. It has the same three `hreflang` links, `https://assetprompter.com/sr/` as its canonical address and `og:url`, and `lang="sr-Latn"`.
+- Structured data: one `<script type="application/ld+json">` at the end of the `<head>` describes the site, the page, the app, its author and the questions (schema.org `WebSite`, `WebPage`, `SoftwareApplication`, `Person`, `FAQPage`). It says only what the page shows: no ratings, no reviews. Its texts are copies of the page's, so change them together:
+  - the page's `name` and `description` are the title and the description (keys `title`, `description`);
+  - the app's `description` is the line under the headline (`hero.sub`);
+  - the questions and answers are the seven under "Before you try it", word for word without markup (`faq.1.q` to `faq.7.a`);
+  - only the app's `featureList` is shown nowhere on the page; its Serbian is `ld.feature.1` to `ld.feature.8` in `i18n.js`, in the same order.
+  - For `/sr/` the same block takes those Serbian texts, `"inLanguage": "sr-Latn"` and the address `https://assetprompter.com/sr/` for the page and the questions (`#webpage`, `#questions`); the site, the app and the author keep their `@id`.
+- `robots.txt` lets every crawler in, search engines and the crawlers of AI assistants alike, and names the sitemap. `sitemap.xml` lists `/` and `/sr/`, each with its `hreflang` alternates; change `lastmod` when the text of the page changes.
+- `llms.txt` (llmstxt.org) is a short summary for AI assistants and coding agents, with links to `AGENT-INSTALL.md` and the README of the app and to both pages. Keep its facts the same as the page's.
+- `404.html` is what GitHub Pages shows for an address with no file. It is a page of its own in the site's look (the top bar, an empty slot that "Needs generating", the way home), with `noindex`. It can be shown at any depth, so its addresses start at the root (`/styles.css`). It links the stylesheet and the fonts as `index.html` does: change it when they change.
+- Icons: `favicon.svg` is the icon. `favicon.ico` (16, 32 and 48 px), `apple-touch-icon.png` (180 px, on the page colour, since iOS has no clear pixels), `icon-192.png`, `icon-512.png` and `icon-512-maskable.png` (the drawing inside the middle 80%, for icons cut to a circle) are drawn from it by `tools/icons.mjs`, at a whole number of pixels per square so the pixel art stays sharp. It needs `playwright-core`, `pngjs` and a Chromium or Edge (`CHROME` or `EDGE`). Run it again when `favicon.svg` changes.
+- `site.webmanifest` gives the name, the colours of the page (`#1d1b21`, and `#19171d` for the bar, as `theme-color`) and the icons, for a shortcut on a home screen. It is a website, so `display` is `browser`.
+- `tools/og.html` is published with the site, so it has `noindex`.
 
 ## Sections, in order
 
@@ -96,7 +115,7 @@ li > .cube > .cube-body > i.f.f-back, .f-bottom, .f-left, .f-right, i.cube-glow,
 - The dots of the hero's ground are drawn twice (`.hub::before` and `.hub::after`); the second, brighter layer is seen only in a circle around the pointer. `main.js` writes `--px` and `--py` on `.hub` and sets `is-pointed` while the pointer is over it.
 - A coloured voice (`.who-agent`, `.who-you`) in the headline or in a lead is underlined in its colour; with motion the line is drawn once.
 - Selection is mustard, the scrollbar is in the page's colours, and the focus ring is mustard.
-- Top bar: the language menu (`.lang`, the pixel globe `#i-globe`), then the GitHub button, which asks for a star (the pixel star `#i-star` is in the sprite; on a phone only the star is shown, and under 390px it gives way to the language and Install). The bar's widths are set for Serbian, whose words are longer: check both languages when a link or a button changes. It is clear over the hero, frosted once the page has scrolled (`.is-stuck`); the link of the section in view gets `aria-current`. A thread on the lower edge of the window (`.read-progress`) fills as the page is read, violet at its tail and mustard at its head; `main.js` writes `--read` on `<html>`. The frosted bar is the only `backdrop-filter` on the page.
+- Top bar: the language menu (`.lang`, the pixel globe `#i-globe`), then the GitHub button, which asks for a star (the pixel star `#i-star` is in the sprite; on a phone only the star is shown, and under 390px it gives way to the language and Install). The bar's widths are set for Serbian, whose words are longer: check both languages when a link or a button changes. The names a screen reader gives the language button and the star hold the words they show (`Language: EN`, `Star on GitHub: Asset Prompter`), in both languages. It is clear over the hero, frosted once the page has scrolled (`.is-stuck`); the link of the section in view gets `aria-current`. A thread on the lower edge of the window (`.read-progress`) fills as the page is read, violet at its tail and mustard at its head; `main.js` writes `--read` on `<html>`. The frosted bar is the only `backdrop-filter` on the page.
 - Buttons rise one pixel toward the pointer and are pressed into their shadow; the primary one is crossed by a band of light once.
 - Copy: the button turns green and says Copied, as the app's does, and the message lights up from its first letter to its last (`.ask.is-copied`). One click on the message selects all of it.
 - Questions: an answer opens and closes with an animated height (`.faq-a` is the wrapper that is animated; with reduced motion or no script the native `<details>` behaviour stays).
@@ -148,4 +167,4 @@ A generator is named as hand-only only with its fact: no public API (Google Flow
 - `styles.css`, `i18n.js` and `main.js` are linked with a `?v=` stamp in `index.html`. Change it when any of them changes, or a browser may keep the old one.
 - Product names and logos belong to their owners. The lines saying the project is not affiliated with them, and "as checked on 2 October 2026", must stay; check the claims again when the page changes.
 - The download buttons point at the `master` branch ZIP of `github.com/Djordje1998/asset-prompter`. Links to the repository's pages open in a new tab (`target="_blank" rel="noopener"`); the ZIP links are downloads and do not.
-- The picture for link previews is `assets/og.png` (1200 by 630). `og:image` and `og:url` in `index.html` hold the page's full address, `https://assetprompter.com/`, because sites that show previews do not follow relative paths. Change both when the page moves to its own domain. To remake the picture, open `tools/og.html` in a browser window of 1200 by 630 and save a screenshot of it.
+- The picture for link previews is `assets/og.png` (1200 by 630); `og:image`, `twitter:image` and `og:url` hold full addresses, because sites that show previews do not follow relative paths. To remake the picture, open `tools/og.html` in a browser window of 1200 by 630 and save a screenshot of it.

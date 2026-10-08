@@ -1,7 +1,7 @@
 // Small behaviours only; the page reads fine without any of it.
 // In order: the top bar, the folder beside the six steps, entrances, the MCP figure, art and clips,
 // the Copy buttons, light under the pointer, the questions, and the hub in the hero.
-// The language menu and the Serbian text are in i18n.js, which runs before this file.
+// The language menu and the Serbian text are in i18n.js, which runs before this file (both are deferred).
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -29,14 +29,18 @@ const oncePerFrame = (fn) => {
 
 const bar = document.querySelector(".bar");
 if (bar) {
-  // The thread on the lower edge of the window fills as the page is read.
+  // The thread on the lower edge of the window fills as the page is read. --read goes on the thread itself: written on
+  // <html>, it would make the browser restyle the whole page on every frame of a scroll.
+  const thread = document.querySelector(".read-progress") || root;
   const stick = oncePerFrame(() => {
-    bar.classList.toggle("is-stuck", scrollY > 8);
+    // Measure first, then write, so the class does not make the browser lay the page out again before the measure.
+    const y = scrollY;
     const span = root.scrollHeight - innerHeight;
-    root.style.setProperty("--read", span > 0 ? Math.min(1, Math.max(0, scrollY / span)).toFixed(4) : "0");
+    bar.classList.toggle("is-stuck", y > 8);
+    thread.style.setProperty("--read", span > 0 ? Math.min(1, Math.max(0, y / span)).toFixed(4) : "0");
   });
   addEventListener("scroll", stick, { passive: true });
-  addEventListener("resize", stick);
+  addEventListener("resize", stick, { passive: true });
   stick();
 
   const links = new Map([...bar.querySelectorAll('.bar-links a[href^="#"]')].map((a) => [a.hash.slice(1), a]));
@@ -104,7 +108,7 @@ if (rail && turns.length) {
   });
 
   addEventListener("scroll", sync, { passive: true });
-  addEventListener("resize", sync);
+  addEventListener("resize", sync, { passive: true });
   sync();
 }
 
@@ -141,9 +145,10 @@ if (uses.length && root.classList.contains("motion")) {
   const SPAN = 0.45;
   let first = true;
   const place = oncePerFrame(() => {
-    for (const card of uses) {
-      const top = card.getBoundingClientRect().top;
-      const raw = Math.min(1, Math.max(0, (innerHeight - top) / (innerHeight * SPAN)));
+    // Every card is measured before any is written to, so the page is laid out once per frame, not once per card.
+    const tops = uses.map((card) => card.getBoundingClientRect().top);
+    uses.forEach((card, i) => {
+      const raw = Math.min(1, Math.max(0, (innerHeight - tops[i]) / (innerHeight * SPAN)));
       // Slow at first, fast at the end: they hit rather than land.
       card.style.setProperty("--p", (raw * raw).toFixed(4));
       if (raw < 1) {
@@ -156,11 +161,11 @@ if (uses.length && root.classList.contains("motion")) {
           setTimeout(() => card.classList.remove("is-hit"), 600);
         }
       }
-    }
+    });
     first = false;
   });
   addEventListener("scroll", place, { passive: true });
-  addEventListener("resize", place);
+  addEventListener("resize", place, { passive: true });
   place();
 }
 
@@ -182,6 +187,41 @@ const onScreen =
       else target.pause();
     }
   });
+
+// A clip is fetched only once its picture is near the window, a screen and a half ahead, and not before the page has
+// loaded, so it never takes the network from what the first view needs.
+const whenNear = new Map();
+const near =
+  hasObserver &&
+  new IntersectionObserver(
+    (entries) => {
+      for (const { target, isIntersecting } of entries) {
+        if (!isIntersecting) continue;
+        near.unobserve(target);
+        whenNear.get(target)();
+        whenNear.delete(target);
+      }
+    },
+    { rootMargin: "150% 0px" },
+  );
+const loaded = new Promise((done) => (document.readyState === "complete" ? done() : addEventListener("load", done, { once: true })));
+
+// Two pictures share a clip: the hero's is shown again beside its frame sheet. The second waits until the first has
+// stopped fetching ("suspend": the file is in, or enough of it for now; at most 15 s) and then takes it from the
+// browser's cache, so one clip is never downloaded twice at once.
+const fetching = new Map();
+const fetchClip = (video, src) => {
+  const turn = (fetching.get(src) || Promise.resolve()).then(
+    () =>
+      new Promise((done) => {
+        video.addEventListener("suspend", done, { once: true });
+        video.addEventListener("error", done, { once: true });
+        setTimeout(done, 15000);
+        video.src = src;
+      }),
+  );
+  fetching.set(src, turn);
+};
 
 for (const art of document.querySelectorAll(".art[data-slot]")) {
   const img = art.querySelector("img");
@@ -213,12 +253,15 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
       },
       { once: true },
     );
-    video.src = src;
+    const fetchNow = () => loaded.then(() => fetchClip(video, src));
+    if (!near) return fetchNow();
+    whenNear.set(art, fetchNow);
+    near.observe(art);
   };
 
+  // A picture below the fold keeps loading="lazy": the browser fetches it as it comes near, and then load or error follows.
   if (img.complete) img.naturalWidth ? ready() : missing();
   else {
-    img.loading = "eager";
     img.addEventListener("load", ready, { once: true });
     img.addEventListener("error", missing, { once: true });
   }
@@ -429,7 +472,7 @@ if (hub) {
         const t = rects.get(node);
         if (!t) {
           node.rest = node.pts = null;
-          node.wire.setAttribute("points", "");
+          node.wire.setAttribute("points", (node.drawn = ""));
           continue;
         }
         // Measured while bobbing: take the bob out.
@@ -460,8 +503,13 @@ if (hub) {
     const [a, b, ...rest] = node.rest;
     const dy = floating ? Math.round(node.dy) : 0;
     node.pts = [[a[0], a[1] + dy], [b[0], b[1] + dy], ...rest];
-    node.wire.setAttribute("points", node.pts.map((q) => q.join(",")).join(" "));
-    if (node.shadow) node.shadow.setAttribute("y", (node.sy + dy).toFixed(1));
+    // Written only when it has changed: in most frames the bob has not moved a whole pixel.
+    const points = node.pts.map((q) => q.join(",")).join(" ");
+    if (points !== node.drawn) node.wire.setAttribute("points", (node.drawn = points));
+    if (node.shadow) {
+      const y = (node.sy + dy).toFixed(1);
+      if (y !== node.shadowY) node.shadow.setAttribute("y", (node.shadowY = y));
+    }
   }
 
   layout();
@@ -524,6 +572,7 @@ if (hub) {
     }
 
     let running = false;
+    let routeDrawn = "";
     let ticking = false;
     let looping = false;
     let count = 0;
@@ -571,7 +620,9 @@ if (hub) {
       }
       node.rx += (rx - node.rx) * 0.09;
       node.ry += (ry - node.ry) * 0.09;
-      node.body.style.transform = `perspective(${PERSPECTIVE}px) rotateX(${node.rx.toFixed(2)}deg) rotateY(${node.ry.toFixed(2)}deg)`;
+      // Once a cube has come to rest, the same turn is not written again.
+      const turn = `perspective(${PERSPECTIVE}px) rotateX(${node.rx.toFixed(2)}deg) rotateY(${node.ry.toFixed(2)}deg)`;
+      if (turn !== node.turn) node.body.style.transform = node.turn = turn;
     }
 
     function frame(now) {
@@ -608,13 +659,14 @@ if (hub) {
         const pts = trip && trip.back ? out.reverse() : out;
         const total = lengthOf(pts);
         const points = pts.map((q) => q.join(",")).join(" ");
-        route.setAttribute("points", points);
+        if (points !== routeDrawn) route.setAttribute("points", (routeDrawn = points));
         if (trip) {
           const k = Math.min((now - trip.start) / trip.time(total), 1);
           // The head runs a tail's length past the end, so the whole thread arrives.
           const head = ease(k) * (total + TAIL);
-          for (const { line, length } of layers) {
-            line.setAttribute("points", points);
+          for (const layer of layers) {
+            const { line, length } = layer;
+            if (points !== layer.drawn) line.setAttribute("points", (layer.drawn = points));
             line.setAttribute("stroke-dasharray", `${length} ${total + 400}`);
             line.setAttribute("stroke-dashoffset", length - Math.min(head, total + length));
           }

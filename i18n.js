@@ -1,7 +1,8 @@
 // The page in a second language.
 // English is the text in index.html and is read from there. This file holds the Serbian text and runs the language
-// menu in the top bar. It is loaded in the <head>, before the page is drawn, so a reader who chose Serbian never
-// sees the English first.
+// menu in the top bar. It is deferred: a small script in the <head> of index.html sets .i18n (the menu shows) and,
+// for a reader who chose Serbian, .lang-pending (the page stays out of sight until the Serbian text is in) before the
+// page is drawn, so that reader never sees the English first.
 //
 // How a text is marked in index.html:
 //   data-i18n="key"             the whole content of the element (the Serbian text may hold markup)
@@ -13,9 +14,28 @@
 
 (() => {
   const SR = {
-    title: "Asset Prompter: tvoj agent piše prompt, ti praviš sliku",
+    title: "Asset Prompter: promptovi za slike i video od tvog agenta",
     description:
-      "Mala lokalna aplikacija koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno.",
+      "Besplatna lokalna aplikacija za Windows i Linux. Claude Code, Codex ili Cursor piše prompt, a ti sliku ili video praviš u alatu Midjourney ili Google Flow.",
+
+    /* ---- link previews (og: and twitter: in the <head>) ---- */
+    "og.locale": "sr_RS",
+    "og.locale.alt": "en_US",
+    "og.title": "Asset Prompter: tvoj agent piše prompt, ti praviš sliku",
+    "og.description":
+      "Besplatna lokalna aplikacija za Windows i Linux koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno.",
+    "og.alt": "Asset Prompter: tvoj agent piše prompt, ti praviš sliku. Robot i osoba sa dve strane zajedničkog foldera.",
+
+    /* ---- structured data: the features in the JSON-LD, in its order. No element on the page shows them. ---- */
+    "ld.feature.1": "Tvoj agent za programiranje upisuje svaki prompt za sliku ili video u slot, sa podešavanjima",
+    "ld.feature.2": "Ti generišeš ručno, u bilo kom alatu, i rezultat spuštaš na karticu slota",
+    "ld.feature.3":
+      "Radi sa alatima Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode i Antigravity, i sa svakim agentom koji radi sa fajlovima",
+    "ld.feature.4": "Preseti za ChatGPT Images, Dreaminu, Google Flow, Grok Imagine, Leonardo.Ai, Lumu i Midjourney",
+    "ld.feature.5": "Svaka verzija, svaki rezultat, zahtev za izmenu i pregled ostaju u folderu slota, kao obični fajlovi",
+    "ld.feature.6": "Jednim klikom odobravaš rezultat i on postaje konačan; iz tog fajla agent izvozi veličine i formate koji mu trebaju",
+    "ld.feature.7": "Svaki video klip pretvara u listove sa frejmovima i mapu pokreta, koje agent može da pročita",
+    "ld.feature.8": "Radi na tvom računaru i sluša samo na 127.0.0.1, bez naloga i bez API ključa",
 
     /* ---- top bar ---- */
     skip: "Preskoči na sadržaj",
@@ -25,8 +45,8 @@
     "nav.agent": "Za agenta",
     "nav.tradeoffs": "Kompromisi",
     "nav.questions": "Pitanja",
-    "lang.label": "Jezik",
-    "star.label": "Daj zvezdicu projektu Asset Prompter na GitHubu",
+    "lang.label": "Jezik: SR",
+    "star.label": "Zvezdica na GitHubu: Asset Prompter",
     star: 'Zvezdica<span class="bar-github-on"> na GitHubu</span>',
     install: "Instaliraj",
 
@@ -269,6 +289,7 @@
   let lang = [new URLSearchParams(location.search).get("lang"), saved()].find((l) => l && Object.hasOwn(LANGS, l)) || "en";
 
   // The menu shows only when this script runs. For Serbian the page stays out of sight until its text is in place.
+  // The script in the <head> has set both already; they are set here again for a page that has no such script.
   root.classList.add("i18n");
   if (lang !== "en") root.classList.add("lang-pending");
 
@@ -343,9 +364,10 @@
 
     for (const item of items) {
       item.addEventListener("click", () => {
-        choose(item.dataset.lang);
         open(false);
         button.focus();
+        // The menu closes at once; the page's text changes in the frame after, so the click is answered without waiting for it.
+        requestAnimationFrame(() => setTimeout(() => choose(item.dataset.lang)));
       });
     }
 
@@ -385,7 +407,7 @@
   // main.js asks for the few texts it writes itself, and for the language when it needs to know.
   window.i18n = { t, get lang() { return lang; } };
 
-  // "interactive" comes when the page is read to its end and before main.js runs, so main.js measures the final text.
+  // Deferred, this runs when the page is read to its end ("interactive") and before main.js, so main.js measures the final text.
   if (document.readyState === "loading") document.addEventListener("readystatechange", start, { once: true });
   else start();
 })();

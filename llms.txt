@@ -1,0 +1,24 @@
+# Asset Prompter
+
+> Asset Prompter is a free, small local app for Windows and Linux that carries prompts and results between your coding agent and the image or video generator you use by hand. Your agent writes the prompt. You make the picture.
+
+- The agent writes each prompt into a slot folder. You copy it into your generator, press Generate there, and drop the result on the slot's card. The agent can open the result and ask for changes; you approve the one you want, and it becomes the final file the agent uses.
+- Agents: any agent that can read and write files in the project folder, such as Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode and Antigravity.
+- Generators: any tool you can paste a prompt into. Presets ship for ChatGPT Images, Dreamina, Google Flow, Grok Imagine, Leonardo.Ai, Luma and Midjourney.
+- It doesn't generate anything itself. It listens on 127.0.0.1 only, has no account and needs no API key. It costs nothing; you pay for your generator and your agent.
+- To install it with an agent, give the agent this message: "Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md"
+
+## Docs
+
+- [Agent install guide](https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md): the steps an agent follows to download, set up, check and start the app
+- [README](https://github.com/Djordje1998/asset-prompter/blob/master/README.md): what the app does, how it works, which agents and generators it works with, and what the agent gets
+- [Repository](https://github.com/Djordje1998/asset-prompter): the source code, under the MIT licence
+
+## Pages
+
+- [Asset Prompter](https://assetprompter.com/): the website in English, with the six steps of one picture, the comparison with MCP servers, the trade-offs, installing and the questions
+- [Asset Prompter na srpskom](https://assetprompter.com/sr/): the same website in Serbian
+
+## Optional
+
+- [Download ZIP](https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip): the app's folder; run setup.bat on Windows or sh setup.sh on Linux
