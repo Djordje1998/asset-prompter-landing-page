@@ -19,15 +19,28 @@ const sayings = (() => {
 })();
 const say = (key, english) => sayings[key] ?? english;
 
-/** Runs fn at most once per frame, however often it is asked for. */
-const oncePerFrame = (fn) => {
+/* The work of the coming frame. A job measures what it needs and returns a function that writes; every job of a frame
+   measures before any job writes, so the browser restyles and lays the page out once per frame, not once per job. */
+let jobs = [];
+const runJobs = (now) => {
+  const due = jobs;
+  jobs = [];
+  for (const write of due.map((job) => job(now))) if (write) write();
+};
+const inFrame = (job) => {
+  if (!jobs.length) requestAnimationFrame(runJobs);
+  jobs.push(job);
+};
+
+/** Runs job (as inFrame does) at most once per frame, however often it is asked for. */
+const oncePerFrame = (job) => {
   let queued = false;
   return () => {
     if (queued) return;
     queued = true;
-    requestAnimationFrame(() => {
+    inFrame((now) => {
       queued = false;
-      fn();
+      return job(now);
     });
   };
 };
@@ -156,6 +169,11 @@ if (langBox) {
       if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
       if (item === current) {
+        // Still a choice: English chosen on /?lang=en, while Serbian is saved, keeps / English from now on.
+        try {
+          localStorage.setItem("lang", item.dataset.lang);
+        } catch {}
+        mark();
         open(false);
         button.focus();
         return;
@@ -216,12 +234,13 @@ if (bar) {
   const thread = document.querySelector(".read-progress") || root;
   let read = "";
   const stick = oncePerFrame(() => {
-    // Measure first, then write, so the class does not make the browser lay the page out again before the measure.
     const y = scrollY;
     const span = root.scrollHeight - innerHeight;
-    bar.classList.toggle("is-stuck", y > 8);
-    const now = span > 0 ? Math.min(1, Math.max(0, y / span)).toFixed(4) : "0";
-    if (now !== read) thread.style.setProperty("--read", (read = now));
+    return () => {
+      bar.classList.toggle("is-stuck", y > 8);
+      const now = span > 0 ? Math.min(1, Math.max(0, y / span)).toFixed(4) : "0";
+      if (now !== read) thread.style.setProperty("--read", (read = now));
+    };
   });
   addEventListener("scroll", stick, { passive: true });
   addEventListener("resize", stick, { passive: true });
@@ -288,7 +307,7 @@ if (rail && turns.length) {
     for (const turn of turns) {
       if (turn.getBoundingClientRect().top <= line) n = Number(turn.dataset.turn);
     }
-    show(n);
+    return () => show(n);
   });
 
   addEventListener("scroll", sync, { passive: true });
@@ -317,8 +336,11 @@ if (!reducedMotion && hasObserver) {
 /* ---- smooth scrolling: Lenis (assets/vendor) eases the wheel, so what follows the scroll moves evenly instead of in steps.
    Touch scrolling stays native. Lenis puts .lenis on <html>; styles.css turns the browser's own smooth anchors off there. ---- */
 
-if (!reducedMotion && typeof Lenis === "function") {
-  new Lenis({ autoRaf: true, lerp: 0.12, anchors: true });
+// Lenis needs ResizeObserver (Safari 13.1, Firefox 69); without it, or if it fails, the page scrolls natively.
+if (!reducedMotion && typeof Lenis === "function" && "ResizeObserver" in window) {
+  try {
+    new Lenis({ autoRaf: true, lerp: 0.12, anchors: true });
+  } catch {}
 }
 
 /* ---- the uses: the two halves of a card come in from opposite sides as it scrolls up, meet in the middle of the window, and hold ---- */
@@ -329,25 +351,28 @@ if (uses.length && root.classList.contains("motion")) {
   const SPAN = 0.45;
   let first = true;
   const place = oncePerFrame(() => {
-    // Every card is measured before any is written to, so the page is laid out once per frame, not once per card.
+    // Every card is measured before any is written to.
+    const h = innerHeight;
     const tops = uses.map((card) => card.getBoundingClientRect().top);
-    uses.forEach((card, i) => {
-      const raw = Math.min(1, Math.max(0, (innerHeight - tops[i]) / (innerHeight * SPAN)));
-      // Slow at first, fast at the end: they hit rather than land. Written only when it has changed.
-      const p = (raw * raw).toFixed(4);
-      if (p !== card.p) card.style.setProperty("--p", (card.p = p));
-      if (raw < 1) {
-        if (card.classList.contains("is-joined") || card.classList.contains("is-hit")) card.classList.remove("is-joined", "is-hit");
-      } else if (!card.classList.contains("is-joined")) {
-        card.classList.add("is-joined");
-        // Already joined when the page opens: no hit for that.
-        if (!first) {
-          card.classList.add("is-hit");
-          setTimeout(() => card.classList.remove("is-hit"), 600);
+    return () => {
+      uses.forEach((card, i) => {
+        const raw = Math.min(1, Math.max(0, (h - tops[i]) / (h * SPAN)));
+        // Slow at first, fast at the end: they hit rather than land. Written only when it has changed.
+        const p = (raw * raw).toFixed(4);
+        if (p !== card.p) card.style.setProperty("--p", (card.p = p));
+        if (raw < 1) {
+          if (card.classList.contains("is-joined") || card.classList.contains("is-hit")) card.classList.remove("is-joined", "is-hit");
+        } else if (!card.classList.contains("is-joined")) {
+          card.classList.add("is-joined");
+          // Already joined when the page opens: no hit for that.
+          if (!first) {
+            card.classList.add("is-hit");
+            setTimeout(() => card.classList.remove("is-hit"), 600);
+          }
         }
-      }
-    });
-    first = false;
+      });
+      first = false;
+    };
   });
   addEventListener("scroll", place, { passive: true });
   addEventListener("resize", place, { passive: true });
@@ -493,11 +518,14 @@ if (finePointer) {
 
   const apply = oncePerFrame(() => {
     if (!(over instanceof Element)) return;
-    for (let el = over.closest(LIT); el; el = el.parentElement && el.parentElement.closest(LIT)) {
-      const r = el.getBoundingClientRect();
-      el.style.setProperty("--mx", `${Math.round(x - r.left)}px`);
-      el.style.setProperty("--my", `${Math.round(y - r.top)}px`);
-    }
+    const lit = [];
+    for (let el = over.closest(LIT); el; el = el.parentElement && el.parentElement.closest(LIT)) lit.push([el, el.getBoundingClientRect()]);
+    return () => {
+      for (const [el, r] of lit) {
+        el.style.setProperty("--mx", `${Math.round(x - r.left)}px`);
+        el.style.setProperty("--my", `${Math.round(y - r.top)}px`);
+      }
+    };
   });
 
   document.addEventListener(
@@ -808,9 +836,14 @@ if (hub) {
       if (turn !== node.turn) node.body.style.transform = node.turn = turn;
     }
 
-    function frame(now) {
+    /** A frame of the hub, in the frame's jobs: the hub is measured with everything else, then drawn. */
+    const frame = (now) => {
+      const box = running && hub.getBoundingClientRect();
+      return () => draw(now, box);
+    };
+
+    function draw(now, box) {
       if (running) {
-        const box = hub.getBoundingClientRect();
         for (const node of nodes) {
           if (!node.rest) continue;
           if (floating) {
@@ -889,14 +922,14 @@ if (hub) {
           }
         }
       }
-      if (running || trip) requestAnimationFrame(frame);
+      if (running || trip) inFrame(frame);
       else ticking = false;
     }
 
     function wake() {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(frame);
+      inFrame(frame);
     }
 
     /** Puts class names on an element for a moment, to play an animation once. */
