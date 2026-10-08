@@ -3,6 +3,32 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Each language is a page of its own: English here, Serbian in sr/index.html (made from this file by
+         tools/build-sr.mjs, with this same script). It runs first, before anything is fetched or drawn: a reader who
+         chose Serbian in the menu goes from here to the Serbian page, and an old link with ?lang= goes to its language.
+         ?lang=en keeps the English page even for that reader, so no address sends back to the one it came from. With
+         the script the language menu shows (.i18n); main.js runs it, so without main.js the menu goes again. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var asked = (/[?&]lang=([a-z]+)/.exec(location.search) || [])[1];
+        var saved = null;
+        try {
+          saved = localStorage.getItem("lang");
+        } catch (e) {}
+        // A page opened from a file has no folder index.
+        var index = location.protocol === "file:" ? "index.html" : "";
+        if (root.lang === "en" && (asked === "sr" || (saved === "sr" && asked !== "en"))) {
+          location.replace("sr/" + index + location.hash);
+        } else if (root.lang !== "en" && asked === "en") {
+          location.replace("../" + index + "?lang=en" + location.hash);
+        }
+        root.classList.add("i18n");
+        document.addEventListener("DOMContentLoaded", function () {
+          if (!root.classList.contains("js")) root.classList.remove("i18n");
+        });
+      })();
+    </script>
     <title data-i18n="title">Asset Prompter: image &amp; video prompts from your coding agent</title>
     <meta
       name="description"
@@ -51,48 +77,17 @@
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
     <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
-    <!-- Runs before the first paint, so it comes before the stylesheet. With i18n.js the language menu shows (.i18n), and a
-         reader who chose Serbian sees nothing until i18n.js has put the Serbian text in (.lang-pending); i18n.js itself is
-         deferred. The choice is made as in i18n.js: ?lang= in the address, then the saved choice, then English. If i18n.js
-         has not run by the time the page is read, both classes go and the page stays English. -->
-    <script>
-      (function () {
-        var root = document.documentElement;
-        var asked = new URLSearchParams(location.search).get("lang");
-        var saved = null;
-        try {
-          saved = localStorage.getItem("lang");
-        } catch (e) {}
-        var lang = [asked, saved].filter(function (l) { return l === "en" || l === "sr"; })[0] || "en";
-        root.classList.add("i18n");
-        if (lang !== "en") {
-          root.classList.add("lang-pending");
-          // The letters with marks are in the latin-ext files: fetch them with the latin ones.
-          ["bricolage-grotesque-v9", "instrument-sans-v4"].forEach(function (name) {
-            var link = document.createElement("link");
-            link.rel = "preload";
-            link.as = "font";
-            link.type = "font/woff2";
-            link.crossOrigin = "anonymous";
-            link.href = "assets/fonts/" + name + "-latin-ext.woff2";
-            document.head.appendChild(link);
-          });
-        }
-        document.addEventListener("DOMContentLoaded", function () {
-          if (!window.i18n) root.classList.remove("i18n", "lang-pending");
-        });
-      })();
-    </script>
     <!-- The fonts the hero is drawn in; the rest are found in styles.css. A font is fetched in CORS mode, so a preload
-         needs crossorigin to be used. -->
+         needs crossorigin to be used. The Serbian page preloads the latin-ext file of each as well, for its letters
+         with marks (tools/build-sr.mjs adds them). -->
     <link rel="preload" href="assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=w2-032" />
-    <script src="./i18n.js?v=w2-032" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=w2-034" />
     <!-- What search engines and AI answers read about the page. Its texts are copies of the page's: the page's name and
          description are the title and the description above, the app's description is hero.sub, the questions and answers
          are faq.1.q to faq.7.a word for word, without markup. Only the features have no element; their Serbian is
-         ld.feature.1 to ld.feature.8 in i18n.js. Change it together with those texts. -->
+         ld.feature.1 to ld.feature.8 in i18n.js. Change it together with those texts. tools/build-sr.mjs writes the
+         Serbian block of sr/index.html from this one and stops if a text here is no longer the page's. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -265,7 +260,8 @@
         <a href="#questions" data-i18n="nav.questions">Questions</a>
       </nav>
       <div class="bar-right">
-        <!-- The language menu. i18n.js switches the page; without the script the menu is not shown.
+        <!-- The language menu. Each language is a page of its own, and the items are links to them; main.js opens the
+             menu and keeps the reader's place on the other page. Without main.js the menu is not shown.
              The button's label holds the code it shows (Language: EN), so the name a reader hears contains what is seen. -->
         <div class="lang">
           <button type="button" class="btn lang-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu" aria-label="Language: EN" data-i18n-aria-label="lang.label">
@@ -275,14 +271,14 @@
           </button>
           <ul class="lang-menu" id="lang-menu" role="menu" hidden>
             <li role="none">
-              <button type="button" role="menuitemradio" aria-checked="true" data-lang="en" lang="en">
+              <a href="./" hreflang="en" role="menuitemradio" aria-checked="true" data-lang="en" lang="en">
                 English<svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>
-              </button>
+              </a>
             </li>
             <li role="none">
-              <button type="button" role="menuitemradio" aria-checked="false" data-lang="sr" lang="sr-Latn">
+              <a href="sr/" hreflang="sr" role="menuitemradio" aria-checked="false" data-lang="sr" lang="sr-Latn">
                 Srpski<svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>
-              </button>
+              </a>
             </li>
           </ul>
         </div>
@@ -965,6 +961,6 @@
     </footer>
 
     <script src="./assets/vendor/lenis.min.js?v=1.3.26" defer></script>
-    <script src="./main.js?v=w2-033" defer></script>
+    <script src="./main.js?v=w2-034" defer></script>
   </body>
 </html>

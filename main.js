@@ -1,7 +1,6 @@
 // Small behaviours only; the page reads fine without any of it.
-// In order: the top bar, the folder beside the six steps, entrances, the MCP figure, art and clips,
+// In order: the language menu, the top bar, the folder beside the six steps, entrances, the MCP figure, art and clips,
 // the Copy buttons, light under the pointer, the questions, and the hub in the hero.
-// The language menu and the Serbian text are in i18n.js, which runs before this file (both are deferred).
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -9,8 +8,16 @@ const hasObserver = "IntersectionObserver" in window;
 const root = document.documentElement;
 root.classList.add("js");
 
-/** A text this script writes itself, in the page's language: i18n.js has the Serbian, the English is given here. */
-const say = (key, english) => window.i18n?.t(key) ?? english;
+/** A text this script writes itself, in the page's language. The English is given here; tools/build-sr.mjs puts the
+    Serbian of every key asked for here in sr/index.html (#say), and nothing else of i18n.js. */
+const sayings = (() => {
+  try {
+    return JSON.parse(document.getElementById("say")?.textContent || "{}");
+  } catch {
+    return {};
+  }
+})();
+const say = (key, english) => sayings[key] ?? english;
 
 /** Runs fn at most once per frame, however often it is asked for. */
 const oncePerFrame = (fn) => {
@@ -24,6 +31,130 @@ const oncePerFrame = (fn) => {
     });
   };
 };
+
+/* ---- language: each language is a page of its own (English at /, Serbian at sr/). The menu's items are links to them;
+   choosing one remembers it (the script at the top of the <head> reads it) and goes there, to the same place. ---- */
+
+const PLACE = "lang-place";
+
+/** The parts of the page, the same in both languages. A place is one of them and how far into it the window's top is,
+    since the other language's text runs to other heights. */
+const parts = () => [...document.querySelectorAll("main > section, body > footer")];
+
+// Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
+try {
+  const place = JSON.parse(sessionStorage.getItem(PLACE));
+  sessionStorage.removeItem(PLACE);
+  const part = place && Date.now() - place.at < 10000 && parts()[place.i];
+  if (part) {
+    const go = () => {
+      // At once: the stylesheet's smooth scrolling would ease it.
+      root.style.scrollBehavior = "auto";
+      scrollTo(0, Math.round(part.getBoundingClientRect().top + scrollY + part.offsetHeight * place.f));
+      root.style.scrollBehavior = "";
+      return scrollY;
+    };
+    const landed = go();
+    document.fonts?.ready.then(() => scrollY === landed && go());
+  }
+} catch {}
+
+const langBox = document.querySelector(".lang");
+if (langBox) {
+  const button = langBox.querySelector(".lang-btn");
+  const list = langBox.querySelector(".lang-menu");
+  const items = [...list.querySelectorAll("[data-lang]")];
+  const current = items.find((item) => item.getAttribute("aria-checked") === "true") || items[0];
+
+  const open = (on) => {
+    list.hidden = !on;
+    button.setAttribute("aria-expanded", String(on));
+  };
+
+  // As soon as the reader reaches for the menu, the other page is fetched, so the switch is quick; and from the English
+  // page the fonts' latin-ext files too, which hold the Serbian letters with marks. Browsers without prefetch skip it.
+  let warmed = false;
+  const warm = () => {
+    if (warmed) return;
+    warmed = true;
+    const fonts = document.querySelector('link[rel="preload"][href*="-latin-ext."]')
+      ? []
+      : [...document.querySelectorAll('link[rel="preload"][as="font"]')].map((font) => font.href.replace("-latin.", "-latin-ext."));
+    for (const href of [...items.filter((item) => item !== current).map((item) => item.href), ...fonts]) {
+      const link = document.createElement("link");
+      if (!link.relList?.supports?.("prefetch")) return;
+      link.rel = "prefetch";
+      link.href = href;
+      if (fonts.includes(href)) {
+        link.as = "font";
+        link.crossOrigin = "anonymous";
+      }
+      document.head.append(link);
+    }
+  };
+  langBox.addEventListener("pointerenter", warm);
+  langBox.addEventListener("focusin", warm);
+
+  button.addEventListener("click", () => {
+    open(list.hidden);
+    if (!list.hidden) current.focus();
+  });
+
+  for (const item of items) {
+    item.addEventListener("click", (event) => {
+      // With a modifier the link opens as any link does, in a new tab or window.
+      if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      open(false);
+      button.focus();
+      if (item === current) return;
+      const lang = item.dataset.lang;
+      let kept = false;
+      try {
+        localStorage.setItem("lang", lang);
+        kept = localStorage.getItem("lang") === lang;
+      } catch {}
+      try {
+        const all = parts();
+        let i = 0;
+        all.forEach((part, n) => part.getBoundingClientRect().top <= 0 && (i = n));
+        const box = all[i].getBoundingClientRect();
+        sessionStorage.setItem(PLACE, JSON.stringify({ i, f: box.height ? -box.top / box.height : 0, at: Date.now() }));
+      } catch {}
+      let href = item.href;
+      // A page opened from a file has no folder index.
+      if (location.protocol === "file:" && href.endsWith("/")) href += "index.html";
+      // A Serbian choice that could not be replaced would send the English page back to the Serbian one; ?lang=en stops that.
+      if (lang === "en" && !kept) href += "?lang=en";
+      // The switch takes the place of this page in the history, as a change of language on one page would.
+      location.replace(href);
+    });
+  }
+
+  langBox.addEventListener("keydown", (event) => {
+    if (list.hidden) return;
+    if (event.key === "Escape") {
+      open(false);
+      button.focus();
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const step = event.key === "ArrowDown" ? 1 : -1;
+      items[(items.indexOf(document.activeElement) + step + items.length) % items.length].focus();
+    } else if (event.key === " " && items.includes(document.activeElement)) {
+      // An item is a link, which Enter follows; as a menu item, Space chooses it too.
+      event.preventDefault();
+      document.activeElement.click();
+    }
+  });
+
+  // It closes when the reader clicks elsewhere or tabs out of it.
+  document.addEventListener("pointerdown", (event) => {
+    if (!langBox.contains(event.target)) open(false);
+  });
+  langBox.addEventListener("focusout", (event) => {
+    if (event.relatedTarget && !langBox.contains(event.relatedTarget)) open(false);
+  });
+}
 
 /* ---- top bar: clear over the hero, solid once the page has moved; a thread shows how far the page is read; the link of the section in view is marked ---- */
 
@@ -248,9 +379,8 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
     video.addEventListener(
       "canplay",
       () => {
-        // The clip takes over the picture's description, and its mark, so i18n.js keeps it in the page's language.
+        // The clip takes over the picture's description.
         video.setAttribute("aria-label", img.alt);
-        if (img.dataset.i18nAlt) video.setAttribute("data-i18n-aria-label", img.dataset.i18nAlt);
         img.replaceWith(video);
         if (onScreen) onScreen.observe(video);
       },
@@ -520,8 +650,6 @@ if (hub) {
   else addEventListener("resize", layout, { passive: true });
   if (document.fonts) document.fonts.ready.then(layout);
   addEventListener("load", layout);
-  // Another language moves the folder without always changing the hub's size.
-  document.addEventListener("langchange", layout);
 
   if (!reducedMotion) {
     const SPEED = 760; // px per second, before easing
