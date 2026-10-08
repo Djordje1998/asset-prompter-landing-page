@@ -53,6 +53,9 @@ const PLACE = "lang-place";
 /** The parts of the page, the same in both languages. A place is one of them and how far into it the window's top is,
     since the other language's text runs to other heights. */
 const parts = () => [...document.querySelectorAll("main > section, body > footer")];
+/** The questions, and which of them are open (one closing counts as closed): the other page opens the same ones. */
+const answers = () => [...document.querySelectorAll(".faq-list details")];
+const openAnswers = () => answers().flatMap((item, n) => (item.open && !item.classList.contains("is-closing") ? [n] : []));
 
 // Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
 // The script at the top of the <head> has marked such a page: no entrance plays (.lang-switched, styles.css), and no
@@ -66,6 +69,8 @@ try {
   sessionStorage.removeItem(PLACE);
   const part = place && Date.now() - place.at < 10000 && parts()[place.i];
   if (part) {
+    // The answers the reader had open, before anything is measured: an open one makes its part taller.
+    if (Array.isArray(place.open)) answers().forEach((item, n) => (item.open = place.open.includes(n)));
     const go = () => {
       // At once: the stylesheet's smooth scrolling would ease it.
       root.style.scrollBehavior = "auto";
@@ -187,7 +192,7 @@ if (langBox) {
       try {
         const place = opened && Math.abs(scrollY - opened.y) < 100 ? opened.place : placeNow();
         // A click from the keyboard (Enter, or Space below) has no pointer behind it: detail is 0.
-        sessionStorage.setItem(PLACE, JSON.stringify({ ...place, kb: event.detail === 0 ? 1 : 0, at: Date.now() }));
+        sessionStorage.setItem(PLACE, JSON.stringify({ ...place, open: openAnswers(), kb: event.detail === 0 ? 1 : 0, at: Date.now() }));
       } catch {}
       open(false);
       const lang = item.dataset.lang;
