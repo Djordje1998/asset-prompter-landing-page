@@ -23,8 +23,11 @@ const SR = {
   "og.description":
     "Besplatna lokalna aplikacija za Windows i Linux koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno.",
   "og.alt": "Asset Prompter: tvoj agent piše prompt, ti praviš sliku. Robot i osoba sa dve strane zajedničkog foldera.",
+  "og.label1": "Cena",
+  "og.data1": "Besplatno",
+  "og.label2": "Radi na",
 
-  /* ---- structured data: the features in the JSON-LD, in its order. No element on the page shows them. ---- */
+  /* ---- structured data: the texts of the JSON-LD that no element on the page shows. The features, in its order: ---- */
   "ld.feature.1": "Tvoj agent za programiranje upisuje svaki prompt za sliku ili video u slot, sa podešavanjima",
   "ld.feature.2": "Ti generišeš ručno, u bilo kom alatu, i rezultat spuštaš na karticu slota",
   "ld.feature.3":
@@ -34,6 +37,12 @@ const SR = {
   "ld.feature.6": "Jednim klikom odobravaš rezultat i on postaje konačan; iz tog fajla agent izvozi veličine i formate koji mu trebaju",
   "ld.feature.7": "Svaki video klip pretvara u listove sa frejmovima i mapu pokreta, koje agent može da pročita",
   "ld.feature.8": "Radi na tvom računaru i sluša samo na 127.0.0.1, bez naloga i bez API ključa",
+  /* the app's kind, what it needs and who it is for (applicationSubCategory, softwareRequirements, audienceType) */
+  "ld.subcategory": "Prenos promptova i rezultata između agenta za programiranje i generatora slika ili videa",
+  "ld.requirements":
+    "Bun; ffmpeg za listove sa frejmovima i mapu pokreta video klipova. Setup instalira oba na Windowsu i Linuxu; na macOS-u Bun instaliraš ručno.",
+  "ld.audience":
+    "Ljudi koji sa agentom za programiranje prave sajtove, aplikacije i druge projekte, a slike i video za njih prave ručno u generatoru kao što su Midjourney, Google Flow ili ChatGPT Images",
 
   /* ---- top bar ---- */
   skip: "Preskoči na sadržaj",

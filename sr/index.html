@@ -37,7 +37,7 @@
       content="Besplatna lokalna aplikacija za Windows i Linux. Claude Code, Codex ili Cursor piše prompt, a ti sliku ili video praviš u alatu Midjourney ili Google Flow."
     />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="author" content="Djordje" />
+    <meta name="author" content="Đorđe Novković" />
     <!-- One address per language. The Serbian page, sr/index.html, has the same three alternates and its own canonical. -->
     <link rel="canonical" href="https://assetprompter.com/sr/" />
     <link rel="alternate" hreflang="en" href="https://assetprompter.com/" />
@@ -58,8 +58,8 @@
       content="Besplatna lokalna aplikacija za Windows i Linux koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno."
     />
     <meta property="og:url" content="https://assetprompter.com/sr/" />
-    <meta property="og:image" content="https://assetprompter.com/assets/og.png" />
-    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image" content="https://assetprompter.com/assets/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" data-i18n-content="og.alt" content="Asset Prompter: tvoj agent piše prompt, ti praviš sliku. Robot i osoba sa dve strane zajedničkog foldera." />
@@ -70,13 +70,23 @@
       data-i18n-content="og.description"
       content="Besplatna lokalna aplikacija za Windows i Linux koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno."
     />
-    <meta name="twitter:image" content="https://assetprompter.com/assets/og.png" />
+    <meta name="twitter:image" content="https://assetprompter.com/assets/og.jpg" />
     <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: tvoj agent piše prompt, ti praviš sliku. Robot i osoba sa dve strane zajedničkog foldera." />
-    <!-- The icon is favicon.svg; the others are drawn from it for browsers and places that take no SVG. -->
+    <!-- Two facts Slack shows under a link (X ignores them). -->
+    <meta name="twitter:label1" data-i18n-content="og.label1" content="Cena" />
+    <meta name="twitter:data1" data-i18n-content="og.data1" content="Besplatno" />
+    <meta name="twitter:label2" data-i18n-content="og.label2" content="Radi na" />
+    <meta name="twitter:data2" content="Windows, Linux" />
+    <!-- The icon is favicon.svg; the others are drawn from it for browsers and places that take no SVG. The 192 px PNG
+         is the square raster icon search results ask for (at least 48 px). -->
     <link rel="icon" href="../favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
     <link rel="manifest" href="../site.webmanifest" />
+    <!-- The page as Markdown, and its short summary, for AI assistants and agents (llms-full.txt, llms.txt). Both are
+         English, so the Serbian page keeps only describedby (tools/build-sr.mjs leaves the alternate out). -->
+    <link rel="describedby" type="text/markdown" href="https://assetprompter.com/llms.txt" />
     <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
     <!-- The fonts the hero is drawn in; the rest are found in styles.css. A font is fetched in CORS mode, so a preload
          needs crossorigin to be used. The Serbian page preloads the latin-ext file of each as well, for its letters
@@ -88,9 +98,11 @@
     <link rel="stylesheet" href="../styles.css?v=w2-035" />
     <!-- What search engines and AI answers read about the page. Its texts are copies of the page's: the page's name and
          description are the title and the description above, the app's description is hero.sub, the questions and answers
-         are faq.1.q to faq.7.a word for word, without markup. Only the features have no element; their Serbian is
-         ld.feature.1 to ld.feature.8 in i18n.js. Change it together with those texts. tools/build-sr.mjs writes the
-         Serbian block of sr/index.html from this one and stops if a text here is no longer the page's. -->
+         are faq.1.q to faq.7.a word for word, without markup. Only the features, the app's subcategory, its requirements
+         and its audience have no element; their Serbian is ld.feature.1 to ld.feature.8, ld.subcategory, ld.requirements
+         and ld.audience in i18n.js. The agents and generators the page names are in mentions, with their Wikidata item
+         where there is one. Change it together with those texts. tools/build-sr.mjs writes the Serbian block of
+         sr/index.html from this one and stops if a text here is no longer the page's. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -108,6 +120,14 @@
               "en",
               "sr-Latn"
             ],
+            "image": {
+              "@type": "ImageObject",
+              "@id": "https://assetprompter.com/#icon",
+              "url": "https://assetprompter.com/icon-512.png",
+              "contentUrl": "https://assetprompter.com/icon-512.png",
+              "width": 512,
+              "height": 512
+            },
             "publisher": {
               "@id": "https://assetprompter.com/#author"
             }
@@ -128,13 +148,89 @@
             "mainEntity": {
               "@id": "https://assetprompter.com/#app"
             },
+            "mentions": [
+              {
+                "@type": "SoftwareApplication",
+                "name": "Claude Code",
+                "sameAs": "https://www.wikidata.org/wiki/Q138457287"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Codex",
+                "sameAs": "https://www.wikidata.org/wiki/Q138940795"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Cursor",
+                "sameAs": "https://www.wikidata.org/wiki/Q131980386"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Gemini CLI"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "GitHub Copilot",
+                "sameAs": "https://www.wikidata.org/wiki/Q107435063"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "OpenCode"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Antigravity",
+                "sameAs": "https://www.wikidata.org/wiki/Q136827654"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "ChatGPT Images",
+                "isPartOf": {
+                  "@type": "SoftwareApplication",
+                  "name": "ChatGPT",
+                  "sameAs": "https://www.wikidata.org/wiki/Q115564437"
+                }
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Dreamina"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Google Flow",
+                "sameAs": "https://www.wikidata.org/wiki/Q140560557"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Grok Imagine"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Leonardo.Ai",
+                "sameAs": "https://www.wikidata.org/wiki/Q124157014"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Luma AI"
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Midjourney",
+                "sameAs": "https://www.wikidata.org/wiki/Q113070628"
+              },
+              {
+                "@type": "Thing",
+                "name": "Model Context Protocol (MCP)",
+                "sameAs": "https://www.wikidata.org/wiki/Q133436854"
+              }
+            ],
             "primaryImageOfPage": {
               "@type": "ImageObject",
-              "url": "https://assetprompter.com/assets/og.png",
+              "url": "https://assetprompter.com/assets/og.jpg",
               "width": 1200,
               "height": 630
             },
-            "dateModified": "2026-10-07"
+            "dateModified": "2026-10-08"
           },
           {
             "@type": "SoftwareApplication",
@@ -143,7 +239,9 @@
             "url": "https://assetprompter.com/",
             "description": "Asset Prompter je mala lokalna aplikacija koja prenosi promptove i rezultate između tvog agenta za programiranje i generatora slika ili videa koji koristiš ručno.",
             "applicationCategory": "DeveloperApplication",
+            "applicationSubCategory": "Prenos promptova i rezultata između agenta za programiranje i generatora slika ili videa",
             "operatingSystem": "Windows, Linux",
+            "softwareRequirements": "Bun; ffmpeg za listove sa frejmovima i mapu pokreta video klipova. Setup instalira oba na Windowsu i Linuxu; na macOS-u Bun instaliraš ručno.",
             "isAccessibleForFree": true,
             "license": "https://opensource.org/license/mit",
             "offers": {
@@ -153,11 +251,67 @@
             },
             "downloadUrl": "https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip",
             "installUrl": "https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md",
-            "image": "https://assetprompter.com/assets/demo/app-icon-256.png",
+            "releaseNotes": "https://github.com/Djordje1998/asset-prompter/blob/master/CHANGELOG.md",
+            "softwareHelp": {
+              "@type": "CreativeWork",
+              "url": "https://github.com/Djordje1998/asset-prompter/blob/master/README.md"
+            },
+            "image": {
+              "@id": "https://assetprompter.com/#icon"
+            },
             "screenshot": [
               "https://assetprompter.com/assets/app/2-result.webp",
               "https://assetprompter.com/assets/app/7-approved.webp",
               "https://assetprompter.com/assets/shots/variants-dialog.webp"
+            ],
+            "audience": {
+              "@type": "Audience",
+              "audienceType": "Ljudi koji sa agentom za programiranje prave sajtove, aplikacije i druge projekte, a slike i video za njih prave ručno u generatoru kao što su Midjourney, Google Flow ili ChatGPT Images"
+            },
+            "keywords": [
+              "coding agent image prompts",
+              "coding agent video prompts",
+              "Claude Code images",
+              "Codex images",
+              "Cursor images",
+              "Midjourney",
+              "Google Flow",
+              "ChatGPT Images",
+              "image prompt handoff",
+              "AI image and video assets for a website",
+              "no API key",
+              "MCP server alternative for generators without an API",
+              "local app",
+              "Windows",
+              "Linux",
+              "free"
+            ],
+            "about": [
+              {
+                "@type": "Thing",
+                "name": "Generative artificial intelligence",
+                "sameAs": "https://www.wikidata.org/wiki/Q117246174"
+              },
+              {
+                "@type": "Thing",
+                "name": "Text-to-image model",
+                "sameAs": "https://www.wikidata.org/wiki/Q113940039"
+              },
+              {
+                "@type": "Thing",
+                "name": "Text-to-video model",
+                "sameAs": "https://www.wikidata.org/wiki/Q115517227"
+              },
+              {
+                "@type": "Thing",
+                "name": "Prompt engineering",
+                "sameAs": "https://www.wikidata.org/wiki/Q108941486"
+              },
+              {
+                "@type": "Thing",
+                "name": "AI agent",
+                "sameAs": "https://www.wikidata.org/wiki/Q132451509"
+              }
             ],
             "featureList": [
               "Tvoj agent za programiranje upisuje svaki prompt za sliku ili video u slot, sa podešavanjima",
@@ -177,10 +331,32 @@
             ]
           },
           {
+            "@type": "SoftwareSourceCode",
+            "@id": "https://assetprompter.com/#source",
+            "codeRepository": "https://github.com/Djordje1998/asset-prompter",
+            "programmingLanguage": "TypeScript",
+            "runtimePlatform": "Bun",
+            "license": "https://opensource.org/license/mit",
+            "targetProduct": {
+              "@id": "https://assetprompter.com/#app"
+            },
+            "author": {
+              "@id": "https://assetprompter.com/#author"
+            }
+          },
+          {
             "@type": "Person",
             "@id": "https://assetprompter.com/#author",
-            "name": "Djordje",
-            "url": "https://github.com/Djordje1998"
+            "name": "Đorđe Novković",
+            "alternateName": [
+              "Djordje Novković",
+              "Djordje1998"
+            ],
+            "url": "https://github.com/Djordje1998",
+            "sameAs": [
+              "https://github.com/Djordje1998",
+              "https://www.linkedin.com/in/dj-nov"
+            ]
           },
           {
             "@type": "FAQPage",

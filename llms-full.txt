@@ -19,7 +19,7 @@ Asset Prompter is a free local app (Windows and Linux, MIT licence) that lets a 
 - Agents: any agent that can read and write files in the project folder, such as Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode and Antigravity.
 - Generators: any tool you can paste a prompt into and get a file out of. Presets ship for ChatGPT Images, Dreamina, Google Flow, Grok Imagine, Leonardo.Ai, Luma AI and Midjourney.
 - Install by agent: paste "Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md" into a coding agent that can run commands.
-- Made by Djordje (GitHub: Djordje1998).
+- Made by Đorđe Novković (Djordje Novković; GitHub: Djordje1998, LinkedIn: https://www.linkedin.com/in/dj-nov).
 
 ## Who it is for
 
@@ -202,7 +202,7 @@ Yes. Remove the approval in Details to reopen the slot, or clone the slot to try
 - App README: https://github.com/Djordje1998/asset-prompter/blob/master/README.md
 - Agent install guide: https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md
 - Download ZIP: https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip
-- Author: Djordje, https://github.com/Djordje1998
+- Author: Đorđe Novković, https://github.com/Djordje1998 and https://www.linkedin.com/in/dj-nov
 
 ## Na srpskom (Serbian)
 
