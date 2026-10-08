@@ -4161,6 +4161,32 @@ li.is-pulse .f-front::after {
   }
 }
 
+/* A folding phone, under 320 pixels: the bar's gaps, edges and name a little smaller, so that its right group stays in
+   the window and the page does not scroll sideways. */
+@media (max-width: 319px) {
+  .bar {
+    gap: 6px;
+    padding-inline: 10px;
+  }
+
+  .bar-right {
+    gap: 6px;
+  }
+
+  .brand {
+    gap: 7px;
+    font-size: 15px;
+  }
+
+  .lang-btn {
+    padding-inline: 6px;
+  }
+
+  .bar-right .btn-primary {
+    padding-inline: 8px;
+  }
+}
+
 /* Where the folder is narrower than its longest row, the tag drops under the file name. */
 @media (max-width: 960px) {
   .film-tree li {
