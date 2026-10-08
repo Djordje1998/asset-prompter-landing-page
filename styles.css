@@ -3997,6 +3997,23 @@ li.is-pulse .f-front::after {
   }
 }
 
+/* On a tablet held sideways (1024px) the footer stays one row, as it was before the guides link: the brand and the
+   line keep their places, and the two links come 10px from the line and from each other. */
+@media (min-width: 1001px) and (max-width: 1060px) {
+  .foot-row {
+    column-gap: 0;
+  }
+
+  .foot .brand {
+    margin-right: 28px;
+  }
+
+  .foot-links {
+    column-gap: 10px;
+    padding-left: 10px;
+  }
+}
+
 @media (max-width: 1020px) {
   .bar-links {
     display: none;
@@ -4375,6 +4392,7 @@ li.is-pulse .f-front::after {
   gap: 4px 8px;
   margin-bottom: 22px;
   color: var(--faint);
+  text-align: center;
   font: 500 12px/1.4 var(--mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -4522,6 +4540,28 @@ li.is-pulse .f-front::after {
   overflow-wrap: normal;
 }
 
+/* A guide's language link names the language it leads to: the word where the bar has room, its code on a phone, where
+   the home page's button shows only its code too. */
+.lang-name + .lang-code {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .lang-name {
+    display: none;
+  }
+
+  .lang-name + .lang-code {
+    display: inline;
+  }
+}
+
+/* A Serbian guide quotes in the marks of its own text, „…”, as the home page does, whatever the language of the words
+   quoted (the browser's own Serbian marks end in “). */
+:root:lang(sr) :is(.prose, .guide-table) q {
+  quotes: "\201E" "\201D" "\201A" "\2019";
+}
+
 /* Words quoted from the app or a source: the agent's violet down the side. */
 .prose blockquote {
   margin-inline: 0;
@@ -4564,11 +4604,16 @@ li.is-pulse .f-front::after {
   margin-inline: auto;
 }
 
-/* A table is a surface like a picture: the card colour, the hard shadow and the lit inner edge. On a phone it scrolls
-   sideways inside its frame; the page does not. */
+/* A table is a surface like a picture: the card colour, the hard shadow and the lit inner edge. Where it is wider than
+   its frame it scrolls sideways inside it; the page does not. A shadow at the right edge says there is more: it is
+   drawn on the frame, and a patch of card colour that scrolls with the table covers it once the end is in view. */
 .table-wrap {
+  container-type: inline-size;
   overflow-x: auto;
-  background: var(--card);
+  background:
+    linear-gradient(to left, var(--card) 24px, transparent) right / 40px 100% no-repeat local,
+    linear-gradient(to left, rgb(0 0 0 / 0.5), transparent) right / 16px 100% no-repeat scroll,
+    var(--card);
   border: 1px solid var(--edge-strong);
   border-radius: 8px;
   box-shadow:
@@ -4579,7 +4624,7 @@ li.is-pulse .f-front::after {
 
 .guide-table {
   width: 100%;
-  min-width: 760px;
+  min-width: 700px;
   border-collapse: collapse;
   font-size: 15px;
   line-height: 1.5;
@@ -4594,6 +4639,14 @@ li.is-pulse .f-front::after {
   color: var(--faint);
   font-size: 13.5px;
   text-align: left;
+}
+
+/* The caption stays in view while the table scrolls under it, as wide as the frame. */
+.guide-table caption > span {
+  position: sticky;
+  left: 16px;
+  display: block;
+  max-width: calc(100cqi - 32px);
 }
 
 .guide-table th,
@@ -4612,13 +4665,15 @@ li.is-pulse .f-front::after {
   text-transform: uppercase;
 }
 
-/* The row's name stays at the left edge while a phone scrolls the table sideways. */
+/* The row's name stays at the left edge while a phone scrolls the table sideways, with an edge of its own that the
+   other columns pass under. */
 .guide-table tbody th {
   position: sticky;
   left: 0;
   z-index: 1;
   min-width: 140px;
   background: var(--card);
+  box-shadow: inset -1px 0 0 var(--edge-strong);
   color: var(--text);
   font-weight: 600;
 }
@@ -4627,10 +4682,17 @@ li.is-pulse .f-front::after {
   position: sticky;
   left: 0;
   z-index: 1;
+  box-shadow: inset -1px 0 0 var(--edge-strong);
 }
 
 .guide-table tbody th code {
   white-space: nowrap;
+}
+
+/* The clip on "How this site was made" is the only picture on the site a keyboard can reach. Its frames clip what is
+   drawn outside them, so its ring goes inside the picture. */
+.guide-wide video:focus-visible {
+  outline-offset: -4px;
 }
 
 .guide-table td {
@@ -4722,6 +4784,14 @@ li.is-pulse .f-front::after {
   margin-inline: auto;
 }
 
+/* On a tablet the cells give up a little side air, so the widest table fits its frame from 768 px up. */
+@media (max-width: 800px) {
+  .guide-table th,
+  .guide-table td {
+    padding-inline: 12px;
+  }
+}
+
 @media (max-width: 760px) {
   .guide-facts {
     grid-template-columns: minmax(0, 1fr);
@@ -4752,7 +4822,13 @@ li.is-pulse .f-front::after {
   }
 
   .guide-table tbody th {
-    min-width: 0;
+    min-width: 8.5em;
     max-width: 8.5em;
+  }
+
+  /* A long slot name breaks at its hyphens rather than run under the next column. */
+  .guide-table tbody th code {
+    white-space: normal;
+    overflow-wrap: normal;
   }
 }

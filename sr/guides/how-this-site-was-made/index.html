@@ -4,8 +4,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title data-i18n="g.made.title">Kako su slike ovog sajta napravljene u alatu Google Flow</title>
-    <meta name="description" data-i18n-content="g.made.description" content="Pravi fajlovi iza ilustracija i klipova ovog sajta: slotovi Asset Promptera, Google Flow, listovi sa frejmovima, mapa pokreta i izvoz, korak po korak." />
+    <title data-i18n="g.made.title">Kako su ilustracije sajta napravljene u alatu Google Flow</title>
+    <meta name="description" data-i18n-content="g.made.description" content="Pravi fajlovi iza slika ovog sajta: slotovi Asset Promptera, ilustracije generisane u alatu Google Flow, listovi sa frejmovima i mapa pokreta klipa, izvoz." />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="author" content="Đorđe Novaković" />
     <!-- A guide sits two folders down, so every address in it starts at the root, as in 404.html. Its Serbian copy,
@@ -63,6 +63,28 @@
           // A Serbian choice that could not be replaced would send the English guide back to the Serbian one.
           location.replace(link.getAttribute("href") + (lang === "en" && !kept ? "?lang=en" : ""));
         });
+        // The bar stays at the top, but the browser takes it as under the room scroll-padding-top keeps for it: focusing one
+        // of its links from the keyboard would scroll the page half a window up. It stays where it was instead: scrolling
+        // to it at once undoes an instant scroll and stops a smooth one, even when the page has not moved yet.
+        var y = scrollY;
+        addEventListener("scroll", function () {
+          y = scrollY;
+        }, { passive: true });
+        document.addEventListener("focusin", function (event) {
+          if (!event.target.closest || !event.target.closest(".bar")) return;
+          // Only the keyboard's focus: a tap or a click does not scroll, and a flick still running is left alone.
+          try {
+            if (!event.target.matches(":focus-visible")) return;
+          } catch (e) {}
+          var at = y;
+          var stay = function () {
+            root.style.scrollBehavior = "auto";
+            scrollTo(0, at);
+            root.style.scrollBehavior = "";
+          };
+          stay();
+          requestAnimationFrame(stay);
+        });
         // Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
         var place = null;
         try {
@@ -103,8 +125,8 @@
     <meta property="og:site_name" content="Asset Prompter" />
     <meta property="og:locale" data-i18n-content="og.locale" content="sr_RS" />
     <meta property="og:locale:alternate" data-i18n-content="og.locale.alt" content="en_US" />
-    <meta property="og:title" data-i18n-content="g.made.title" content="Kako su slike ovog sajta napravljene u alatu Google Flow" />
-    <meta property="og:description" data-i18n-content="g.made.description" content="Pravi fajlovi iza ilustracija i klipova ovog sajta: slotovi Asset Promptera, Google Flow, listovi sa frejmovima, mapa pokreta i izvoz, korak po korak." />
+    <meta property="og:title" data-i18n-content="g.made.title" content="Kako su ilustracije sajta napravljene u alatu Google Flow" />
+    <meta property="og:description" data-i18n-content="g.made.description" content="Pravi fajlovi iza slika ovog sajta: slotovi Asset Promptera, ilustracije generisane u alatu Google Flow, listovi sa frejmovima i mapa pokreta klipa, izvoz." />
     <meta property="og:url" content="https://assetprompter.com/sr/guides/how-this-site-was-made/" />
     <meta property="og:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og-sr.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
@@ -115,8 +137,8 @@
     <meta property="article:modified_time" content="2026-10-08" />
     <meta property="article:author" content="https://github.com/Djordje1998" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" data-i18n-content="g.made.title" content="Kako su slike ovog sajta napravljene u alatu Google Flow" />
-    <meta name="twitter:description" data-i18n-content="g.made.description" content="Pravi fajlovi iza ilustracija i klipova ovog sajta: slotovi Asset Promptera, Google Flow, listovi sa frejmovima, mapa pokreta i izvoz, korak po korak." />
+    <meta name="twitter:title" data-i18n-content="g.made.title" content="Kako su ilustracije sajta napravljene u alatu Google Flow" />
+    <meta name="twitter:description" data-i18n-content="g.made.description" content="Pravi fajlovi iza slika ovog sajta: slotovi Asset Promptera, ilustracije generisane u alatu Google Flow, listovi sa frejmovima i mapa pokreta klipa, izvoz." />
     <meta name="twitter:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og-sr.jpg" />
     <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: tvoj agent piše prompt, ti praviš sliku. Robot i osoba sa dve strane zajedničkog foldera." />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -129,7 +151,7 @@
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-sr.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-sr.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-045" />
+    <link rel="stylesheet" href="/styles.css?v=w2-049" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -141,8 +163,8 @@
             "@type": "WebPage",
             "@id": "https://assetprompter.com/sr/guides/how-this-site-was-made/#webpage",
             "url": "https://assetprompter.com/sr/guides/how-this-site-was-made/",
-            "name": "Kako su slike ovog sajta napravljene u alatu Google Flow",
-            "description": "Pravi fajlovi iza ilustracija i klipova ovog sajta: slotovi Asset Promptera, Google Flow, listovi sa frejmovima, mapa pokreta i izvoz, korak po korak.",
+            "name": "Kako su ilustracije sajta napravljene u alatu Google Flow",
+            "description": "Pravi fajlovi iza slika ovog sajta: slotovi Asset Promptera, ilustracije generisane u alatu Google Flow, listovi sa frejmovima i mapa pokreta klipa, izvoz.",
             "inLanguage": "sr-Latn",
             "isPartOf": {
               "@id": "https://assetprompter.com/#website"
@@ -166,7 +188,7 @@
             "@type": "Article",
             "@id": "https://assetprompter.com/sr/guides/how-this-site-was-made/#article",
             "headline": "Kako su nastale slike na ovom sajtu",
-            "description": "Pravi fajlovi iza ilustracija i klipova ovog sajta: slotovi Asset Promptera, Google Flow, listovi sa frejmovima, mapa pokreta i izvoz, korak po korak.",
+            "description": "Pravi fajlovi iza slika ovog sajta: slotovi Asset Promptera, ilustracije generisane u alatu Google Flow, listovi sa frejmovima i mapa pokreta klipa, izvoz.",
             "inLanguage": "sr-Latn",
             "mainEntityOfPage": {
               "@id": "https://assetprompter.com/sr/guides/how-this-site-was-made/#webpage"
@@ -183,7 +205,10 @@
             "about": {
               "@id": "https://assetprompter.com/#app"
             },
-            "image": "https://assetprompter.com/assets/og-sr.jpg",
+            "image": [
+              "https://assetprompter.com/assets/art/loop-relay.webp",
+              "https://assetprompter.com/assets/og-sr.jpg"
+            ],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
@@ -263,9 +288,10 @@
       </nav>
       <div class="bar-right">
         <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
-             without a script. The script at the top keeps the choice and the reader's place. -->
-        <a class="btn lang-btn" href="/guides/how-this-site-was-made/" hreflang="en" lang="en" data-lang="en" aria-label="English: this page in English">
+             without a script. It names the language it leads to, as a word where the bar has room and as its code on a phone. The script at the top keeps the choice and the reader's place. -->
+        <a class="btn lang-btn" href="/guides/how-this-site-was-made/" hreflang="en" lang="en" data-lang="en" aria-label="English, EN: this page in English">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
+          <span class="lang-name">English</span>
           <span class="lang-code">EN</span>
         </a>
         <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Zvezdica na GitHubu: Asset Prompter" data-i18n-aria-label="star.label">
@@ -300,12 +326,12 @@
       <section class="section band guide-sec" aria-labelledby="slots">
         <div class="wrap">
           <div class="prose">
-            <h2 id="slots" data-i18n="g.made.1.h">Jedan projekat, šest slotova</h2>
-            <p data-i18n="g.made.1.p1">Svaka ilustracija i svaki klip na <a href="/sr/">početnoj stranici</a> nastali su u jednom projektu Asset Promptera, <code>asset-prompter-landing</code>. Svaka slika je tražena kao <strong>slot</strong>, folder za jedan aset, i svaki fajl na sajtu nosi ime svog slota: <code>&lt;slot&gt;.webp</code> za sliku, <code>&lt;slot&gt;.mp4</code> za njen klip. Ilustracije su generisane ručno u alatu Google Flow.</p>
+            <h2 id="slots" data-i18n="g.made.1.h">Jedan projekat, slot za svaki aset</h2>
+            <p data-i18n="g.made.1.p1">Svaka ilustracija i svaki klip na <a href="/sr/">početnoj stranici</a> nastali su u jednom projektu Asset Promptera, <code>asset-prompter-landing</code>. Svaki je tražen kao <strong>slot</strong>, folder za jedan aset. Svaki fajl na sajtu nosi ime slota svoje slike: <code>&lt;slot&gt;.webp</code> za sliku, <code>&lt;slot&gt;.mp4</code> za klip koji počinje njome. Ilustracije su generisane ručno u alatu Google Flow.</p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="slots-caption" tabindex="0">
             <table class="guide-table">
-              <caption id="slots-caption" data-i18n="g.made.t.caption">Šest slotova i gde su njihovi fajlovi na početnoj stranici. Dimenzije su izmerene na fajlovima 8. oktobra 2026.</caption>
+              <caption id="slots-caption"><span data-i18n="g.made.t.caption">Slotovi iza fajlova na početnoj stranici i gde su ti fajlovi. Dimenzije su izmerene na fajlovima 8. oktobra 2026.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.made.t.slot">Slot</th>
@@ -317,15 +343,15 @@
               <tbody>
                 <tr>
                   <th scope="row"><code>loop-relay</code></th>
-                  <td data-i18n="g.made.t.1.kind">Slika i njen klip</td>
-                  <td data-i18n="g.made.t.1.where">Vrh stranice i <a href="/sr/#agent">„Proverava klip koji ne može da pusti”</a></td>
-                  <td data-i18n="g.made.t.1.file"><code>assets/art/loop-relay.webp</code>, 1280 × 714; <code>loop-relay.mp4</code> i <code>loop-relay-av1.mp4</code></td>
+                  <td data-i18n="g.made.t.1.kind">Slika</td>
+                  <td data-i18n="g.made.t.1.where">Vrh stranice, kao slika pre nego što krene njen klip</td>
+                  <td><code>assets/art/loop-relay.webp</code>, 1280 × 714</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>loop-relay-clip</code></th>
-                  <td data-i18n="g.made.t.2.kind">Video slot</td>
-                  <td data-i18n="g.made.t.2.where">List sa frejmovima 003 i mapa pokreta njegove verzije 2, u <a href="/sr/#agent">„Proverava klip koji ne može da pusti”</a></td>
-                  <td><code>assets/demo/clip-loop-relay-frames.webp</code>, 1280 × 720; <code>clip-loop-relay-motion.webp</code>, 640 × 360</td>
+                  <td data-i18n="g.made.t.2.kind">Video slot: klip sa vrha stranice</td>
+                  <td data-i18n="g.made.t.2.where">Vrh stranice i <a href="/sr/#agent">„Proverava klip koji ne može da pusti”</a>, sa listom sa frejmovima 003 i mapom pokreta njegove verzije 2</td>
+                  <td data-i18n="g.made.t.2.file"><code>assets/art/loop-relay.mp4</code> i <code>loop-relay-av1.mp4</code>; <code>assets/demo/clip-loop-relay-frames.webp</code>, 1280 × 720; <code>clip-loop-relay-motion.webp</code>, 640 × 360</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>you-are-the-server</code></th>
@@ -347,7 +373,7 @@
                 </tr>
                 <tr>
                   <th scope="row"><code>gallery-full</code></th>
-                  <td data-i18n="g.made.t.6.kind">Slika i njen klip</td>
+                  <td data-i18n="g.made.t.6.kind">Slika i klip koji počinje njome (njegov video slot ovde nije zabeležen)</td>
                   <td data-i18n="g.made.t.6.where">Završna sekcija, „Daj svom agentu način da traži slike.”</td>
                   <td data-i18n="g.made.t.6.file"><code>assets/art/gallery-full.webp</code>, 1280 × 714; <code>gallery-full.mp4</code> i <code>gallery-full-av1.mp4</code></td>
                 </tr>
@@ -405,7 +431,7 @@
           </div>
           <div class="prose">
             <h3 data-i18n="g.made.2.flow.h">Šta Google Flow traži od prompta</h3>
-            <p data-i18n="g.made.2.flow.p">Agent generator upoznaje iz njegovog preseta. <a href="https://github.com/Djordje1998/asset-prompter/blob/master/presets/google-flow.md" target="_blank" rel="noopener">Preset za Google Flow</a> u Asset Prompteru (proveren 6. oktobra 2026) mu, između ostalog, kaže:</p>
+            <p data-i18n="g.made.2.flow.p">Agent generator upoznaje iz njegovog preseta. <a href="https://github.com/Djordje1998/asset-prompter/blob/master/presets/google-flow.md" target="_blank" rel="noopener">Preset za Google Flow</a> u Asset Prompteru (proveren 6. oktobra 2026.) mu, između ostalog, kaže:</p>
             <ul data-i18n="g.made.2.flow.list"><li>Flow nema negativni prompt ni seed, pa ono što treba izostaviti ide u sam prompt (<span lang="en">„no people, no text”</span>).</li>
               <li>Video samo iz prompta je režim <code>frames</code> bez početnog frejma.</li>
               <li>Video stiže sa generisanim zvukom, a Flow nema prekidač za zvuk po klipu: opiši zvuk u promptu ili napiši <span lang="en">„no sound”</span>.</li>
@@ -419,8 +445,8 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="clip" data-i18n="g.made.3.h">Kako agent proverava klip koji ne može da gleda</h2>
-            <p data-i18n="g.made.3.p1">Agent ne može da gleda video. Zato za svaki klip koji prevučeš na karticu aplikacija pokreće ffmpeg i pretvara ga u slike i brojeve koje agent može da pročita (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):</p>
-            <ul data-i18n="g.made.3.list"><li><strong>Listovi sa frejmovima</strong>: četiri frejma u sekundi, na 250 ms jedan od drugog, u mreži 2 × 2, 640 px po dužoj strani. Po jedan list za svaku sekundu, pa osmosekundni klip ispod ima osam listova, od <code>001.jpg</code> do <code>008.jpg</code>, koji se čitaju sleva nadesno, odozgo nadole.</li>
+            <p data-i18n="g.made.3.p1">Agent ne može da gleda video. Zato za svaki klip koji prevučeš na karticu aplikacija pokreće ffmpeg (Setup ga instalira na Windowsu i Linuxu) i pretvara ga u slike i brojeve koje agent može da pročita (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):</p>
+            <ul data-i18n="g.made.3.list"><li><strong>Listovi sa frejmovima</strong>: četiri frejma u sekundi, na 250 ms jedan od drugog, u mreži 2 × 2, svaki frejm 640 px po dužoj strani, pa je list ovog klipa 1280 × 720. Po jedan list za svaku sekundu, pa osmosekundni klip ispod ima osam listova, od <code>001.jpg</code> do <code>008.jpg</code>, koji se čitaju sleva nadesno, odozgo nadole.</li>
               <li><strong><code>first-last.jpg</code></strong>: prvi i poslednji frejm jedan pored drugog, da se vidi da li se kraj klipa u petlji spaja sa njegovim početkom.</li>
               <li><strong><code>motion.jpg</code></strong>, mapa pokreta: crvenom bojom je označeno ono što se promenilo tokom klipa, preko zatamnjenog prvog frejma.</li>
               <li>Za svaku sekundu, koliko se slika pomerila u odnosu na prvi frejm i na prethodni, u procentima, u <code>info.md</code>.</li></ul>
@@ -430,7 +456,7 @@
             <figure class="pipe-step">
               <div class="pipe-pic">
                 <div class="art">
-                  <video controls muted playsinline preload="none" poster="/assets/art/loop-relay.webp" width="1280" height="720" data-i18n-aria-label="clip.alt" aria-label="Klip sa vrha ove stranice: robot pruža list sa promptom ka zajedničkom folderu, a osoba iz njega vadi sliku.">
+                  <video controls muted playsinline preload="none" poster="/assets/art/loop-relay.webp" width="1280" height="720" data-i18n-aria-label="g.made.clip.alt" aria-label="Klip sa vrha početne stranice: robot pruža list sa promptom ka zajedničkom folderu, a osoba iz njega vadi sliku.">
                     <source src="/assets/art/loop-relay-av1.mp4" type='video/mp4; codecs="av01.0.05M.08"' />
                     <source src="/assets/art/loop-relay.mp4" type='video/mp4; codecs="avc1.64001F"' />
                   </video>
@@ -460,16 +486,16 @@
       <section class="section guide-sec" aria-labelledby="export">
         <div class="wrap">
           <div class="prose">
-            <h2 id="export" data-i18n="g.made.4.h">Od odobrenog fajla do ove stranice</h2>
+            <h2 id="export" data-i18n="g.made.4.h">Od odobrenog fajla do ovog sajta</h2>
             <p data-i18n="g.made.4.p1">Kada je slot bio odobren, njegov konačni fajl je u četiri koraka stigao u repozitorijum ovog sajta:</p>
             <ol data-i18n="g.made.4.list"><li>Odobri slot u Asset Prompteru.</li>
               <li>Pretvori njegov <code>final.png</code> u <code>assets/art/&lt;slot&gt;.webp</code>. Širina od oko 1400 px je sasvim dovoljna; fajlovi ovde su široki 1280 i 960 px.</li>
               <li>Za klip, sačuvaj <code>final.mp4</code> kao <code>assets/art/&lt;slot&gt;.mp4</code>, bez zvuka.</li>
               <li>Napravi AV1 kopiju klipa i zadrži je samo ako svaki njen frejm ima SSIM od najmanje 0,995 u odnosu na H.264 frejm:</li></ol>
-            <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
-            <p data-i18n="g.made.4.p2">AV1 kopije imaju otprilike upola manje bajtova: <code>loop-relay</code> ima 365 KiB naspram 776 KiB u H.264, a <code>gallery-full</code> 245 KiB naspram 536 KiB. Najniži SSIM jednog frejma u ta dva klipa bio je 0,9956. Stranica uzima AV1 fajl samo tamo gde pregledač na pitanje da li ga pušta odgovori <span lang="en">„probably”</span>, a H.264 fajl svuda drugde.</p>
+            <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -svtav1-params tune=0 -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
+            <p data-i18n="g.made.4.p2">AV1 kopije imaju otprilike upola manje bajtova: <code>loop-relay</code> ima 365 KiB naspram 776 KiB u H.264, a <code>gallery-full</code> 245 KiB naspram 536 KiB. Najniži SSIM jednog frejma u ta dva klipa bio je 0,9956. Početna stranica uzima AV1 fajl samo tamo gde pregledač na pitanje da li ga pušta odgovori <span lang="en">„probably”</span> i, gde to može da kaže, dekodira ga hardverski; H.264 fajl svuda drugde.</p>
             <h3 data-i18n="g.made.4.exports.h">Dimenzije i isečci nastaju iz odobrenog fajla</h3>
-            <p data-i18n="g.made.4.p3">Folder <code>exports/</code> u slotu sadrži ono što agent napravi od konačnog fajla: isečke, druge dimenzije, druge formate i sitne izmene, bez novog generisanja. Aplikacija ih prikazuje pored konačne slike, svaku sa dugmetom „Copy image”. Dijalog ispod je iz slota <code>hero-space-diner</code> u demo projektu aplikacije, <code>orbital-eats</code>, a ne sa ovog sajta.</p>
+            <p data-i18n="g.made.4.p3">Folder <code>exports/</code> u slotu sadrži ono što agent napravi od konačnog fajla: isečke, druge dimenzije, druge formate i sitne izmene, bez novog generisanja. Aplikacija ih prikazuje pored konačne slike, svaku sa dugmetom „Copy image”. Dijalog ispod je iz slota <code>hero-space-diner</code> u projektu <code>orbital-eats</code>, iz kog potiču snimci ekrana aplikacije na početnoj stranici, a ne iz projekta ovog sajta.</p>
           </div>
           <figure class="guide-wide guide-fig">
             <div class="appshot">
@@ -484,7 +510,7 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="revision" data-i18n="g.made.5.h">Jedna revizija, onako kako je aplikacija prikazuje</h2>
-            <p data-i18n="g.made.5.p1">Snimci ekrana aplikacije na početnoj stranici potiču iz tog demo projekta, iz slota <code>observation-dining-room</code>. U pravom projektu taj slot još čeka odobrenje; snimci prikazuju pripremljenu kopiju. Kako se čita sa kartica, njegova revizija je tekla ovako:</p>
+            <p data-i18n="g.made.5.p1">Snimci ekrana aplikacije na početnoj stranici potiču iz tog projekta, iz slota <code>observation-dining-room</code>. U samom projektu taj slot još čeka odobrenje; snimci prikazuju pripremljenu kopiju. Kako se čita sa kartica, njegova revizija je tekla ovako:</p>
             <ul data-i18n="g.made.5.list"><li><code>slot.md</code>: <q lang="en">Atmospheric photograph for the 'About Our Dining Experience' section of the website. It must show the spacious seating area and the realistic observation lounge overlooking outer space.</q></li>
               <li>Verzija 1: Image, 16:9, Nano Banana Pro, prompt od 374 znaka koji počinje sa <q lang="en">Eye-level wide photograph of the main observation dining hall in an orbital restaurant.</q></li>
               <li>Zahtev za izmenu na verziji 1: <q lang="en">Too cold and empty. Make the booths warm cognac leather, add warm ceiling lights, and let the sun rise over the horizon.</q></li>

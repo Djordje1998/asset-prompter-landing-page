@@ -63,6 +63,28 @@
           // A Serbian choice that could not be replaced would send the English guide back to the Serbian one.
           location.replace(link.getAttribute("href") + (lang === "en" && !kept ? "?lang=en" : ""));
         });
+        // The bar stays at the top, but the browser takes it as under the room scroll-padding-top keeps for it: focusing one
+        // of its links from the keyboard would scroll the page half a window up. It stays where it was instead: scrolling
+        // to it at once undoes an instant scroll and stops a smooth one, even when the page has not moved yet.
+        var y = scrollY;
+        addEventListener("scroll", function () {
+          y = scrollY;
+        }, { passive: true });
+        document.addEventListener("focusin", function (event) {
+          if (!event.target.closest || !event.target.closest(".bar")) return;
+          // Only the keyboard's focus: a tap or a click does not scroll, and a flick still running is left alone.
+          try {
+            if (!event.target.matches(":focus-visible")) return;
+          } catch (e) {}
+          var at = y;
+          var stay = function () {
+            root.style.scrollBehavior = "auto";
+            scrollTo(0, at);
+            root.style.scrollBehavior = "";
+          };
+          stay();
+          requestAnimationFrame(stay);
+        });
         // Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
         var place = null;
         try {
@@ -129,7 +151,7 @@
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-sr.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-sr.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-045" />
+    <link rel="stylesheet" href="/styles.css?v=w2-049" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -183,7 +205,10 @@
             "about": {
               "@id": "https://assetprompter.com/#app"
             },
-            "image": "https://assetprompter.com/assets/og-sr.jpg",
+            "image": [
+              "https://assetprompter.com/assets/art/problem-courier.webp",
+              "https://assetprompter.com/assets/og-sr.jpg"
+            ],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
@@ -292,9 +317,10 @@
       </nav>
       <div class="bar-right">
         <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
-             without a script. The script at the top keeps the choice and the reader's place. -->
-        <a class="btn lang-btn" href="/guides/get-images-into-coding-agent-project/" hreflang="en" lang="en" data-lang="en" aria-label="English: this page in English">
+             without a script. It names the language it leads to, as a word where the bar has room and as its code on a phone. The script at the top keeps the choice and the reader's place. -->
+        <a class="btn lang-btn" href="/guides/get-images-into-coding-agent-project/" hreflang="en" lang="en" data-lang="en" aria-label="English, EN: this page in English">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
+          <span class="lang-name">English</span>
           <span class="lang-code">EN</span>
         </a>
         <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Zvezdica na GitHubu: Asset Prompter" data-i18n-aria-label="star.label">
@@ -330,7 +356,7 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="short" data-i18n="g.ways.short.h">Kratak odgovor</h2>
-            <p data-i18n="g.ways.short.p">Ako tvoj agent ima ugrađen alat za slike i njegov model je dovoljno dobar, koristi njega. Ako tvoj generator ima zvanični MCP server u okviru tvoje pretplate, poveži ga. Ako ima samo API, možeš da ga plaćaš po slici. Ako nema ništa od toga, kao Midjourney i Google Flow, fajlove prenosiš ti: ručno ili preko zajedničkog foldera kao što je onaj u Asset Prompteru. Načini ispod idu od onog koji od tebe traži najmanje posla do onog koji traži najviše; činjenice iza svakog su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora i agenata</a>, proverenoj 8. oktobra 2026.</p>
+            <p data-i18n="g.ways.short.p">Ako tvoj agent ima ugrađen alat za slike i njegov model je dovoljno dobar, koristi njega; Claude Code nema svoj. Ako tvoj generator ima zvanični MCP server u okviru tvoje pretplate, poveži ga. Ako ima samo API, možeš da ga plaćaš po slici. Ako nema ništa od toga, kao Midjourney i Google Flow, fajlove prenosiš ti: ručno ili preko zajedničkog foldera kao što je onaj u Asset Prompteru. Načini ispod idu od onog koji od tebe traži najmanje posla do onog koji traži najviše; činjenice iza svakog su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora i agenata</a>, proverenoj 8. oktobra 2026.</p>
           </div>
         </div>
       </section>
@@ -339,12 +365,12 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="builtin" data-i18n="g.ways.1.h">1. Agentov sopstveni alat za slike</h2>
-            <p data-i18n="g.ways.1.p">Codex ima ugrađeni alat <code>image_gen</code>, Cursorov agent generiše slike od verzije 2.4, agent u Antigravityju sam odlučuje kada da pozove model za slike, a Gemini CLI ima proširenje <code>nanobanana</code>.</p>
+            <p data-i18n="g.ways.1.p">Codex ima ugrađeni alat <code>image_gen</code>, Cursorov agent generiše slike od verzije 2.4, agent u Antigravityju sam odlučuje kada da pozove model za slike, a Gemini CLI ima proširenje <code>nanobanana</code>. Claude Code nema sopstveno generisanje slika: <a href="https://support.claude.com/en/articles/9002504-can-claude-produce-images" target="_blank" rel="noopener">centar za pomoć kompanije Anthropic</a> kaže <q lang="en">Claude doesn’t generate photos or illustrations the way image-generation tools do.</q></p>
             <dl class="guide-facts">
               <dt data-i18n="g.ways.facts.1">Ko pritiska „Generate”</dt>
               <dd data-i18n="g.ways.1.1">Agent.</dd>
               <dt data-i18n="g.ways.facts.2">Šta plaćaš dodatno</dt>
-              <dd data-i18n="g.ways.1.2">Na Codexu ništa: koristi Codex limite ChatGPT pretplate, koje potezi sa slikama brže troše. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.</dd>
+              <dd data-i18n="g.ways.1.2">Na Codexu ništa pored ChatGPT Plus, Pro ili Business pretplate: potezi sa slikama troše njene Codex limite, brže od ostalih poteza; generisanje slika nije dostupno na besplatnoj pretplati. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.</dd>
               <dt data-i18n="g.ways.facts.3">Šta agent vidi</dt>
               <dd data-i18n="g.ways.1.3">Sliku koju je napravio.</dd>
               <dt data-i18n="g.ways.facts.4">Gde stoje verzije</dt>
@@ -360,7 +386,7 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="mcp" data-i18n="g.ways.2.h">2. Zvanični MCP server</h2>
-            <p data-i18n="g.ways.2.p">Higgsfield, Ideogram, Krea, Kling i Runway imaju MCP servere na koje se prijavljuješ svojim nalogom; Leonardo.Ai i Luma imaju servere koji rade preko njihovog API-ja.</p>
+            <p data-i18n="g.ways.2.p">Higgsfield, Ideogram, Krea, Kling i Runway imaju MCP servere na koje se prijavljuješ svojim nalogom; Leonardo.Ai ima server koji radi preko svog API-ja, a Lumina GitHub organizacija ima jedan koji radi preko Luminog.</p>
             <dl class="guide-facts">
               <dt data-i18n="g.ways.facts.1">Ko pritiska „Generate”</dt>
               <dd data-i18n="g.ways.2.1">Agent.</dd>
@@ -386,7 +412,7 @@
               <dt data-i18n="g.ways.facts.1">Ko pritiska „Generate”</dt>
               <dd data-i18n="g.ways.3.1">Agent, preko skripte.</dd>
               <dt data-i18n="g.ways.facts.2">Šta plaćaš dodatno</dt>
-              <dd data-i18n="g.ways.3.2">Svako generisanje, naplaćeno odvojeno od pretplate na aplikaciju koju već plaćaš.</dd>
+              <dd data-i18n="g.ways.3.2">Svako generisanje, naplaćeno odvojeno od pretplate na aplikaciju koju već plaćaš. Za Grok Imagine stranice kompanije xAI ne kažu da li Grok pretplata pokriva išta od toga.</dd>
               <dt data-i18n="g.ways.facts.3">Šta agent vidi</dt>
               <dd data-i18n="g.ways.3.3">Fajlove koje skripta sačuva.</dd>
               <dt data-i18n="g.ways.facts.4">Gde stoje verzije</dt>
@@ -441,7 +467,7 @@
               <dt data-i18n="g.ways.facts.2">Šta plaćaš dodatno</dt>
               <dd data-i18n="g.ways.5.2">Ništa: aplikacija je besplatna, pod MIT licencom. Plaćaš svoj generator i svog agenta, kao i do sada.</dd>
               <dt data-i18n="g.ways.facts.3">Šta agent vidi</dt>
-              <dd data-i18n="g.ways.5.3">Svaki rezultat. Svaki pregleda, a klip čita kroz listove sa frejmovima i mapu pokreta.</dd>
+              <dd data-i18n="g.ways.5.3">Svaki rezultat. Svaki pregleda, a klip čita kroz listove sa frejmovima i mapu pokreta, koje pravi ffmpeg; Setup ga instalira na Windowsu i Linuxu.</dd>
               <dt data-i18n="g.ways.facts.4">Gde stoje verzije</dt>
               <dd data-i18n="g.ways.5.4">U folderu slota, kao obični fajlovi: svaka verzija, rezultat, zahtev za izmenu i pregled. Tvoje odobrenje je konačno.</dd>
               <dt data-i18n="g.ways.facts.5">Izaberi ovo kada</dt>
@@ -453,7 +479,7 @@
             <div class="appshot">
             <picture>
               <source media="(max-width: 640px)" srcset="/assets/app/2-result-narrow-440.webp 440w, /assets/app/2-result-narrow.webp 880w" sizes="(max-width: 472px) calc(100vw - 32px), 440px" width="880" height="1638" />
-              <img src="/assets/app/2-result.webp" srcset="/assets/app/2-result-800.webp 800w, /assets/app/2-result.webp 1600w" sizes="(max-width: 832px) calc(100vw - 32px), 800px" data-i18n-alt="turn.3.alt" alt="Ista kartica, sada sa tvojom slikom: trpezarija na svemirskoj stanici. Kartica nosi oznaku „Agent's turn” i dugmad „Approve v1” i „Request changes”." width="1600" height="750" loading="lazy" />
+              <img src="/assets/app/2-result.webp" srcset="/assets/app/2-result-800.webp 800w, /assets/app/2-result.webp 1600w" sizes="(max-width: 832px) calc(100vw - 32px), 800px" data-i18n-alt="g.ways.result.alt" alt="Kartica slota sa tvojom slikom: trpezarija na svemirskoj stanici. Kartica nosi oznaku „Agent's turn” i dugmad „Approve v1” i „Request changes”." width="1600" height="750" loading="lazy" />
             </picture>
             </div>
             <figcaption data-i18n="g.ways.5.caption">Kartica slota kada na nju prevučeš svoj rezultat: sada je red na agenta.</figcaption>
@@ -469,7 +495,7 @@
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="cmp-caption" tabindex="0">
             <table class="guide-table">
-              <caption id="cmp-caption" data-i18n="g.ways.cmp.caption">Pet načina, upoređenih po činjenicama iz tabele generatora, proverenih 8. oktobra 2026.</caption>
+              <caption id="cmp-caption"><span data-i18n="g.ways.cmp.caption">Pet načina, upoređenih po činjenicama iz tabele generatora, proverenih 8. oktobra 2026.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.ways.cmp.h0">Način</th>
@@ -533,7 +559,7 @@
           <div class="prose guide-wide">
             <aside class="guide-note" aria-labelledby="automation">
               <h3 id="automation" data-i18n="g.ways.note.h">A upravljanje veb-aplikacijom koja nema API?</h3>
-              <p data-i18n="g.ways.note.p">Neki alati trećih strana upravljaju veb-stranicom servisa Midjourney ili Flow umesto agenta. To radi dok ne prestane: uslovi korišćenja servisa Midjourney zabranjuju automatizovan pristup, a alat koji klikće kroz veb-stranicu prestaje da radi kad god se stranica promeni. Izvori su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora</a>.</p>
+              <p data-i18n="g.ways.note.p">Neki alati trećih strana upravljaju veb-stranicom servisa Midjourney umesto agenta. To radi dok ne prestane: uslovi korišćenja servisa Midjourney zabranjuju automatizovan pristup, a alat koji klikće kroz veb-stranicu prestaje da radi kad god se stranica promeni. Izvori su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora</a>.</p>
             </aside>
           </div>
         </div>
@@ -563,7 +589,7 @@
                 <li data-i18n="fit.yes.2">Već plaćaš pretplatu na generator i ne želiš još i račune za API.</li>
                 <li data-i18n="fit.yes.3">Želiš poslednju reč. Ništa nije gotovo dok ti ne odobriš.</li>
                 <li data-i18n="fit.yes.4">Želiš da sve bude na tvom računaru: obični fajlovi u folderu, bez naloga.</li>
-                <li data-i18n="g.ways.need.yes.5">Želiš da agent proverava tvoje video klipove, kroz listove sa frejmovima i mapu pokreta.</li>
+                <li data-i18n="g.ways.need.yes.5">Želiš da agent proverava tvoje video klipove, kroz listove sa frejmovima i mapu pokreta (uz ffmpeg, koji Setup instalira).</li>
               </ul>
             </div>
           </div>

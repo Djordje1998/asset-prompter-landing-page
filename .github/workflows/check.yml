@@ -41,7 +41,7 @@ jobs:
         run: |
           if git diff --name-only HEAD^1 HEAD | grep -qE '(^|/)index\.html$|^i18n(-guides)?\.js$' &&
             ! git diff HEAD^1 HEAD -- sitemap.xml | grep -q '^+.*<lastmod>'; then
-            echo "::warning file=sitemap.xml,title=lastmod::a page, i18n.js or i18n-guides.js changed, sitemap.xml's lastmod did not. If the text of a page changed, set its lastmod and the dateModified in its JSON-LD (on a guide also the date it shows) to the day it goes live."
+            echo "::warning file=sitemap.xml,title=lastmod::a page, i18n.js or i18n-guides.js changed, sitemap.xml's lastmod did not. If the text of a page changed, set its lastmod and the dateModified in its JSON-LD (on a guide also its article:modified_time and the date it shows) to the day it goes live."
           fi
       - name: A changed stylesheet or main.js should have a new ?v= stamp (a warning only)
         if: github.event_name == 'pull_request'
@@ -49,7 +49,7 @@ jobs:
           for file in styles.css main.js; do
             if git diff --name-only HEAD^1 HEAD | grep -qxF "$file" &&
               ! git diff HEAD^1 HEAD -- index.html | grep -q "^+.*$file?v="; then
-              echo "::warning file=index.html,title=?v= stamp::$file changed, its ?v= stamp in index.html did not. Change the stamp (styles.css also in 404.html) and run node tools/build-sr.mjs, or a browser may keep the old $file for ten minutes."
+              echo "::warning file=index.html,title=?v= stamp::$file changed, its ?v= stamp in index.html did not. Change the stamp (styles.css also in 404.html and guides/*/index.html) and run node tools/build-sr.mjs, or a browser may keep the old $file for ten minutes."
             fi
           done
 

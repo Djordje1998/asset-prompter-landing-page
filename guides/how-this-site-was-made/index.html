@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title data-i18n="g.made.title">How this site's art was made with Google Flow</title>
-    <meta name="description" data-i18n-content="g.made.description" content="The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
+    <title data-i18n="g.made.title">How this site's illustrations were made in Google Flow</title>
+    <meta name="description" data-i18n-content="g.made.description" content="The real files behind this site's pictures: Asset Prompter slots, illustrations generated in Google Flow, a clip's frame sheets and motion map, the exports." />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="author" content="Đorđe Novaković" />
     <!-- A guide sits two folders down, so every address in it starts at the root, as in 404.html. Its Serbian copy,
@@ -62,6 +62,28 @@
           // A Serbian choice that could not be replaced would send the English guide back to the Serbian one.
           location.replace(link.getAttribute("href") + (lang === "en" && !kept ? "?lang=en" : ""));
         });
+        // The bar stays at the top, but the browser takes it as under the room scroll-padding-top keeps for it: focusing one
+        // of its links from the keyboard would scroll the page half a window up. It stays where it was instead: scrolling
+        // to it at once undoes an instant scroll and stops a smooth one, even when the page has not moved yet.
+        var y = scrollY;
+        addEventListener("scroll", function () {
+          y = scrollY;
+        }, { passive: true });
+        document.addEventListener("focusin", function (event) {
+          if (!event.target.closest || !event.target.closest(".bar")) return;
+          // Only the keyboard's focus: a tap or a click does not scroll, and a flick still running is left alone.
+          try {
+            if (!event.target.matches(":focus-visible")) return;
+          } catch (e) {}
+          var at = y;
+          var stay = function () {
+            root.style.scrollBehavior = "auto";
+            scrollTo(0, at);
+            root.style.scrollBehavior = "";
+          };
+          stay();
+          requestAnimationFrame(stay);
+        });
         // Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
         var place = null;
         try {
@@ -102,8 +124,8 @@
     <meta property="og:site_name" content="Asset Prompter" />
     <meta property="og:locale" data-i18n-content="og.locale" content="en_US" />
     <meta property="og:locale:alternate" data-i18n-content="og.locale.alt" content="sr_RS" />
-    <meta property="og:title" data-i18n-content="g.made.title" content="How this site's art was made with Google Flow" />
-    <meta property="og:description" data-i18n-content="g.made.description" content="The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
+    <meta property="og:title" data-i18n-content="g.made.title" content="How this site's illustrations were made in Google Flow" />
+    <meta property="og:description" data-i18n-content="g.made.description" content="The real files behind this site's pictures: Asset Prompter slots, illustrations generated in Google Flow, a clip's frame sheets and motion map, the exports." />
     <meta property="og:url" content="https://assetprompter.com/guides/how-this-site-was-made/" />
     <meta property="og:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
@@ -114,8 +136,8 @@
     <meta property="article:modified_time" content="2026-10-08" />
     <meta property="article:author" content="https://github.com/Djordje1998" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" data-i18n-content="g.made.title" content="How this site's art was made with Google Flow" />
-    <meta name="twitter:description" data-i18n-content="g.made.description" content="The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
+    <meta name="twitter:title" data-i18n-content="g.made.title" content="How this site's illustrations were made in Google Flow" />
+    <meta name="twitter:description" data-i18n-content="g.made.description" content="The real files behind this site's pictures: Asset Prompter slots, illustrations generated in Google Flow, a clip's frame sheets and motion map, the exports." />
     <meta name="twitter:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
     <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -126,7 +148,7 @@
     <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-045" />
+    <link rel="stylesheet" href="/styles.css?v=w2-049" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -138,8 +160,8 @@
             "@type": "WebPage",
             "@id": "https://assetprompter.com/guides/how-this-site-was-made/#webpage",
             "url": "https://assetprompter.com/guides/how-this-site-was-made/",
-            "name": "How this site's art was made with Google Flow",
-            "description": "The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step.",
+            "name": "How this site's illustrations were made in Google Flow",
+            "description": "The real files behind this site's pictures: Asset Prompter slots, illustrations generated in Google Flow, a clip's frame sheets and motion map, the exports.",
             "inLanguage": "en",
             "isPartOf": {
               "@id": "https://assetprompter.com/#website"
@@ -163,7 +185,7 @@
             "@type": "Article",
             "@id": "https://assetprompter.com/guides/how-this-site-was-made/#article",
             "headline": "How the pictures on this site were made",
-            "description": "The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step.",
+            "description": "The real files behind this site's pictures: Asset Prompter slots, illustrations generated in Google Flow, a clip's frame sheets and motion map, the exports.",
             "inLanguage": "en",
             "mainEntityOfPage": {
               "@id": "https://assetprompter.com/guides/how-this-site-was-made/#webpage"
@@ -180,7 +202,7 @@
             "about": {
               "@id": "https://assetprompter.com/#app"
             },
-            "image": "https://assetprompter.com/assets/og.jpg",
+            "image": ["https://assetprompter.com/assets/art/loop-relay.webp", "https://assetprompter.com/assets/og.jpg"],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
@@ -260,9 +282,10 @@
       </nav>
       <div class="bar-right">
         <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
-             without a script. The script at the top keeps the choice and the reader's place. -->
-        <a class="btn lang-btn" href="/sr/guides/how-this-site-was-made/" hreflang="sr" lang="sr-Latn" data-lang="sr" aria-label="Srpski: ova stranica na srpskom">
+             without a script. It names the language it leads to, as a word where the bar has room and as its code on a phone. The script at the top keeps the choice and the reader's place. -->
+        <a class="btn lang-btn" href="/sr/guides/how-this-site-was-made/" hreflang="sr" lang="sr-Latn" data-lang="sr" aria-label="Srpski, SR: ova stranica na srpskom">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
+          <span class="lang-name">Srpski</span>
           <span class="lang-code">SR</span>
         </a>
         <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star on GitHub: Asset Prompter" data-i18n-aria-label="star.label">
@@ -300,17 +323,17 @@
       <section class="section band guide-sec" aria-labelledby="slots">
         <div class="wrap">
           <div class="prose">
-            <h2 id="slots" data-i18n="g.made.1.h">One project, six slots</h2>
+            <h2 id="slots" data-i18n="g.made.1.h">One project, a slot for each asset</h2>
             <p data-i18n="g.made.1.p1">
               Every illustration and clip on the <a href="/">home page</a> came out of one Asset Prompter project,
-              <code>asset-prompter-landing</code>. Each picture was asked for as a <strong>slot</strong>, a folder for one asset, and
-              each file on the site is named after its slot: <code>&lt;slot&gt;.webp</code> for a picture, <code>&lt;slot&gt;.mp4</code> for
-              its clip. The illustrations were generated by hand in Google Flow.
+              <code>asset-prompter-landing</code>. Each was asked for as a <strong>slot</strong>, a folder for one asset. Each file on
+              the site is named after its picture's slot: <code>&lt;slot&gt;.webp</code> for the picture, <code>&lt;slot&gt;.mp4</code> for
+              the clip that starts on it. The illustrations were generated by hand in Google Flow.
             </p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="slots-caption" tabindex="0">
             <table class="guide-table">
-              <caption id="slots-caption" data-i18n="g.made.t.caption">The six slots and where their files are on the home page. Sizes measured from the files on 8 October 2026.</caption>
+              <caption id="slots-caption"><span data-i18n="g.made.t.caption">The slots behind the files on the home page, and where those files are. Sizes measured from the files on 8 October 2026.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.made.t.slot">Slot</th>
@@ -322,38 +345,38 @@
               <tbody>
                 <tr>
                   <th scope="row"><code>loop-relay</code></th>
-                  <td data-i18n="g.made.t.1.kind">A picture and its clip</td>
-                  <td data-i18n="g.made.t.1.where">The top of the page, and <a href="/#agent">"It checks a clip it can't play"</a></td>
-                  <td data-i18n="g.made.t.1.file"><code>assets/art/loop-relay.webp</code>, 1280 × 714; <code>loop-relay.mp4</code> and <code>loop-relay-av1.mp4</code></td>
+                  <td data-i18n="g.made.t.1.kind">A picture</td>
+                  <td data-i18n="g.made.t.1.where">The top of the page, as the still before its clip plays</td>
+                  <td><code>assets/art/loop-relay.webp</code>, 1280 × 714</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>loop-relay-clip</code></th>
-                  <td data-i18n="g.made.t.2.kind">A video slot</td>
-                  <td data-i18n="g.made.t.2.where">Frame sheet 003 and the motion map of its version 2, in <a href="/#agent">"It checks a clip it can't play"</a></td>
-                  <td><code>assets/demo/clip-loop-relay-frames.webp</code>, 1280 × 720; <code>clip-loop-relay-motion.webp</code>, 640 × 360</td>
+                  <td data-i18n="g.made.t.2.kind">A video slot: the hero's clip</td>
+                  <td data-i18n="g.made.t.2.where">The top of the page, and <a href="/#agent">“It checks a clip it can't play”</a> with frame sheet 003 and the motion map of its version 2</td>
+                  <td data-i18n="g.made.t.2.file"><code>assets/art/loop-relay.mp4</code> and <code>loop-relay-av1.mp4</code>; <code>assets/demo/clip-loop-relay-frames.webp</code>, 1280 × 720; <code>clip-loop-relay-motion.webp</code>, 640 × 360</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>you-are-the-server</code></th>
                   <td data-i18n="g.made.t.3.kind">A picture</td>
-                  <td data-i18n="g.made.t.3.where"><a href="/#mcp">"To your agent, the same steps as an MCP server"</a></td>
+                  <td data-i18n="g.made.t.3.where"><a href="/#mcp">“To your agent, the same steps as an MCP server”</a></td>
                   <td><code>assets/art/you-are-the-server.webp</code>, 960 × 716</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>problem-courier</code></th>
                   <td data-i18n="g.made.t.4.kind">A picture</td>
-                  <td data-i18n="g.made.t.4.where"><a href="/#why">"Without it, you are the courier"</a></td>
+                  <td data-i18n="g.made.t.4.where"><a href="/#why">“Without it, you are the courier”</a></td>
                   <td><code>assets/art/problem-courier.webp</code>, 1280 × 714</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>you-press-generate</code></th>
                   <td data-i18n="g.made.t.5.kind">A picture</td>
-                  <td data-i18n="g.made.t.5.where"><a href="/#tradeoffs">"It doesn't generate anything"</a></td>
+                  <td data-i18n="g.made.t.5.where"><a href="/#tradeoffs">“It doesn't generate anything”</a></td>
                   <td><code>assets/art/you-press-generate.webp</code>, 960 × 716</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>gallery-full</code></th>
-                  <td data-i18n="g.made.t.6.kind">A picture and its clip</td>
-                  <td data-i18n="g.made.t.6.where">The closing section, "Give your agent a way to ask for pictures."</td>
+                  <td data-i18n="g.made.t.6.kind">A picture, and the clip that starts on it (its video slot is not recorded here)</td>
+                  <td data-i18n="g.made.t.6.where">The closing section, “Give your agent a way to ask for pictures.”</td>
                   <td data-i18n="g.made.t.6.file"><code>assets/art/gallery-full.webp</code>, 1280 × 714; <code>gallery-full.mp4</code> and <code>gallery-full-av1.mp4</code></td>
                 </tr>
               </tbody>
@@ -362,7 +385,7 @@
           <div class="prose">
             <p data-i18n="g.made.1.p2">
               The page was built slot first. Until a slot's file exists, the page draws the place it will take as a dashed
-              frame with the slot's name and what the picture should show, under the same "Needs generating" the app puts on a
+              frame with the slot's name and what the picture should show, under the same “Needs generating” the app puts on a
               card that waits for you:
             </p>
           </div>
@@ -425,9 +448,9 @@
               <a href="https://github.com/Djordje1998/asset-prompter/blob/master/presets/google-flow.md" target="_blank" rel="noopener">Google Flow preset</a> (checked 6 October 2026) tells it, among other things:
             </p>
             <ul data-i18n="g.made.2.flow.list">
-              <li>Flow has no negative prompt and no seed, so what should be left out goes into the prompt itself ("no people, no text").</li>
+              <li>Flow has no negative prompt and no seed, so what should be left out goes into the prompt itself (“no people, no text”).</li>
               <li>A video from the prompt alone is the mode <code>frames</code> with no start frame.</li>
-              <li>Videos come with generated sound, and Flow has no switch for it per clip: describe the sound in the prompt, or write "no sound".</li>
+              <li>Videos come with generated sound, and Flow has no switch for it per clip: describe the sound in the prompt, or write “no sound”.</li>
               <li>Every account gets 50 credits a day; Veo 3.1 Lite costs 10 per generation, Quality 100.</li>
             </ul>
             <p data-i18n="g.made.2.p2">
@@ -444,11 +467,11 @@
           <div class="prose">
             <h2 id="clip" data-i18n="g.made.3.h">How an agent checks a clip it can't watch</h2>
             <p data-i18n="g.made.3.p1">
-              An agent can't watch video. So for every clip you drop on a card, the app runs ffmpeg and turns it into pictures
-              and numbers the agent can read (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):
+              An agent can't watch video. So for every clip you drop on a card, the app runs ffmpeg (setup installs it on
+              Windows and Linux) and turns it into pictures and numbers the agent can read (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):
             </p>
             <ul data-i18n="g.made.3.list">
-              <li><strong>Frame sheets</strong>: four frames a second, 250 ms apart, in a 2 × 2 grid, 640 px on the long side. One sheet per second, so the eight-second clip below has eight, <code>001.jpg</code> to <code>008.jpg</code>, read left to right, top to bottom.</li>
+              <li><strong>Frame sheets</strong>: four frames a second, 250 ms apart, in a 2 × 2 grid, each frame 640 px on its long side, so a sheet of this clip is 1280 × 720. One sheet per second, so the eight-second clip below has eight, <code>001.jpg</code> to <code>008.jpg</code>, read left to right, top to bottom.</li>
               <li><strong><code>first-last.jpg</code></strong>: the first and the last frame side by side, to see whether a clip meets itself in a loop.</li>
               <li><strong><code>motion.jpg</code></strong>, the motion map: red marks what changed during the clip, over a dimmed first frame.</li>
               <li>Per second, how far the picture has moved from the first frame and from the frame before, in percent, in <code>info.md</code>.</li>
@@ -462,7 +485,7 @@
             <figure class="pipe-step">
               <div class="pipe-pic">
                 <div class="art">
-                  <video controls muted playsinline preload="none" poster="/assets/art/loop-relay.webp" width="1280" height="720" data-i18n-aria-label="clip.alt" aria-label="The clip from the top of this page: the robot holds a prompt sheet toward the shared folder and the person lifts a picture out of it.">
+                  <video controls muted playsinline preload="none" poster="/assets/art/loop-relay.webp" width="1280" height="720" data-i18n-aria-label="g.made.clip.alt" aria-label="The clip from the top of the home page: the robot holds a prompt sheet toward the shared folder and the person lifts a picture out of it.">
                     <source src="/assets/art/loop-relay-av1.mp4" type='video/mp4; codecs="av01.0.05M.08"' />
                     <source src="/assets/art/loop-relay.mp4" type='video/mp4; codecs="avc1.64001F"' />
                   </video>
@@ -495,7 +518,7 @@
       <section class="section guide-sec" aria-labelledby="export">
         <div class="wrap">
           <div class="prose">
-            <h2 id="export" data-i18n="g.made.4.h">From the approved file to this page</h2>
+            <h2 id="export" data-i18n="g.made.4.h">From the approved file to this site</h2>
             <p data-i18n="g.made.4.p1">Once a slot was approved, its final file went into this site's repository in four steps:</p>
             <ol data-i18n="g.made.4.list">
               <li>Approve the slot in Asset Prompter.</li>
@@ -503,17 +526,19 @@
               <li>For a clip, save <code>final.mp4</code> as <code>assets/art/&lt;slot&gt;.mp4</code>, without sound.</li>
               <li>Make the clip's AV1 copy, and keep it only if every frame of it is within SSIM 0.995 of the H.264 frame:</li>
             </ol>
-            <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
+            <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -svtav1-params tune=0 -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
             <p data-i18n="g.made.4.p2">
               The AV1 copies are about half the bytes: <code>loop-relay</code> is 365 KiB against 776 KiB in H.264, and
-              <code>gallery-full</code> 245 KiB against 536 KiB. The lowest frame SSIM of the two was 0.9956. The page takes the AV1
-              file only where the browser answers "probably" when asked whether it plays it, and the H.264 file everywhere else.
+              <code>gallery-full</code> 245 KiB against 536 KiB. The lowest frame SSIM of the two was 0.9956. The home page takes the
+              AV1 file only where the browser answers “probably” when asked whether it plays it and, where it can tell, decodes
+              it in hardware; the H.264 file everywhere else.
             </p>
             <h3 data-i18n="g.made.4.exports.h">Sizes and crops come from the approved file</h3>
             <p data-i18n="g.made.4.p3">
               A slot's <code>exports/</code> folder holds what the agent makes from the final file: crops, other sizes, other formats
               and small edits, with no new generation. The app shows them beside the final picture, each with a Copy image button.
-              The dialog below is from <code>hero-space-diner</code> in the app's demo project <code>orbital-eats</code>, not from this site.
+              The dialog below is from <code>hero-space-diner</code> in <code>orbital-eats</code>, the project the screenshots of the app on
+              the home page come from, not from this site's project.
             </p>
           </div>
           <figure class="guide-wide guide-fig">
@@ -530,8 +555,8 @@
           <div class="prose">
             <h2 id="revision" data-i18n="g.made.5.h">One revision, as the app shows it</h2>
             <p data-i18n="g.made.5.p1">
-              The screenshots of the app on the home page come from that demo project, from the slot
-              <code>observation-dining-room</code>. In the real project that slot is still waiting for approval; the screenshots
+              The screenshots of the app on the home page come from that project, from the slot
+              <code>observation-dining-room</code>. In the project itself that slot is still waiting for approval; the screenshots
               show a staged copy. Read off the cards, its revision went like this:
             </p>
             <ul data-i18n="g.made.5.list">

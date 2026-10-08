@@ -63,6 +63,28 @@
           // A Serbian choice that could not be replaced would send the English guide back to the Serbian one.
           location.replace(link.getAttribute("href") + (lang === "en" && !kept ? "?lang=en" : ""));
         });
+        // The bar stays at the top, but the browser takes it as under the room scroll-padding-top keeps for it: focusing one
+        // of its links from the keyboard would scroll the page half a window up. It stays where it was instead: scrolling
+        // to it at once undoes an instant scroll and stops a smooth one, even when the page has not moved yet.
+        var y = scrollY;
+        addEventListener("scroll", function () {
+          y = scrollY;
+        }, { passive: true });
+        document.addEventListener("focusin", function (event) {
+          if (!event.target.closest || !event.target.closest(".bar")) return;
+          // Only the keyboard's focus: a tap or a click does not scroll, and a flick still running is left alone.
+          try {
+            if (!event.target.matches(":focus-visible")) return;
+          } catch (e) {}
+          var at = y;
+          var stay = function () {
+            root.style.scrollBehavior = "auto";
+            scrollTo(0, at);
+            root.style.scrollBehavior = "";
+          };
+          stay();
+          requestAnimationFrame(stay);
+        });
         // Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
         var place = null;
         try {
@@ -126,7 +148,7 @@
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-sr.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-sr.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-045" />
+    <link rel="stylesheet" href="/styles.css?v=w2-049" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -218,9 +240,10 @@
       </nav>
       <div class="bar-right">
         <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
-             without a script. The script at the top keeps the choice and the reader's place. -->
-        <a class="btn lang-btn" href="/guides/" hreflang="en" lang="en" data-lang="en" aria-label="English: this page in English">
+             without a script. It names the language it leads to, as a word where the bar has room and as its code on a phone. The script at the top keeps the choice and the reader's place. -->
+        <a class="btn lang-btn" href="/guides/" hreflang="en" lang="en" data-lang="en" aria-label="English, EN: this page in English">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
+          <span class="lang-name">English</span>
           <span class="lang-code">EN</span>
         </a>
         <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Zvezdica na GitHubu: Asset Prompter" data-i18n-aria-label="star.label">
@@ -245,7 +268,7 @@
           </nav>
           <div class="head">
             <h1 data-i18n="g.hub.h1">Vodiči</h1>
-            <p class="lead" data-i18n="g.hub.lead">Beleške iz prve ruke od autora Asset Promptera, svaka sa datumom i izvorima.</p>
+            <p class="lead" data-i18n="g.hub.lead">Beleške autora Asset Promptera, svaka sa datumom i izvorima.</p>
           </div>
         </div>
       </section>
@@ -259,7 +282,7 @@
               </figure>
               <div class="row-text">
                 <h2 class="h-sub"><a href="/sr/guides/how-this-site-was-made/" data-i18n="g.hub.made.h">Kako su nastale slike na ovom sajtu</a></h2>
-                <p data-i18n="g.hub.made.p">Šest slotova iza ilustracija i klipova ovog sajta, kako je agent proverio klip koji ne može da gleda i kako su odobreni fajlovi postali ovi koje vidiš.</p>
+                <p data-i18n="g.hub.made.p">Slotovi iza ilustracija i klipova ovog sajta, kako agent proverava klip koji ne može da gleda i kako su odobreni fajlovi postali ovi koje vidiš.</p>
                 <p class="guide-meta" data-i18n="g.updated">Ažurirano <time datetime="2026-10-08">8. oktobra 2026.</time></p>
               </div>
             </article>
@@ -269,7 +292,7 @@
               </figure>
               <div class="row-text">
                 <h2 class="h-sub"><a href="/sr/guides/image-generators-api-mcp/" data-i18n="g.hub.api.h">Koji generatori slika i videa imaju API ili MCP server</a></h2>
-                <p data-i18n="g.hub.api.p">Tabela sa datumom, za dvanaest generatora i pet agenata za programiranje: ko ima javni API, ko ima zvanični MCP server i šta se za koji plaća pored tvoje pretplate.</p>
+                <p data-i18n="g.hub.api.p">Tabela sa datumom, za dvanaest generatora i pet agenata za programiranje: ko ima javni API, ko ima zvanični MCP server i kako se koji naplaćuje pored tvoje pretplate.</p>
                 <p class="guide-meta" data-i18n="g.updated">Ažurirano <time datetime="2026-10-08">8. oktobra 2026.</time></p>
               </div>
             </article>

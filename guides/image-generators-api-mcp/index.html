@@ -62,6 +62,28 @@
           // A Serbian choice that could not be replaced would send the English guide back to the Serbian one.
           location.replace(link.getAttribute("href") + (lang === "en" && !kept ? "?lang=en" : ""));
         });
+        // The bar stays at the top, but the browser takes it as under the room scroll-padding-top keeps for it: focusing one
+        // of its links from the keyboard would scroll the page half a window up. It stays where it was instead: scrolling
+        // to it at once undoes an instant scroll and stops a smooth one, even when the page has not moved yet.
+        var y = scrollY;
+        addEventListener("scroll", function () {
+          y = scrollY;
+        }, { passive: true });
+        document.addEventListener("focusin", function (event) {
+          if (!event.target.closest || !event.target.closest(".bar")) return;
+          // Only the keyboard's focus: a tap or a click does not scroll, and a flick still running is left alone.
+          try {
+            if (!event.target.matches(":focus-visible")) return;
+          } catch (e) {}
+          var at = y;
+          var stay = function () {
+            root.style.scrollBehavior = "auto";
+            scrollTo(0, at);
+            root.style.scrollBehavior = "";
+          };
+          stay();
+          requestAnimationFrame(stay);
+        });
         // Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
         var place = null;
         try {
@@ -126,7 +148,7 @@
     <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-045" />
+    <link rel="stylesheet" href="/styles.css?v=w2-049" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -180,7 +202,7 @@
             "about": {
               "@id": "https://assetprompter.com/#app"
             },
-            "image": "https://assetprompter.com/assets/og.jpg",
+            "image": ["https://assetprompter.com/assets/art/you-are-the-server.webp", "https://assetprompter.com/assets/og.jpg"],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
@@ -335,9 +357,10 @@
       </nav>
       <div class="bar-right">
         <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
-             without a script. The script at the top keeps the choice and the reader's place. -->
-        <a class="btn lang-btn" href="/sr/guides/image-generators-api-mcp/" hreflang="sr" lang="sr-Latn" data-lang="sr" aria-label="Srpski: ova stranica na srpskom">
+             without a script. It names the language it leads to, as a word where the bar has room and as its code on a phone. The script at the top keeps the choice and the reader's place. -->
+        <a class="btn lang-btn" href="/sr/guides/image-generators-api-mcp/" hreflang="sr" lang="sr-Latn" data-lang="sr" aria-label="Srpski, SR: ova stranica na srpskom">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
+          <span class="lang-name">Srpski</span>
           <span class="lang-code">SR</span>
         </a>
         <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star on GitHub: Asset Prompter" data-i18n-aria-label="star.label">
@@ -386,7 +409,8 @@
               </p>
               <p data-i18n="g.api.short.2">
                 <strong>ChatGPT Images, Grok Imagine, Leonardo.Ai and Luma have APIs</strong>, billed apart from the app's plan where
-                the vendor says how; Leonardo and Luma also have MCP servers, which run on that API billing.
+                the vendor says how. Leonardo also has an MCP server, and Luma's GitHub organisation has one; both run on that API
+                billing.
               </p>
               <p data-i18n="g.api.short.3">
                 <strong>Higgsfield, Ideogram, Krea, Kling and Runway have official MCP servers</strong> you sign in to with your
@@ -402,13 +426,13 @@
           <div class="prose">
             <h2 id="table" data-i18n="g.api.table.h">The seven generators Asset Prompter has presets for</h2>
             <p data-i18n="g.api.table.p">
-              <a href="/#questions">Presets ship</a> for these seven. "Not found" means no first-party statement was found either way,
+              <a href="/#questions">Presets ship</a> for these seven. “Not found” means no first-party statement was found either way,
               not that the thing does not exist.
             </p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-presets" tabindex="0">
             <table class="guide-table">
-              <caption id="t-presets" data-i18n="g.api.a.caption">The seven generators with presets, checked 8 October 2026. Plans and APIs change often; each row links its sources.</caption>
+              <caption id="t-presets"><span data-i18n="g.api.a.caption">The seven generators with presets, checked 8 October 2026. Plans and APIs change often; each row links its sources.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.api.a.h0">Generator</th>
@@ -423,35 +447,35 @@
                   <th scope="row">ChatGPT Images (OpenAI)</th>
                   <td data-i18n="g.api.a.1.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> OpenAI's image generation API.</td>
                   <td data-i18n="g.api.a.1.2">Billed apart. OpenAI's help centre lists the API under what ChatGPT Plus does not include: <q>API usage is separate and billed independently.</q></td>
-                  <td data-i18n="g.api.a.1.3"><span class="tag t-review">Not found</span> None from OpenAI.</td>
+                  <td data-i18n="g.api.a.1.3"><span class="tag t-review">Not found</span> None found from OpenAI.</td>
                   <td data-i18n="g.api.a.1.4"><span class="src"><a href="https://developers.openai.com/api/docs/guides/image-generation" target="_blank" rel="noopener">OpenAI: image generation</a>; <a href="https://help.openai.com/en/articles/6950777" target="_blank" rel="noopener">OpenAI help: ChatGPT Plus</a>; <a href="https://help.openai.com/en/articles/9039756" target="_blank" rel="noopener">billing</a></span></td>
                 </tr>
                 <tr>
                   <th scope="row">Midjourney</th>
                   <td data-i18n="g.api.a.2.1"><span class="tag t-generate">No</span> Its Community Guidelines: <q>Midjourney does not provide an API, nor provide third-party apps or scripts, and automating interactions with Midjourney service is strictly prohibited</q>, with rare exceptions it grants explicitly.</td>
                   <td data-i18n="g.api.a.2.2">No API to bill.</td>
-                  <td data-i18n="g.api.a.2.3"><span class="tag t-generate">No</span> Third-party "Midjourney API" and MCP wrappers drive your account by automation, which its Terms of Service forbid.</td>
+                  <td data-i18n="g.api.a.2.3"><span class="tag t-generate">No</span> Third-party “Midjourney API” and MCP wrappers drive your account by automation, which its Terms of Service forbid.</td>
                   <td data-i18n="g.api.a.2.4"><span class="src"><a href="https://docs.midjourney.com/hc/en-us/articles/32013696484109-Community-Guidelines" target="_blank" rel="noopener">Midjourney: Community Guidelines</a>; <a href="https://docs.midjourney.com/hc/en-us/articles/32083055291277-Terms-of-Service" target="_blank" rel="noopener">Terms of Service</a></span></td>
                 </tr>
                 <tr>
                   <th scope="row">Google Flow</th>
                   <td data-i18n="g.api.a.3.1"><span class="tag t-generate">No</span> No API for Flow itself. Its models, Veo 3.1 for video and Nano Banana for images, are in Google's Gemini API and on Vertex AI.</td>
                   <td data-i18n="g.api.a.3.2">Billed apart. Google: the benefits of a Google AI plan apply in the AI Studio web app; using the Gemini API with an API key is billed separately.</td>
-                  <td data-i18n="g.api.a.3.3"><span class="tag t-review">Not found</span> None for Flow. Google's list of its MCP servers names Genmedia (Gemini image models, Veo) on Google Cloud, whose README says <q>This is not an officially supported Google product.</q></td>
+                  <td data-i18n="g.api.a.3.3"><span class="tag t-review">Not found</span> None found for Flow. Google's list of MCP servers names Genmedia, <q>including Imagen and Veo models</q>; Genmedia's own README lists Gemini Image and Veo, marks Imagen deprecated and says <q>This is not an officially supported Google product.</q></td>
                   <td data-i18n="g.api.a.3.4"><span class="src"><a href="https://ai.google.dev/gemini-api/docs/veo" target="_blank" rel="noopener">Gemini API: Veo</a>; <a href="https://ai.google.dev/gemini-api/docs/google-ai-plans" target="_blank" rel="noopener">Google AI plans</a>; <a href="https://github.com/google/mcp" target="_blank" rel="noopener">google/mcp</a>; <a href="https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia" target="_blank" rel="noopener">Genmedia README</a></span></td>
                 </tr>
                 <tr>
                   <th scope="row">Dreamina (CapCut)</th>
-                  <td data-i18n="g.api.a.4.1"><span class="tag t-review">Not found</span> No public Dreamina API. ByteDance's Seedance (video) and Seedream (image) models are offered to developers through BytePlus ModelArk.</td>
-                  <td data-i18n="g.api.a.4.2">ModelArk is a separate BytePlus account with its own API keys and billing.</td>
+                  <td data-i18n="g.api.a.4.1"><span class="tag t-review">Separately</span> None found for the Dreamina app itself. BytePlus sells its models as an API on ModelArk: <q>Dreamina Seedance 2.0 is now available through ModelArk on BytePlus, giving businesses and developers API access</q>, and ModelArk's image generation API has the Seedream image models.</td>
+                  <td data-i18n="g.api.a.4.2">ModelArk is a separate BytePlus account with its own API keys and billing. BytePlus: <q>BytePlus is not available in the United States.</q></td>
                   <td data-i18n="g.api.a.4.3"><span class="tag t-review">Not found</span></td>
-                  <td data-i18n="g.api.a.4.4"><span class="src"><a href="https://docs.byteplus.com/en/docs/ModelArk/1631633" target="_blank" rel="noopener">BytePlus ModelArk docs</a></span></td>
+                  <td data-i18n="g.api.a.4.4"><span class="src"><a href="https://www.byteplus.com/en/blog/dreamina-seedance2-0" target="_blank" rel="noopener">BytePlus: Dreamina Seedance 2.0</a>; <a href="https://docs.byteplus.com/en/docs/ModelArk/1541523" target="_blank" rel="noopener">ModelArk: image generation API</a></span></td>
                 </tr>
                 <tr>
                   <th scope="row">Grok Imagine (xAI)</th>
                   <td data-i18n="g.api.a.5.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> xAI's API has Grok Imagine image and video generation.</td>
                   <td data-i18n="g.api.a.5.2">Through xAI's developer console. Whether a Grok subscription covers any API use: not found in xAI's own pages.</td>
-                  <td data-i18n="g.api.a.5.3"><span class="tag t-review">Not found</span> Only community servers.</td>
+                  <td data-i18n="g.api.a.5.3"><span class="tag t-review">Not found</span> None found from xAI; only community servers turned up.</td>
                   <td data-i18n="g.api.a.5.4"><span class="src"><a href="https://docs.x.ai/developers/model-capabilities/video/generation" target="_blank" rel="noopener">xAI docs: video generation</a>; <a href="https://x.ai/news/grok-imagine-api" target="_blank" rel="noopener">xAI: Grok Imagine API</a></span></td>
                 </tr>
                 <tr>
@@ -465,7 +489,7 @@
                   <th scope="row">Luma (Dream Machine)</th>
                   <td data-i18n="g.api.a.7.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> The Luma API.</td>
                   <td data-i18n="g.api.a.7.2">Billed apart. Luma: <q>Dream Machine subscriptions and API are separate—credits do not transfer between them.</q></td>
-                  <td data-i18n="g.api.a.7.3"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Yes</span> <code>luma-api-mcp</code>, in Luma's GitHub organisation. It is set up with an API key from Luma's API keys page, so it runs on API credits; its README lists the Photon image and Ray video models.</td>
+                  <td data-i18n="g.api.a.7.3"><span class="tag t-review">In Luma's GitHub</span> <code>luma-api-mcp</code>, in Luma's GitHub organisation; its README doesn't call it official. It is set up with an API key from Luma's API keys page, so it runs on API credits. Its README lists the image models <code>photon-1</code> and <code>photon-flash-1</code> and the video models <code>ray-2</code>, <code>ray-flash-2</code> and <code>ray-1-6</code>, not the Ray3 models of the app's Luma preset.</td>
                   <td data-i18n="g.api.a.7.4"><span class="src"><a href="https://lumalabs.ai/learning-hub/dream-machine-credit-system" target="_blank" rel="noopener">Luma: credit system</a>; <a href="https://github.com/lumalabs/luma-api-mcp" target="_blank" rel="noopener">lumalabs/luma-api-mcp</a></span></td>
                 </tr>
               </tbody>
@@ -474,13 +498,14 @@
           <div class="prose">
             <h2 id="mcp-plan" data-i18n="g.api.b.h">Generators with an official MCP server on your account</h2>
             <p data-i18n="g.api.b.p">
-              With these, an agent can generate by itself on what you already pay for. The home page names them in
-              <a href="/#mcp">"To your agent, the same steps as an MCP server"</a>.
+              With these, an agent can generate by itself, in most cases on what you already pay for (see each row). The home page names Higgsfield, Kling and
+              Runway in <a href="/#mcp">“To your agent, the same steps as an MCP server”</a>, and Higgsfield, Ideogram, Krea and
+              Runway in <a href="/#questions">“Before you try it”</a>.
             </p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-mcp" tabindex="0">
             <table class="guide-table is-narrow">
-              <caption id="t-mcp" data-i18n="g.api.b.caption">Official MCP servers you sign in to, checked 8 October 2026.</caption>
+              <caption id="t-mcp"><span data-i18n="g.api.b.caption">Official MCP servers you sign in to, checked 8 October 2026.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.api.b.h0">Generator</th>
@@ -499,7 +524,7 @@
                 <tr>
                   <th scope="row">Ideogram</th>
                   <td data-i18n="g.api.b.2.1"><code>https://mcp.ideogram.ai/mcp</code>; you sign in with your Ideogram account (OAuth), no API key.</td>
-                  <td data-i18n="g.api.b.2.2">Your plan. Ideogram: <q>Usage through the MCP draw from the same subscription as the web app.</q></td>
+                  <td data-i18n="g.api.b.2.2">Your plan. Ideogram says MCP use draws on the same subscription as its web app, with no separate billing for it.</td>
                   <td data-i18n="g.api.b.2.3"><span class="src"><a href="https://ideogram.ai/features/mcp/" target="_blank" rel="noopener">Ideogram MCP</a></span></td>
                 </tr>
                 <tr>
@@ -529,7 +554,7 @@
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-agents" tabindex="0">
             <table class="guide-table is-narrow">
-              <caption id="t-agents" data-i18n="g.api.c.caption">Image generation in coding agents, checked 8 October 2026.</caption>
+              <caption id="t-agents"><span data-i18n="g.api.c.caption">Image generation in coding agents, checked 8 October 2026.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.api.c.h0">Agent</th>
@@ -565,7 +590,7 @@
                 </tr>
                 <tr>
                   <th scope="row">Claude Code (Anthropic)</th>
-                  <td data-i18n="g.api.c.5.1">No image generation of its own. Anthropic's help centre: Claude isn't built to produce photos or illustrations the way image tools are; it can view the images you give it.</td>
+                  <td data-i18n="g.api.c.5.1">No image generation of its own. Anthropic's help centre: <q>Claude doesn’t generate photos or illustrations the way image-generation tools do.</q> It can draw diagrams and charts in HTML and SVG, and view the images you give it.</td>
                   <td data-i18n="g.api.c.5.2">Nothing to bill.</td>
                   <td data-i18n="g.api.c.5.3"><span class="src"><a href="https://support.claude.com/en/articles/9002504-can-claude-produce-images" target="_blank" rel="noopener">Claude help centre</a></span></td>
                 </tr>
@@ -581,14 +606,15 @@
             <h2 id="means" data-i18n="g.api.means.h">What this means for your coding agent</h2>
             <h3 data-i18n="g.api.means.1.h">The generator has an official MCP server on your plan</h3>
             <p data-i18n="g.api.means.1.p">
-              Higgsfield, Ideogram and Runway, and Krea when you sign in: the agent can generate by itself. Asset Prompter is
-              optional there. As the home page's answer puts it, it still helps if you want to choose and approve every result
+              Higgsfield, Ideogram and Runway, and Krea when you sign in: the agent can generate by itself. Kling's server signs
+              in with your account too; whose credits it uses, the app's or the API's, is not stated. Asset Prompter is optional there. As the home page's answer puts it, it still helps if you want to choose and approve every result
               yourself and keep each version in the folder, or if you use features the tool keeps to its own app.
             </p>
             <h3 data-i18n="g.api.means.2.h">It has an API, billed apart from your plan</h3>
             <p data-i18n="g.api.means.2.p">
-              ChatGPT Images, the Gemini API (Veo, Nano Banana), Grok Imagine, Leonardo.Ai and Luma: the agent can generate through a
-              script or an MCP server with an API key, and you pay per generation on top of any plan you already have.
+              ChatGPT Images, the Gemini API (Veo, Nano Banana), Leonardo.Ai and Luma: the agent can generate through a script or an
+              MCP server with an API key, and you pay per generation on top of any plan you already have. Grok Imagine has an
+              API too; whether a Grok plan covers any of it, xAI's own pages don't say.
             </p>
             <h3 data-i18n="g.api.means.3.h">It has no API</h3>
             <p data-i18n="g.api.means.3.p">
@@ -607,7 +633,9 @@
             <h2 id="checked" data-i18n="g.api.how.h">How this was checked</h2>
             <p data-i18n="g.api.how.p1">
               Each row was checked on 8 October 2026 against the vendor's own documentation, help centre or GitHub repository,
-              linked in the row. Where no first-party statement was found, the cell says so. Prices are left out: they change
+              linked in the row. The GitHub repositories and Anthropic's help centre were read on the page itself; the other
+              vendors' sites did not open from where this guide was written, so their words were read in a search engine's copy
+              of the same page. Where no first-party statement was found, the cell says so. Prices are left out: they change
               more often than this page.
             </p>
             <p data-i18n="g.api.how.p2">

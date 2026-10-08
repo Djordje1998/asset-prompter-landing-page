@@ -63,6 +63,28 @@
           // A Serbian choice that could not be replaced would send the English guide back to the Serbian one.
           location.replace(link.getAttribute("href") + (lang === "en" && !kept ? "?lang=en" : ""));
         });
+        // The bar stays at the top, but the browser takes it as under the room scroll-padding-top keeps for it: focusing one
+        // of its links from the keyboard would scroll the page half a window up. It stays where it was instead: scrolling
+        // to it at once undoes an instant scroll and stops a smooth one, even when the page has not moved yet.
+        var y = scrollY;
+        addEventListener("scroll", function () {
+          y = scrollY;
+        }, { passive: true });
+        document.addEventListener("focusin", function (event) {
+          if (!event.target.closest || !event.target.closest(".bar")) return;
+          // Only the keyboard's focus: a tap or a click does not scroll, and a flick still running is left alone.
+          try {
+            if (!event.target.matches(":focus-visible")) return;
+          } catch (e) {}
+          var at = y;
+          var stay = function () {
+            root.style.scrollBehavior = "auto";
+            scrollTo(0, at);
+            root.style.scrollBehavior = "";
+          };
+          stay();
+          requestAnimationFrame(stay);
+        });
         // Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
         var place = null;
         try {
@@ -129,7 +151,7 @@
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-sr.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-sr.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-045" />
+    <link rel="stylesheet" href="/styles.css?v=w2-049" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -183,7 +205,10 @@
             "about": {
               "@id": "https://assetprompter.com/#app"
             },
-            "image": "https://assetprompter.com/assets/og-sr.jpg",
+            "image": [
+              "https://assetprompter.com/assets/art/you-are-the-server.webp",
+              "https://assetprompter.com/assets/og-sr.jpg"
+            ],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
@@ -338,9 +363,10 @@
       </nav>
       <div class="bar-right">
         <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
-             without a script. The script at the top keeps the choice and the reader's place. -->
-        <a class="btn lang-btn" href="/guides/image-generators-api-mcp/" hreflang="en" lang="en" data-lang="en" aria-label="English: this page in English">
+             without a script. It names the language it leads to, as a word where the bar has room and as its code on a phone. The script at the top keeps the choice and the reader's place. -->
+        <a class="btn lang-btn" href="/guides/image-generators-api-mcp/" hreflang="en" lang="en" data-lang="en" aria-label="English, EN: this page in English">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
+          <span class="lang-name">English</span>
           <span class="lang-code">EN</span>
         </a>
         <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Zvezdica na GitHubu: Asset Prompter" data-i18n-aria-label="star.label">
@@ -381,7 +407,7 @@
             <div class="prose">
               <h2 id="short" data-i18n="g.api.short.h">Kratak odgovor</h2>
               <p data-i18n="g.api.short.1"><strong>Midjourney i Google Flow nemaju javni API.</strong> Pravila servisa Midjourney zabranjuju njegovu automatizaciju; modeli koje Flow koristi, Veo i Nano Banana, dostupni su u Gemini API-ju kompanije Google, koji se naplaćuje odvojeno od Google AI pretplate.</p>
-              <p data-i18n="g.api.short.2"><strong>ChatGPT Images, Grok Imagine, Leonardo.Ai i Luma imaju API</strong>, koji se, gde proizvođač to navodi, naplaćuje odvojeno od pretplate na aplikaciju; Leonardo i Luma imaju i MCP servere, koji rade preko te API naplate.</p>
+              <p data-i18n="g.api.short.2"><strong>ChatGPT Images, Grok Imagine, Leonardo.Ai i Luma imaju API</strong>, koji se, gde proizvođač to navodi, naplaćuje odvojeno od pretplate na aplikaciju. Leonardo ima i MCP server, a Lumina GitHub organizacija ima jedan; oba rade preko te API naplate.</p>
               <p data-i18n="g.api.short.3"><strong>Higgsfield, Ideogram, Krea, Kling i Runway imaju zvanične MCP servere</strong> na koje se prijavljuješ svojim nalogom; Ideogram i Runway kažu da korišćenje preko MCP-a troši istu pretplatu ili kredite kao i njihova aplikacija.</p>
             </div>
           </div>
@@ -396,7 +422,7 @@
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-presets" tabindex="0">
             <table class="guide-table">
-              <caption id="t-presets" data-i18n="g.api.a.caption">Sedam generatora sa presetima, provereno 8. oktobra 2026. Pretplate i API-ji se često menjaju; svaki red navodi svoje izvore.</caption>
+              <caption id="t-presets"><span data-i18n="g.api.a.caption">Sedam generatora sa presetima, provereno 8. oktobra 2026. Pretplate i API-ji se često menjaju; svaki red navodi svoje izvore.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.api.a.h0">Generator</th>
@@ -411,7 +437,7 @@
                   <th scope="row">ChatGPT Images (OpenAI)</th>
                   <td data-i18n="g.api.a.1.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Da</span> API za generisanje slika kompanije OpenAI.</td>
                   <td data-i18n="g.api.a.1.2">Naplaćuje se odvojeno. Centar za pomoć kompanije OpenAI navodi API među onim što ChatGPT Plus ne uključuje: <q lang="en">API usage is separate and billed independently.</q></td>
-                  <td data-i18n="g.api.a.1.3"><span class="tag t-review">Nije pronađeno</span> OpenAI nema svoj.</td>
+                  <td data-i18n="g.api.a.1.3"><span class="tag t-review">Nije pronađeno</span> OpenAI-jev nije pronađen.</td>
                   <td data-i18n="g.api.a.1.4"><span class="src"><a href="https://developers.openai.com/api/docs/guides/image-generation" target="_blank" rel="noopener">OpenAI: generisanje slika</a>; <a href="https://help.openai.com/en/articles/6950777" target="_blank" rel="noopener">OpenAI pomoć: ChatGPT Plus</a>; <a href="https://help.openai.com/en/articles/9039756" target="_blank" rel="noopener">naplata</a></span></td>
                 </tr>
                 <tr>
@@ -425,21 +451,21 @@
                   <th scope="row">Google Flow</th>
                   <td data-i18n="g.api.a.3.1"><span class="tag t-generate">Ne</span> Sam Flow nema API. Njegovi modeli, Veo 3.1 za video i Nano Banana za slike, dostupni su u Gemini API-ju kompanije Google i na platformi Vertex AI.</td>
                   <td data-i18n="g.api.a.3.2">Naplaćuje se odvojeno. Google: pogodnosti Google AI pretplate važe u veb-aplikaciji AI Studio; korišćenje Gemini API-ja sa API ključem naplaćuje se posebno.</td>
-                  <td data-i18n="g.api.a.3.3"><span class="tag t-review">Nije pronađeno</span> Za Flow ga nema. Googleov spisak njegovih MCP servera navodi Genmedia (Gemini modeli za slike, Veo) na Google Cloudu, čiji README kaže <q lang="en">This is not an officially supported Google product.</q></td>
+                  <td data-i18n="g.api.a.3.3"><span class="tag t-review">Nije pronađeno</span> Za Flow nije pronađen. Googleov spisak MCP servera navodi Genmedia, <q lang="en">including Imagen and Veo models</q>; README samog Genmedia navodi Gemini Image i Veo, Imagen označava kao zastareo i kaže <q lang="en">This is not an officially supported Google product.</q></td>
                   <td data-i18n="g.api.a.3.4"><span class="src"><a href="https://ai.google.dev/gemini-api/docs/veo" target="_blank" rel="noopener">Gemini API: Veo</a>; <a href="https://ai.google.dev/gemini-api/docs/google-ai-plans" target="_blank" rel="noopener">Google AI pretplate</a>; <a href="https://github.com/google/mcp" target="_blank" rel="noopener">google/mcp</a>; <a href="https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia" target="_blank" rel="noopener">Genmedia README</a></span></td>
                 </tr>
                 <tr>
                   <th scope="row">Dreamina (CapCut)</th>
-                  <td data-i18n="g.api.a.4.1"><span class="tag t-review">Nije pronađeno</span> Javni API za Dreaminu nije pronađen. ByteDanceovi modeli Seedance (video) i Seedream (slike) nude se programerima preko platforme BytePlus ModelArk.</td>
-                  <td data-i18n="g.api.a.4.2">ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom.</td>
+                  <td data-i18n="g.api.a.4.1"><span class="tag t-review">Odvojeno</span> Za samu aplikaciju Dreamina nije pronađen. BytePlus prodaje njene modele kao API na platformi ModelArk: <q lang="en">Dreamina Seedance 2.0 is now available through ModelArk on BytePlus, giving businesses and developers API access</q>, a ModelArk-ov API za generisanje slika ima modele Seedream.</td>
+                  <td data-i18n="g.api.a.4.2">ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom. BytePlus: <q lang="en">BytePlus is not available in the United States.</q></td>
                   <td data-i18n="g.api.a.4.3"><span class="tag t-review">Nije pronađeno</span></td>
-                  <td data-i18n="g.api.a.4.4"><span class="src"><a href="https://docs.byteplus.com/en/docs/ModelArk/1631633" target="_blank" rel="noopener">BytePlus ModelArk dokumentacija</a></span></td>
+                  <td data-i18n="g.api.a.4.4"><span class="src"><a href="https://www.byteplus.com/en/blog/dreamina-seedance2-0" target="_blank" rel="noopener">BytePlus: Dreamina Seedance 2.0</a>; <a href="https://docs.byteplus.com/en/docs/ModelArk/1541523" target="_blank" rel="noopener">ModelArk: API za generisanje slika</a></span></td>
                 </tr>
                 <tr>
                   <th scope="row">Grok Imagine (xAI)</th>
                   <td data-i18n="g.api.a.5.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Da</span> API kompanije xAI nudi generisanje slika i videa modelom Grok Imagine.</td>
                   <td data-i18n="g.api.a.5.2">Preko xAI konzole za programere. Da li Grok pretplata pokriva ikakvo korišćenje API-ja: nije pronađeno na stranicama kompanije xAI.</td>
-                  <td data-i18n="g.api.a.5.3"><span class="tag t-review">Nije pronađeno</span> Postoje samo serveri zajednice.</td>
+                  <td data-i18n="g.api.a.5.3"><span class="tag t-review">Nije pronađeno</span> xAI-jev nije pronađen; pronađeni su samo serveri zajednice.</td>
                   <td data-i18n="g.api.a.5.4"><span class="src"><a href="https://docs.x.ai/developers/model-capabilities/video/generation" target="_blank" rel="noopener">xAI dokumentacija: generisanje videa</a>; <a href="https://x.ai/news/grok-imagine-api" target="_blank" rel="noopener">xAI: Grok Imagine API</a></span></td>
                 </tr>
                 <tr>
@@ -453,7 +479,7 @@
                   <th scope="row">Luma (Dream Machine)</th>
                   <td data-i18n="g.api.a.7.1"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Da</span> Luma API.</td>
                   <td data-i18n="g.api.a.7.2">Naplaćuje se odvojeno. Luma: <q lang="en">Dream Machine subscriptions and API are separate—credits do not transfer between them.</q></td>
-                  <td data-i18n="g.api.a.7.3"><span class="tag t-approved"><svg class="icon" width="12" height="12" aria-hidden="true"><use href="#i-check" /></svg>Da</span> <code>luma-api-mcp</code>, u Luminoj GitHub organizaciji. Podešava se API ključem sa Lumine stranice za API ključeve, pa radi preko API kredita; njegov README navodi modele Photon za slike i Ray za video.</td>
+                  <td data-i18n="g.api.a.7.3"><span class="tag t-review">U Luminom GitHubu</span> <code>luma-api-mcp</code>, u Luminoj GitHub organizaciji; njegov README ne kaže da je zvaničan. Podešava se API ključem sa Lumine stranice za API ključeve, pa radi preko API kredita. Njegov README navodi modele za slike <code>photon-1</code> i <code>photon-flash-1</code> i modele za video <code>ray-2</code>, <code>ray-flash-2</code> i <code>ray-1-6</code>, a ne modele Ray3 iz Luminog preseta u aplikaciji.</td>
                   <td data-i18n="g.api.a.7.4"><span class="src"><a href="https://lumalabs.ai/learning-hub/dream-machine-credit-system" target="_blank" rel="noopener">Luma: sistem kredita</a>; <a href="https://github.com/lumalabs/luma-api-mcp" target="_blank" rel="noopener">lumalabs/luma-api-mcp</a></span></td>
                 </tr>
               </tbody>
@@ -461,11 +487,11 @@
           </section>
           <div class="prose">
             <h2 id="mcp-plan" data-i18n="g.api.b.h">Generatori sa zvaničnim MCP serverom na tvom nalogu</h2>
-            <p data-i18n="g.api.b.p">Sa njima agent može sam da generiše, u okviru onoga što već plaćaš. Početna stranica ih navodi u <a href="/sr/#mcp">„Za tvog agenta, isti koraci kao sa MCP serverom”</a>.</p>
+            <p data-i18n="g.api.b.p">Sa njima agent može sam da generiše, uglavnom u okviru onoga što već plaćaš (vidi svaki red). Početna stranica navodi Higgsfield, Kling i Runway u <a href="/sr/#mcp">„Za tvog agenta, isti koraci kao sa MCP serverom”</a>, a Higgsfield, Ideogram, Krea i Runway u <a href="/sr/#questions">„Pre nego što probaš”</a>.</p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-mcp" tabindex="0">
             <table class="guide-table is-narrow">
-              <caption id="t-mcp" data-i18n="g.api.b.caption">Zvanični MCP serveri na koje se prijavljuješ, provereno 8. oktobra 2026.</caption>
+              <caption id="t-mcp"><span data-i18n="g.api.b.caption">Zvanični MCP serveri na koje se prijavljuješ, provereno 8. oktobra 2026.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.api.b.h0">Generator</th>
@@ -484,7 +510,7 @@
                 <tr>
                   <th scope="row">Ideogram</th>
                   <td data-i18n="g.api.b.2.1"><code>https://mcp.ideogram.ai/mcp</code>; prijavljuješ se svojim Ideogram nalogom (OAuth), bez API ključa.</td>
-                  <td data-i18n="g.api.b.2.2">Tvoju pretplatu. Ideogram: <q lang="en">Usage through the MCP draw from the same subscription as the web app.</q></td>
+                  <td data-i18n="g.api.b.2.2">Tvoju pretplatu. Ideogram kaže da korišćenje preko MCP-a troši istu pretplatu kao njegova veb aplikacija, bez posebne naplate.</td>
                   <td data-i18n="g.api.b.2.3"><span class="src"><a href="https://ideogram.ai/features/mcp/" target="_blank" rel="noopener">Ideogram MCP</a></span></td>
                 </tr>
                 <tr>
@@ -514,7 +540,7 @@
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-agents" tabindex="0">
             <table class="guide-table is-narrow">
-              <caption id="t-agents" data-i18n="g.api.c.caption">Generisanje slika u agentima za programiranje, provereno 8. oktobra 2026.</caption>
+              <caption id="t-agents"><span data-i18n="g.api.c.caption">Generisanje slika u agentima za programiranje, provereno 8. oktobra 2026.</span></caption>
               <thead>
                 <tr>
                   <th scope="col" data-i18n="g.api.c.h0">Agent</th>
@@ -550,7 +576,7 @@
                 </tr>
                 <tr>
                   <th scope="row">Claude Code (Anthropic)</th>
-                  <td data-i18n="g.api.c.5.1">Nema sopstveno generisanje slika. Centar za pomoć kompanije Anthropic: Claude nije napravljen da pravi fotografije ili ilustracije kao alati za slike; može da pregleda slike koje mu daš.</td>
+                  <td data-i18n="g.api.c.5.1">Nema sopstveno generisanje slika. Centar za pomoć kompanije Anthropic: <q lang="en">Claude doesn’t generate photos or illustrations the way image-generation tools do.</q> Može da nacrta dijagrame i grafikone u HTML-u i SVG-u i da pregleda slike koje mu daš.</td>
                   <td data-i18n="g.api.c.5.2">Nema šta da se naplati.</td>
                   <td data-i18n="g.api.c.5.3"><span class="src"><a href="https://support.claude.com/en/articles/9002504-can-claude-produce-images" target="_blank" rel="noopener">Claude centar za pomoć</a></span></td>
                 </tr>
@@ -565,9 +591,9 @@
           <div class="prose">
             <h2 id="means" data-i18n="g.api.means.h">Šta to znači za tvog agenta za programiranje</h2>
             <h3 data-i18n="g.api.means.1.h">Generator ima zvanični MCP server u okviru tvoje pretplate</h3>
-            <p data-i18n="g.api.means.1.p">Higgsfield, Ideogram i Runway, i Krea kada se prijaviš: agent može sam da generiše. Asset Prompter je tu opcion. Kako kaže odgovor na početnoj stranici, i dalje pomaže ako želiš da svaki rezultat lično biraš i odobravaš i da svaku verziju čuvaš u folderu, ili ako koristiš mogućnosti koje alat zadržava samo za svoju aplikaciju.</p>
+            <p data-i18n="g.api.means.1.p">Higgsfield, Ideogram i Runway, i Krea kada se prijaviš: agent može sam da generiše. I na MCP server Kling se prijavljuješ svojim nalogom; čije kredite troši, aplikacije ili API-ja, nije navedeno. Asset Prompter je tu opcion. Kako kaže odgovor na početnoj stranici, i dalje pomaže ako želiš da svaki rezultat lično biraš i odobravaš i da svaku verziju čuvaš u folderu, ili ako koristiš mogućnosti koje alat zadržava samo za svoju aplikaciju.</p>
             <h3 data-i18n="g.api.means.2.h">Ima API koji se naplaćuje odvojeno od pretplate</h3>
-            <p data-i18n="g.api.means.2.p">ChatGPT Images, Gemini API (Veo, Nano Banana), Grok Imagine, Leonardo.Ai i Luma: agent može da generiše preko skripte ili MCP servera sa API ključem, a ti plaćaš svako generisanje, pored pretplate koju možda već imaš.</p>
+            <p data-i18n="g.api.means.2.p">ChatGPT Images, Gemini API (Veo, Nano Banana), Leonardo.Ai i Luma: agent može da generiše preko skripte ili MCP servera sa API ključem, a ti plaćaš svako generisanje, pored pretplate koju možda već imaš. I Grok Imagine ima API; da li Grok pretplata pokriva išta od toga, stranice kompanije xAI ne kažu.</p>
             <h3 data-i18n="g.api.means.3.h">Nema API</h3>
             <p data-i18n="g.api.means.3.p">Midjourney i Google Flow: agent ne može da pritisne „Generate”. Automatizovanje veb-aplikacije krši uslove korišćenja servisa Midjourney. Ostaje da promptove i fajlove prenosiš ručno, ili preko zajedničkog foldera kao što je onaj u Asset Prompteru; vodič <a href="/sr/guides/get-images-into-coding-agent-project/">pet načina da slike stignu u projekat tvog agenta</a> ih poredi, a <a href="/sr/guides/how-this-site-was-made/">kako su nastale slike ovog sajta</a> pokazuje folder sa alatom Flow.</p>
           </div>
@@ -578,7 +604,7 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="checked" data-i18n="g.api.how.h">Kako je ovo provereno</h2>
-            <p data-i18n="g.api.how.p1">Svaki red je proveren 8. oktobra 2026. u dokumentaciji, centru za pomoć ili GitHub repozitorijumu samog proizvođača, koji su navedeni u redu. Gde izjava samog proizvođača nije pronađena, ćelija to i kaže. Cene su izostavljene: menjaju se češće od ove stranice.</p>
+            <p data-i18n="g.api.how.p1">Svaki red je proveren 8. oktobra 2026. u dokumentaciji, centru za pomoć ili GitHub repozitorijumu samog proizvođača, koji su navedeni u redu. GitHub repozitorijumi i Anthropicov centar za pomoć pročitani su na samoj stranici; sajtovi ostalih proizvođača nisu se otvarali odande gde je ovaj vodič pisan, pa su njihove reči pročitane u kopiji iste stranice kod pretraživača. Gde izjava samog proizvođača nije pronađena, ćelija to i kaže. Cene su izostavljene: menjaju se češće od ove stranice.</p>
             <p data-i18n="g.api.how.p2">Nazivi proizvoda pripadaju svojim vlasnicima. Asset Prompter je nezavisan projekat: nije povezan ni sa jednim od njih, niti ga iko od njih podržava. Vidiš grešku? <a href="https://github.com/Djordje1998/asset-prompter/issues" target="_blank" rel="noopener">Prijavi je na GitHubu</a>.</p>
             <h2 id="changes" data-i18n="g.api.log.h">Šta se promenilo</h2>
             <ul data-i18n="g.api.log.list"><li><time datetime="2026-10-08">8. oktobra 2026.</time>: prva verzija.</li></ul>
