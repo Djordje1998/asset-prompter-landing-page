@@ -425,7 +425,7 @@
                   <th scope="row">Google Flow</th>
                   <td data-i18n="g.api.a.3.1"><span class="tag t-generate">Ne</span> Sam Flow nema API. Njegovi modeli, Veo 3.1 za video i Nano Banana za slike, dostupni su u Gemini API-ju kompanije Google i na platformi Vertex AI.</td>
                   <td data-i18n="g.api.a.3.2">Naplaćuje se odvojeno. Google: pogodnosti Google AI pretplate važe u veb-aplikaciji AI Studio; korišćenje Gemini API-ja sa API ključem naplaćuje se posebno.</td>
-                  <td data-i18n="g.api.a.3.3"><span class="tag t-review">Nije pronađeno</span> Za Flow ga nema. Googleov spisak njegovih MCP servera navodi Genmedia (Gemini modeli za slike, Veo) na Google Cloudu, čiji README kaže <q lang="en">This is not an officially supported Google product.</q></td>
+                  <td data-i18n="g.api.a.3.3"><span class="tag t-review">Nije pronađeno</span> Za Flow ga nema. Googleov spisak MCP servera navodi Genmedia, <q lang="en">including Imagen and Veo models</q>; README samog Genmedia navodi Gemini Image i Veo, Imagen označava kao zastareo i kaže <q lang="en">This is not an officially supported Google product.</q></td>
                   <td data-i18n="g.api.a.3.4"><span class="src"><a href="https://ai.google.dev/gemini-api/docs/veo" target="_blank" rel="noopener">Gemini API: Veo</a>; <a href="https://ai.google.dev/gemini-api/docs/google-ai-plans" target="_blank" rel="noopener">Google AI pretplate</a>; <a href="https://github.com/google/mcp" target="_blank" rel="noopener">google/mcp</a>; <a href="https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia" target="_blank" rel="noopener">Genmedia README</a></span></td>
                 </tr>
                 <tr>
@@ -461,7 +461,7 @@
           </section>
           <div class="prose">
             <h2 id="mcp-plan" data-i18n="g.api.b.h">Generatori sa zvaničnim MCP serverom na tvom nalogu</h2>
-            <p data-i18n="g.api.b.p">Sa njima agent može sam da generiše, u okviru onoga što već plaćaš. Početna stranica ih navodi u <a href="/sr/#mcp">„Za tvog agenta, isti koraci kao sa MCP serverom”</a>.</p>
+            <p data-i18n="g.api.b.p">Sa njima agent može sam da generiše, u okviru onoga što već plaćaš. Početna stranica navodi Higgsfield, Kling i Runway u <a href="/sr/#mcp">„Za tvog agenta, isti koraci kao sa MCP serverom”</a>, a Higgsfield, Ideogram, Krea i Runway u <a href="/sr/#questions">„Pre nego što probaš”</a>.</p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-mcp" tabindex="0">
             <table class="guide-table is-narrow">
@@ -484,7 +484,7 @@
                 <tr>
                   <th scope="row">Ideogram</th>
                   <td data-i18n="g.api.b.2.1"><code>https://mcp.ideogram.ai/mcp</code>; prijavljuješ se svojim Ideogram nalogom (OAuth), bez API ključa.</td>
-                  <td data-i18n="g.api.b.2.2">Tvoju pretplatu. Ideogram: <q lang="en">Usage through the MCP draw from the same subscription as the web app.</q></td>
+                  <td data-i18n="g.api.b.2.2">Tvoju pretplatu. Ideogram kaže da korišćenje preko MCP-a troši istu pretplatu kao njegova veb aplikacija, bez posebne naplate.</td>
                   <td data-i18n="g.api.b.2.3"><span class="src"><a href="https://ideogram.ai/features/mcp/" target="_blank" rel="noopener">Ideogram MCP</a></span></td>
                 </tr>
                 <tr>
@@ -550,7 +550,7 @@
                 </tr>
                 <tr>
                   <th scope="row">Claude Code (Anthropic)</th>
-                  <td data-i18n="g.api.c.5.1">Nema sopstveno generisanje slika. Centar za pomoć kompanije Anthropic: Claude nije napravljen da pravi fotografije ili ilustracije kao alati za slike; može da pregleda slike koje mu daš.</td>
+                  <td data-i18n="g.api.c.5.1">Nema sopstveno generisanje slika. Centar za pomoć kompanije Anthropic: <q lang="en">Claude doesn’t generate photos or illustrations the way image-generation tools do.</q> Može da nacrta dijagrame i grafikone u HTML-u i SVG-u i da pregleda slike koje mu daš.</td>
                   <td data-i18n="g.api.c.5.2">Nema šta da se naplati.</td>
                   <td data-i18n="g.api.c.5.3"><span class="src"><a href="https://support.claude.com/en/articles/9002504-can-claude-produce-images" target="_blank" rel="noopener">Claude centar za pomoć</a></span></td>
                 </tr>
@@ -565,7 +565,7 @@
           <div class="prose">
             <h2 id="means" data-i18n="g.api.means.h">Šta to znači za tvog agenta za programiranje</h2>
             <h3 data-i18n="g.api.means.1.h">Generator ima zvanični MCP server u okviru tvoje pretplate</h3>
-            <p data-i18n="g.api.means.1.p">Higgsfield, Ideogram i Runway, i Krea kada se prijaviš: agent može sam da generiše. Asset Prompter je tu opcion. Kako kaže odgovor na početnoj stranici, i dalje pomaže ako želiš da svaki rezultat lično biraš i odobravaš i da svaku verziju čuvaš u folderu, ili ako koristiš mogućnosti koje alat zadržava samo za svoju aplikaciju.</p>
+            <p data-i18n="g.api.means.1.p">Higgsfield, Ideogram i Runway, i Krea kada se prijaviš: agent može sam da generiše. I na MCP server Kling se prijavljuješ svojim nalogom; čije kredite troši, aplikacije ili API-ja, nije navedeno. Asset Prompter je tu opcion. Kako kaže odgovor na početnoj stranici, i dalje pomaže ako želiš da svaki rezultat lično biraš i odobravaš i da svaku verziju čuvaš u folderu, ili ako koristiš mogućnosti koje alat zadržava samo za svoju aplikaciju.</p>
             <h3 data-i18n="g.api.means.2.h">Ima API koji se naplaćuje odvojeno od pretplate</h3>
             <p data-i18n="g.api.means.2.p">ChatGPT Images, Gemini API (Veo, Nano Banana), Grok Imagine, Leonardo.Ai i Luma: agent može da generiše preko skripte ili MCP servera sa API ključem, a ti plaćaš svako generisanje, pored pretplate koju možda već imaš.</p>
             <h3 data-i18n="g.api.means.3.h">Nema API</h3>
@@ -578,7 +578,7 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="checked" data-i18n="g.api.how.h">Kako je ovo provereno</h2>
-            <p data-i18n="g.api.how.p1">Svaki red je proveren 8. oktobra 2026. u dokumentaciji, centru za pomoć ili GitHub repozitorijumu samog proizvođača, koji su navedeni u redu. Gde izjava samog proizvođača nije pronađena, ćelija to i kaže. Cene su izostavljene: menjaju se češće od ove stranice.</p>
+            <p data-i18n="g.api.how.p1">Svaki red je proveren 8. oktobra 2026. u dokumentaciji, centru za pomoć ili GitHub repozitorijumu samog proizvođača, koji su navedeni u redu. GitHub repozitorijumi i Anthropicov centar za pomoć pročitani su na samoj stranici; sajtovi ostalih proizvođača nisu se otvarali odande gde je ovaj vodič pisan, pa su njihove reči pročitane u kopiji iste stranice kod pretraživača. Gde izjava samog proizvođača nije pronađena, ćelija to i kaže. Cene su izostavljene: menjaju se češće od ove stranice.</p>
             <p data-i18n="g.api.how.p2">Nazivi proizvoda pripadaju svojim vlasnicima. Asset Prompter je nezavisan projekat: nije povezan ni sa jednim od njih, niti ga iko od njih podržava. Vidiš grešku? <a href="https://github.com/Djordje1998/asset-prompter/issues" target="_blank" rel="noopener">Prijavi je na GitHubu</a>.</p>
             <h2 id="changes" data-i18n="g.api.log.h">Šta se promenilo</h2>
             <ul data-i18n="g.api.log.list"><li><time datetime="2026-10-08">8. oktobra 2026.</time>: prva verzija.</li></ul>

@@ -437,7 +437,7 @@
                   <th scope="row">Google Flow</th>
                   <td data-i18n="g.api.a.3.1"><span class="tag t-generate">No</span> No API for Flow itself. Its models, Veo 3.1 for video and Nano Banana for images, are in Google's Gemini API and on Vertex AI.</td>
                   <td data-i18n="g.api.a.3.2">Billed apart. Google: the benefits of a Google AI plan apply in the AI Studio web app; using the Gemini API with an API key is billed separately.</td>
-                  <td data-i18n="g.api.a.3.3"><span class="tag t-review">Not found</span> None for Flow. Google's list of its MCP servers names Genmedia (Gemini image models, Veo) on Google Cloud, whose README says <q>This is not an officially supported Google product.</q></td>
+                  <td data-i18n="g.api.a.3.3"><span class="tag t-review">Not found</span> None for Flow. Google's list of MCP servers names Genmedia, <q>including Imagen and Veo models</q>; Genmedia's own README lists Gemini Image and Veo, marks Imagen deprecated and says <q>This is not an officially supported Google product.</q></td>
                   <td data-i18n="g.api.a.3.4"><span class="src"><a href="https://ai.google.dev/gemini-api/docs/veo" target="_blank" rel="noopener">Gemini API: Veo</a>; <a href="https://ai.google.dev/gemini-api/docs/google-ai-plans" target="_blank" rel="noopener">Google AI plans</a>; <a href="https://github.com/google/mcp" target="_blank" rel="noopener">google/mcp</a>; <a href="https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia" target="_blank" rel="noopener">Genmedia README</a></span></td>
                 </tr>
                 <tr>
@@ -474,8 +474,9 @@
           <div class="prose">
             <h2 id="mcp-plan" data-i18n="g.api.b.h">Generators with an official MCP server on your account</h2>
             <p data-i18n="g.api.b.p">
-              With these, an agent can generate by itself on what you already pay for. The home page names them in
-              <a href="/#mcp">"To your agent, the same steps as an MCP server"</a>.
+              With these, an agent can generate by itself on what you already pay for. The home page names Higgsfield, Kling and
+              Runway in <a href="/#mcp">"To your agent, the same steps as an MCP server"</a>, and Higgsfield, Ideogram, Krea and
+              Runway in <a href="/#questions">"Before you try it"</a>.
             </p>
           </div>
           <section class="table-wrap guide-wide" aria-labelledby="t-mcp" tabindex="0">
@@ -499,7 +500,7 @@
                 <tr>
                   <th scope="row">Ideogram</th>
                   <td data-i18n="g.api.b.2.1"><code>https://mcp.ideogram.ai/mcp</code>; you sign in with your Ideogram account (OAuth), no API key.</td>
-                  <td data-i18n="g.api.b.2.2">Your plan. Ideogram: <q>Usage through the MCP draw from the same subscription as the web app.</q></td>
+                  <td data-i18n="g.api.b.2.2">Your plan. Ideogram says MCP use draws on the same subscription as its web app, with no separate billing for it.</td>
                   <td data-i18n="g.api.b.2.3"><span class="src"><a href="https://ideogram.ai/features/mcp/" target="_blank" rel="noopener">Ideogram MCP</a></span></td>
                 </tr>
                 <tr>
@@ -565,7 +566,7 @@
                 </tr>
                 <tr>
                   <th scope="row">Claude Code (Anthropic)</th>
-                  <td data-i18n="g.api.c.5.1">No image generation of its own. Anthropic's help centre: Claude isn't built to produce photos or illustrations the way image tools are; it can view the images you give it.</td>
+                  <td data-i18n="g.api.c.5.1">No image generation of its own. Anthropic's help centre: <q>Claude doesn’t generate photos or illustrations the way image-generation tools do.</q> It can draw diagrams and charts in HTML and SVG, and view the images you give it.</td>
                   <td data-i18n="g.api.c.5.2">Nothing to bill.</td>
                   <td data-i18n="g.api.c.5.3"><span class="src"><a href="https://support.claude.com/en/articles/9002504-can-claude-produce-images" target="_blank" rel="noopener">Claude help centre</a></span></td>
                 </tr>
@@ -581,8 +582,8 @@
             <h2 id="means" data-i18n="g.api.means.h">What this means for your coding agent</h2>
             <h3 data-i18n="g.api.means.1.h">The generator has an official MCP server on your plan</h3>
             <p data-i18n="g.api.means.1.p">
-              Higgsfield, Ideogram and Runway, and Krea when you sign in: the agent can generate by itself. Asset Prompter is
-              optional there. As the home page's answer puts it, it still helps if you want to choose and approve every result
+              Higgsfield, Ideogram and Runway, and Krea when you sign in: the agent can generate by itself. Kling's server signs
+              in with your account too; whose credits it uses, the app's or the API's, is not stated. Asset Prompter is optional there. As the home page's answer puts it, it still helps if you want to choose and approve every result
               yourself and keep each version in the folder, or if you use features the tool keeps to its own app.
             </p>
             <h3 data-i18n="g.api.means.2.h">It has an API, billed apart from your plan</h3>
@@ -607,7 +608,9 @@
             <h2 id="checked" data-i18n="g.api.how.h">How this was checked</h2>
             <p data-i18n="g.api.how.p1">
               Each row was checked on 8 October 2026 against the vendor's own documentation, help centre or GitHub repository,
-              linked in the row. Where no first-party statement was found, the cell says so. Prices are left out: they change
+              linked in the row. The GitHub repositories and Anthropic's help centre were read on the page itself; the other
+              vendors' sites did not open from where this guide was written, so their words were read in a search engine's copy
+              of the same page. Where no first-party statement was found, the cell says so. Prices are left out: they change
               more often than this page.
             </p>
             <p data-i18n="g.api.how.p2">

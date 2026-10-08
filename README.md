@@ -209,7 +209,7 @@ Longer answers that do not fit the one page, each a page of its own under `guide
 | Address | What it answers |
 | --- | --- |
 | `/guides/` | The list of guides (`CollectionPage`). |
-| `/guides/how-this-site-was-made/` | How the site's pictures were made: the six slots, the slot folder, the Google Flow preset, the frame sheets and motion map of the hero's clip, the export to WebP, H.264 and AV1, and one revision as the app shows it (`Article`). |
+| `/guides/how-this-site-was-made/` | How the site's pictures were made: the slots, the slot folder, the Google Flow preset, the frame sheets and motion map of the hero's clip, the export to WebP, H.264 and AV1, and one revision as the app shows it (`Article`). |
 | `/guides/image-generators-api-mcp/` | Which generators and agents have an API, an official MCP server or image generation of their own, and how each bills: three tables, every row with its sources (`TechArticle`). |
 | `/guides/get-images-into-coding-agent-project/` | The five ways to get images into an agent's project, side by side, and when you don't need Asset Prompter (`TechArticle`). |
 

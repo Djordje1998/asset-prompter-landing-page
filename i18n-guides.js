@@ -27,7 +27,7 @@ const SR = {
   "g.hub.lead": "Beleške iz prve ruke od autora Asset Promptera, svaka sa datumom i izvorima.",
   "g.hub.made.h": "Kako su nastale slike na ovom sajtu",
   "g.hub.made.p":
-    "Šest slotova iza ilustracija i klipova ovog sajta, kako je agent proverio klip koji ne može da gleda i kako su odobreni fajlovi postali ovi koje vidiš.",
+    "Slotovi iza ilustracija i klipova ovog sajta, kako je agent proverio klip koji ne može da gleda i kako su odobreni fajlovi postali ovi koje vidiš.",
   "g.hub.api.h": "Koji generatori slika i videa imaju API ili MCP server",
   "g.hub.api.p":
     "Tabela sa datumom, za dvanaest generatora i pet agenata za programiranje: ko ima javni API, ko ima zvanični MCP server i šta se za koji plaća pored tvoje pretplate.",
@@ -36,33 +36,35 @@ const SR = {
     "Ugrađeni alati, MCP serveri, plaćeni API, kopiranje i lepljenje ili zajednički folder: ko u kom slučaju pritiska „Generate”, koliko to košta i kada ti Asset Prompter ne treba.",
 
   /* ---- /guides/how-this-site-was-made/ ---- */
-  "g.made.title": "Kako su slike ovog sajta napravljene u alatu Google Flow",
+  "g.made.title": "Kako su ilustracije sajta napravljene u alatu Google Flow",
   "g.made.description":
-    "Pravi fajlovi iza ilustracija i klipova ovog sajta: slotovi Asset Promptera, Google Flow, listovi sa frejmovima, mapa pokreta i izvoz, korak po korak.",
+    "Pravi fajlovi iza slika ovog sajta: slotovi Asset Promptera, ilustracije generisane u alatu Google Flow, listovi sa frejmovima i mapa pokreta klipa, izvoz.",
   "g.made.crumb": "Kako je nastao ovaj sajt",
   "g.made.h1": "Kako su nastale slike na ovom sajtu",
   "g.made.lead":
     "Piše u podnožju: ilustracije su generisane ručno u alatu Google Flow, preko Asset Promptera. Evo slotova, fajlova i koraka iza njih.",
-  "g.made.1.h": "Jedan projekat, šest slotova",
+  "g.made.1.h": "Jedan projekat, slot za svaki aset",
   "g.made.1.p1":
-    'Svaka ilustracija i svaki klip na <a href="/">početnoj stranici</a> nastali su u jednom projektu Asset Promptera, <code>asset-prompter-landing</code>. Svaka slika je tražena kao <strong>slot</strong>, folder za jedan aset, i svaki fajl na sajtu nosi ime svog slota: <code>&lt;slot&gt;.webp</code> za sliku, <code>&lt;slot&gt;.mp4</code> za njen klip. Ilustracije su generisane ručno u alatu Google Flow.',
-  "g.made.t.caption": "Šest slotova i gde su njihovi fajlovi na početnoj stranici. Dimenzije su izmerene na fajlovima 8. oktobra 2026.",
+    'Svaka ilustracija i svaki klip na <a href="/">početnoj stranici</a> nastali su u jednom projektu Asset Promptera, <code>asset-prompter-landing</code>. Svaki je tražen kao <strong>slot</strong>, folder za jedan aset. Svaki fajl na sajtu nosi ime slota svoje slike: <code>&lt;slot&gt;.webp</code> za sliku, <code>&lt;slot&gt;.mp4</code> za klip koji počinje njome. Ilustracije su generisane ručno u alatu Google Flow.',
+  "g.made.t.caption": "Slotovi iza fajlova na početnoj stranici i gde su ti fajlovi. Dimenzije su izmerene na fajlovima 8. oktobra 2026.",
   "g.made.t.slot": "Slot",
   "g.made.t.kind": "Vrsta",
   "g.made.t.where": "Gde je na početnoj stranici",
   "g.made.t.file": "Fajl na sajtu",
-  "g.made.t.1.kind": "Slika i njen klip",
-  "g.made.t.1.where": 'Vrh stranice i <a href="/#agent">„Proverava klip koji ne može da pusti”</a>',
-  "g.made.t.1.file": "<code>assets/art/loop-relay.webp</code>, 1280 × 714; <code>loop-relay.mp4</code> i <code>loop-relay-av1.mp4</code>",
-  "g.made.t.2.kind": "Video slot",
-  "g.made.t.2.where": 'List sa frejmovima 003 i mapa pokreta njegove verzije 2, u <a href="/#agent">„Proverava klip koji ne može da pusti”</a>',
+  "g.made.t.1.kind": "Slika",
+  "g.made.t.1.where": "Vrh stranice, kao slika pre nego što krene njen klip",
+  "g.made.t.2.kind": "Video slot: klip sa vrha stranice",
+  "g.made.t.2.where":
+    'Vrh stranice i <a href="/#agent">„Proverava klip koji ne može da pusti”</a>, sa listom sa frejmovima 003 i mapom pokreta njegove verzije 2',
+  "g.made.t.2.file":
+    "<code>assets/art/loop-relay.mp4</code> i <code>loop-relay-av1.mp4</code>; <code>assets/demo/clip-loop-relay-frames.webp</code>, 1280 × 720; <code>clip-loop-relay-motion.webp</code>, 640 × 360",
   "g.made.t.3.kind": "Slika",
   "g.made.t.3.where": '<a href="/#mcp">„Za tvog agenta, isti koraci kao sa MCP serverom”</a>',
   "g.made.t.4.kind": "Slika",
   "g.made.t.4.where": '<a href="/#why">„Bez njega, kurir si ti”</a>',
   "g.made.t.5.kind": "Slika",
   "g.made.t.5.where": '<a href="/#tradeoffs">„Sam ne generiše ništa”</a>',
-  "g.made.t.6.kind": "Slika i njen klip",
+  "g.made.t.6.kind": "Slika i klip koji počinje njome (njegov video slot ovde nije zabeležen)",
   "g.made.t.6.where": "Završna sekcija, „Daj svom agentu način da traži slike.”",
   "g.made.t.6.file": "<code>assets/art/gallery-full.webp</code>, 1280 × 714; <code>gallery-full.mp4</code> i <code>gallery-full-av1.mp4</code>",
   "g.made.1.p2":
@@ -98,15 +100,16 @@ const SR = {
   "g.made.3.p1":
     'Agent ne može da gleda video. Zato za svaki klip koji prevučeš na karticu aplikacija pokreće ffmpeg i pretvara ga u slike i brojeve koje agent može da pročita (<a href="https://github.com/Djordje1998/asset-prompter/blob/master/src/server/analysis.ts" target="_blank" rel="noopener">src/server/analysis.ts</a>):',
   "g.made.3.list":
-    "<li><strong>Listovi sa frejmovima</strong>: četiri frejma u sekundi, na 250 ms jedan od drugog, u mreži 2 × 2, 640 px po dužoj strani. Po jedan list za svaku sekundu, pa osmosekundni klip ispod ima osam listova, od <code>001.jpg</code> do <code>008.jpg</code>, koji se čitaju sleva nadesno, odozgo nadole.</li>\n" +
+    "<li><strong>Listovi sa frejmovima</strong>: četiri frejma u sekundi, na 250 ms jedan od drugog, u mreži 2 × 2, svaki frejm 640 px po dužoj strani, pa je list ovog klipa 1280 × 720. Po jedan list za svaku sekundu, pa osmosekundni klip ispod ima osam listova, od <code>001.jpg</code> do <code>008.jpg</code>, koji se čitaju sleva nadesno, odozgo nadole.</li>\n" +
     "              <li><strong><code>first-last.jpg</code></strong>: prvi i poslednji frejm jedan pored drugog, da se vidi da li se kraj klipa u petlji spaja sa njegovim početkom.</li>\n" +
     "              <li><strong><code>motion.jpg</code></strong>, mapa pokreta: crvenom bojom je označeno ono što se promenilo tokom klipa, preko zatamnjenog prvog frejma.</li>\n" +
     "              <li>Za svaku sekundu, koliko se slika pomerila u odnosu na prvi frejm i na prethodni, u procentima, u <code>info.md</code>.</li>",
   "g.made.3.p2":
     "Evo klipa sa vrha početne stranice, uz list sa frejmovima 003 i mapu pokreta slota <code>loop-relay-clip</code>, verzija 2. Klip na sajtu traje osam sekundi, 1280 × 720, 24 frejma u sekundi, bez zvučnog zapisa. Pokreni ga da ga pogledaš.",
+  "g.made.clip.alt": "Klip sa vrha početne stranice: robot pruža list sa promptom ka zajedničkom folderu, a osoba iz njega vadi sliku.",
   "g.made.3.p3":
     'Ono što slike ne mogu da prenesu je zvuk. Kao što početna stranica kaže među <a href="/#tradeoffs">kompromisima</a>: agent ne čuje, a provera zvuka u klipu je tvoj posao.',
-  "g.made.4.h": "Od odobrenog fajla do ove stranice",
+  "g.made.4.h": "Od odobrenog fajla do ovog sajta",
   "g.made.4.p1": "Kada je slot bio odobren, njegov konačni fajl je u četiri koraka stigao u repozitorijum ovog sajta:",
   "g.made.4.list":
     "<li>Odobri slot u Asset Prompteru.</li>\n" +
@@ -179,7 +182,7 @@ const SR = {
   "g.api.a.3.2":
     "Naplaćuje se odvojeno. Google: pogodnosti Google AI pretplate važe u veb-aplikaciji AI Studio; korišćenje Gemini API-ja sa API ključem naplaćuje se posebno.",
   "g.api.a.3.3":
-    '<span class="tag t-review">Nije pronađeno</span> Za Flow ga nema. Googleov spisak njegovih MCP servera navodi Genmedia (Gemini modeli za slike, Veo) na Google Cloudu, čiji README kaže <q lang="en">This is not an officially supported Google product.</q>',
+    '<span class="tag t-review">Nije pronađeno</span> Za Flow ga nema. Googleov spisak MCP servera navodi Genmedia, <q lang="en">including Imagen and Veo models</q>; README samog Genmedia navodi Gemini Image i Veo, Imagen označava kao zastareo i kaže <q lang="en">This is not an officially supported Google product.</q>',
   "g.api.a.3.4":
     '<span class="src"><a href="https://ai.google.dev/gemini-api/docs/veo" target="_blank" rel="noopener">Gemini API: Veo</a>; <a href="https://ai.google.dev/gemini-api/docs/google-ai-plans" target="_blank" rel="noopener">Google AI pretplate</a>; <a href="https://github.com/google/mcp" target="_blank" rel="noopener">google/mcp</a>; <a href="https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia" target="_blank" rel="noopener">Genmedia README</a></span>',
   "g.api.a.4.1":
@@ -212,7 +215,7 @@ const SR = {
     '<span class="src"><a href="https://lumalabs.ai/learning-hub/dream-machine-credit-system" target="_blank" rel="noopener">Luma: sistem kredita</a>; <a href="https://github.com/lumalabs/luma-api-mcp" target="_blank" rel="noopener">lumalabs/luma-api-mcp</a></span>',
   "g.api.b.h": "Generatori sa zvaničnim MCP serverom na tvom nalogu",
   "g.api.b.p":
-    'Sa njima agent može sam da generiše, u okviru onoga što već plaćaš. Početna stranica ih navodi u <a href="/#mcp">„Za tvog agenta, isti koraci kao sa MCP serverom”</a>.',
+    'Sa njima agent može sam da generiše, u okviru onoga što već plaćaš. Početna stranica navodi Higgsfield, Kling i Runway u <a href="/#mcp">„Za tvog agenta, isti koraci kao sa MCP serverom”</a>, a Higgsfield, Ideogram, Krea i Runway u <a href="/#questions">„Pre nego što probaš”</a>.',
   "g.api.b.caption": "Zvanični MCP serveri na koje se prijavljuješ, provereno 8. oktobra 2026.",
   "g.api.b.h0": "Generator",
   "g.api.b.h1": "MCP server",
@@ -224,7 +227,7 @@ const SR = {
   "g.api.b.1.3":
     '<span class="src"><a href="https://higgsfield.ai/creator-hub/help-center/mcp-cli/how-do-i-connect-higgsfield-to-claude" target="_blank" rel="noopener">Higgsfield centar za pomoć</a></span>',
   "g.api.b.2.1": "<code>https://mcp.ideogram.ai/mcp</code>; prijavljuješ se svojim Ideogram nalogom (OAuth), bez API ključa.",
-  "g.api.b.2.2": 'Tvoju pretplatu. Ideogram: <q lang="en">Usage through the MCP draw from the same subscription as the web app.</q>',
+  "g.api.b.2.2": "Tvoju pretplatu. Ideogram kaže da korišćenje preko MCP-a troši istu pretplatu kao njegova veb aplikacija, bez posebne naplate.",
   "g.api.b.2.3": '<span class="src"><a href="https://ideogram.ai/features/mcp/" target="_blank" rel="noopener">Ideogram MCP</a></span>',
   "g.api.b.3.1": "<code>https://api.krea.ai/mcp</code>; prijavljuješ se svojim Krea nalogom (OAuth) ili koristiš API token.",
   "g.api.b.3.2":
@@ -270,14 +273,14 @@ const SR = {
   "g.api.c.4.3":
     '<span class="src"><a href="https://github.com/gemini-cli-extensions/nanobanana" target="_blank" rel="noopener">gemini-cli-extensions/nanobanana</a></span>',
   "g.api.c.5.1":
-    "Nema sopstveno generisanje slika. Centar za pomoć kompanije Anthropic: Claude nije napravljen da pravi fotografije ili ilustracije kao alati za slike; može da pregleda slike koje mu daš.",
+    'Nema sopstveno generisanje slika. Centar za pomoć kompanije Anthropic: <q lang="en">Claude doesn’t generate photos or illustrations the way image-generation tools do.</q> Može da nacrta dijagrame i grafikone u HTML-u i SVG-u i da pregleda slike koje mu daš.',
   "g.api.c.5.2": "Nema šta da se naplati.",
   "g.api.c.5.3":
     '<span class="src"><a href="https://support.claude.com/en/articles/9002504-can-claude-produce-images" target="_blank" rel="noopener">Claude centar za pomoć</a></span>',
   "g.api.means.h": "Šta to znači za tvog agenta za programiranje",
   "g.api.means.1.h": "Generator ima zvanični MCP server u okviru tvoje pretplate",
   "g.api.means.1.p":
-    "Higgsfield, Ideogram i Runway, i Krea kada se prijaviš: agent može sam da generiše. Asset Prompter je tu opcion. Kako kaže odgovor na početnoj stranici, i dalje pomaže ako želiš da svaki rezultat lično biraš i odobravaš i da svaku verziju čuvaš u folderu, ili ako koristiš mogućnosti koje alat zadržava samo za svoju aplikaciju.",
+    "Higgsfield, Ideogram i Runway, i Krea kada se prijaviš: agent može sam da generiše. I na MCP server Kling se prijavljuješ svojim nalogom; čije kredite troši, aplikacije ili API-ja, nije navedeno. Asset Prompter je tu opcion. Kako kaže odgovor na početnoj stranici, i dalje pomaže ako želiš da svaki rezultat lično biraš i odobravaš i da svaku verziju čuvaš u folderu, ili ako koristiš mogućnosti koje alat zadržava samo za svoju aplikaciju.",
   "g.api.means.2.h": "Ima API koji se naplaćuje odvojeno od pretplate",
   "g.api.means.2.p":
     "ChatGPT Images, Gemini API (Veo, Nano Banana), Grok Imagine, Leonardo.Ai i Luma: agent može da generiše preko skripte ili MCP servera sa API ključem, a ti plaćaš svako generisanje, pored pretplate koju možda već imaš.",
@@ -286,7 +289,7 @@ const SR = {
     'Midjourney i Google Flow: agent ne može da pritisne „Generate”. Automatizovanje veb-aplikacije krši uslove korišćenja servisa Midjourney. Ostaje da promptove i fajlove prenosiš ručno, ili preko zajedničkog foldera kao što je onaj u Asset Prompteru; vodič <a href="/guides/get-images-into-coding-agent-project/">pet načina da slike stignu u projekat tvog agenta</a> ih poredi, a <a href="/guides/how-this-site-was-made/">kako su nastale slike ovog sajta</a> pokazuje folder sa alatom Flow.',
   "g.api.how.h": "Kako je ovo provereno",
   "g.api.how.p1":
-    "Svaki red je proveren 8. oktobra 2026. u dokumentaciji, centru za pomoć ili GitHub repozitorijumu samog proizvođača, koji su navedeni u redu. Gde izjava samog proizvođača nije pronađena, ćelija to i kaže. Cene su izostavljene: menjaju se češće od ove stranice.",
+    "Svaki red je proveren 8. oktobra 2026. u dokumentaciji, centru za pomoć ili GitHub repozitorijumu samog proizvođača, koji su navedeni u redu. GitHub repozitorijumi i Anthropicov centar za pomoć pročitani su na samoj stranici; sajtovi ostalih proizvođača nisu se otvarali odande gde je ovaj vodič pisan, pa su njihove reči pročitane u kopiji iste stranice kod pretraživača. Gde izjava samog proizvođača nije pronađena, ćelija to i kaže. Cene su izostavljene: menjaju se češće od ove stranice.",
   "g.api.how.p2":
     'Nazivi proizvoda pripadaju svojim vlasnicima. Asset Prompter je nezavisan projekat: nije povezan ni sa jednim od njih, niti ga iko od njih podržava. Vidiš grešku? <a href="https://github.com/Djordje1998/asset-prompter/issues" target="_blank" rel="noopener">Prijavi je na GitHubu</a>.',
   "g.api.log.h": "Šta se promenilo",
@@ -313,7 +316,7 @@ const SR = {
   "g.ways.facts.5": "Izaberi ovo kada",
   "g.ways.1.1": "Agent.",
   "g.ways.1.2":
-    "Na Codexu ništa: koristi Codex limite ChatGPT pretplate, koje potezi sa slikama brže troše. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.",
+    "Na Codexu ništa pored plaćene ChatGPT pretplate: potezi sa slikama troše njene Codex limite, brže od ostalih poteza, a besplatna pretplata ih nema. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.",
   "g.ways.1.3": "Sliku koju je napravio.",
   "g.ways.1.4":
     "Tamo gde ih alat čuva. Cursor ih podrazumevano čuva u folderu <code>assets/</code> projekta. Codex ih drži u <code>$CODEX_HOME/generated_images/</code>, a njegov skill za slike kaže agentu da ono što projekat koristi kopira u projekat, kao nov fajl, na primer <code>hero-v2.png</code>, a ne preko starog.",
@@ -353,6 +356,8 @@ const SR = {
   "g.ways.5.5": "Tvoj generator nema API ili želiš poslednju reč o svakoj slici.",
   "g.ways.5.more":
     'Setup radi na Windowsu i Linuxu; na macOS-u Bun instaliraš ručno. <a href="/#loop">Šest koraka na početnoj stranici</a> pokazuju jednu sliku kroz ceo krug.',
+  "g.ways.result.alt":
+    "Kartica slota sa tvojom slikom: trpezarija na svemirskoj stanici. Kartica nosi oznaku „Agent's turn” i dugmad „Approve v1” i „Request changes”.",
   "g.ways.5.caption": "Kartica slota kada na nju prevučeš svoj rezultat: sada je red na agenta.",
   "g.ways.cmp.h": "Uporedo",
   "g.ways.cmp.p": "„Zavisi” znači da to zavisi od alata ili od onoga što tražiš od agenta.",
