@@ -228,7 +228,7 @@ const SR = {
   "g.api.b.2.3": '<span class="src"><a href="https://ideogram.ai/features/mcp/" target="_blank" rel="noopener">Ideogram MCP</a></span>',
   "g.api.b.3.1": "<code>https://api.krea.ai/mcp</code>; prijavljuješ se svojim Krea nalogom (OAuth) ili koristiš API token.",
   "g.api.b.3.2":
-    "Kad si prijavljen: računske jedinice (compute units) radnog prostora koji izabereš, kao i aplikacija. Sa tokenom: API stanje radnog prostora u dolarima, koje je odvojeno.",
+    "Uz prijavu: računske jedinice (compute units) radnog prostora koji izabereš, kao i aplikacija. Sa tokenom: API stanje radnog prostora u dolarima, koje je odvojeno.",
   "g.api.b.3.3":
     '<span class="src"><a href="https://www.krea.ai/docs/developers/mcp" target="_blank" rel="noopener">Krea: MCP</a>; <a href="https://www.krea.ai/docs/developers/api-keys-and-billing" target="_blank" rel="noopener">Krea: API ključevi i naplata</a></span>',
   "g.api.b.4.1":
@@ -288,7 +288,7 @@ const SR = {
   "g.api.how.p1":
     "Svaki red je proveren 8. oktobra 2026. u dokumentaciji, centru za pomoć ili GitHub repozitorijumu samog proizvođača, koji su navedeni u redu. Gde izjava samog proizvođača nije pronađena, ćelija to i kaže. Cene su izostavljene: menjaju se češće od ove stranice.",
   "g.api.how.p2":
-    'Nazivi proizvoda pripadaju svojim vlasnicima. Asset Prompter je nezavisan projekat: nije povezan ni sa jednim od njih, niti ga iko od njih podržava. Našao si grešku? <a href="https://github.com/Djordje1998/asset-prompter/issues" target="_blank" rel="noopener">Prijavi je na GitHubu</a>.',
+    'Nazivi proizvoda pripadaju svojim vlasnicima. Asset Prompter je nezavisan projekat: nije povezan ni sa jednim od njih, niti ga iko od njih podržava. Vidiš grešku? <a href="https://github.com/Djordje1998/asset-prompter/issues" target="_blank" rel="noopener">Prijavi je na GitHubu</a>.',
   "g.api.log.h": "Šta se promenilo",
   "g.api.log.list": '<li><time datetime="2026-10-08">8. oktobra 2026.</time>: prva verzija.</li>',
 
@@ -302,7 +302,7 @@ const SR = {
     "Claude Code, Codex i Cursor znaju koje slike su projektu potrebne. Kako fajlovi stižu tamo zavisi od tvog generatora. Evo pet načina, pošteno upoređenih.",
   "g.ways.short.h": "Kratak odgovor",
   "g.ways.short.p":
-    'Ako tvoj agent ima ugrađen alat za slike i njegov model je dovoljno dobar, koristi njega. Ako tvoj generator ima zvanični MCP server u okviru tvoje pretplate, poveži ga. Ako ima samo API, možeš da ga plaćaš po slici. Ako nema ništa od toga, kao Midjourney i Google Flow, fajlove prenosiš sam: ručno ili preko zajedničkog foldera kao što je onaj u Asset Prompteru. Načini ispod idu od onog koji od tebe traži najmanje posla do onog koji traži najviše; činjenice iza svakog su u <a href="/guides/image-generators-api-mcp/">tabeli generatora i agenata</a>, proverenoj 8. oktobra 2026.',
+    'Ako tvoj agent ima ugrađen alat za slike i njegov model je dovoljno dobar, koristi njega. Ako tvoj generator ima zvanični MCP server u okviru tvoje pretplate, poveži ga. Ako ima samo API, možeš da ga plaćaš po slici. Ako nema ništa od toga, kao Midjourney i Google Flow, fajlove prenosiš ti: ručno ili preko zajedničkog foldera kao što je onaj u Asset Prompteru. Načini ispod idu od onog koji od tebe traži najmanje posla do onog koji traži najviše; činjenice iza svakog su u <a href="/guides/image-generators-api-mcp/">tabeli generatora i agenata</a>, proverenoj 8. oktobra 2026.',
   "g.ways.1.h": "1. Agentov sopstveni alat za slike",
   "g.ways.1.p":
     "Codex ima ugrađeni alat <code>image_gen</code>, Cursorov agent generiše slike od verzije 2.4, agent u Antigravityju sam odlučuje kada da pozove model za slike, a Gemini CLI ima proširenje <code>nanobanana</code>.",
@@ -410,7 +410,7 @@ const SR = {
   "g.ways.need.no.2": "Trebaju ti serije koje se izvršavaju dok nisi tu.",
   "g.ways.need.no.3": "Treba ti jedna ili dve slike, jednom.",
   "g.ways.need.no.4": "Radiš u prozoru za čet u pregledaču, a ne sa agentom koji radi sa fajlovima: aplikaciji treba agent koji to ume.",
-  "g.ways.need.no.5": "Na macOS-u si i ne želiš sam da instaliraš Bun.",
+  "g.ways.need.no.5": "Radiš na macOS-u i ne želiš da Bun instaliraš ručno.",
   "g.ways.need.yes.5": "Želiš da agent proverava tvoje video klipove, kroz listove sa frejmovima i mapu pokreta.",
   "g.ways.next":
     'Dalje: <a href="/guides/how-this-site-was-made/">kako su uz njega nastale slike ovog sajta</a>, korak po korak, i <a href="/#install">dva načina da ga instaliraš</a>.',

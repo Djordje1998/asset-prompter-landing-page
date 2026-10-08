@@ -80,12 +80,18 @@
               root.style.scrollBehavior = "";
               return scrollY;
             };
-            var landed = go();
-            if (document.fonts) {
-              document.fonts.ready.then(function () {
-                if (scrollY === landed) go();
-              });
-            }
+            // Once the stylesheet is in (it holds the first paint, but not DOMContentLoaded).
+            var css = document.querySelector('link[rel="stylesheet"]');
+            var start = function () {
+              var landed = go();
+              if (document.fonts) {
+                document.fonts.ready.then(function () {
+                  if (scrollY === landed) go();
+                });
+              }
+            };
+            if (!css || css.sheet) start();
+            else css.addEventListener("load", start);
           });
         }
       })();
@@ -324,7 +330,7 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="short" data-i18n="g.ways.short.h">Kratak odgovor</h2>
-            <p data-i18n="g.ways.short.p">Ako tvoj agent ima ugrađen alat za slike i njegov model je dovoljno dobar, koristi njega. Ako tvoj generator ima zvanični MCP server u okviru tvoje pretplate, poveži ga. Ako ima samo API, možeš da ga plaćaš po slici. Ako nema ništa od toga, kao Midjourney i Google Flow, fajlove prenosiš sam: ručno ili preko zajedničkog foldera kao što je onaj u Asset Prompteru. Načini ispod idu od onog koji od tebe traži najmanje posla do onog koji traži najviše; činjenice iza svakog su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora i agenata</a>, proverenoj 8. oktobra 2026.</p>
+            <p data-i18n="g.ways.short.p">Ako tvoj agent ima ugrađen alat za slike i njegov model je dovoljno dobar, koristi njega. Ako tvoj generator ima zvanični MCP server u okviru tvoje pretplate, poveži ga. Ako ima samo API, možeš da ga plaćaš po slici. Ako nema ništa od toga, kao Midjourney i Google Flow, fajlove prenosiš ti: ručno ili preko zajedničkog foldera kao što je onaj u Asset Prompteru. Načini ispod idu od onog koji od tebe traži najmanje posla do onog koji traži najviše; činjenice iza svakog su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora i agenata</a>, proverenoj 8. oktobra 2026.</p>
           </div>
         </div>
       </section>
@@ -547,7 +553,7 @@
                 <li data-i18n="g.ways.need.no.2">Trebaju ti serije koje se izvršavaju dok nisi tu.</li>
                 <li data-i18n="g.ways.need.no.3">Treba ti jedna ili dve slike, jednom.</li>
                 <li data-i18n="g.ways.need.no.4">Radiš u prozoru za čet u pregledaču, a ne sa agentom koji radi sa fajlovima: aplikaciji treba agent koji to ume.</li>
-                <li data-i18n="g.ways.need.no.5">Na macOS-u si i ne želiš sam da instaliraš Bun.</li>
+                <li data-i18n="g.ways.need.no.5">Radiš na macOS-u i ne želiš da Bun instaliraš ručno.</li>
               </ul>
             </div>
             <div class="fit-col t-approved">

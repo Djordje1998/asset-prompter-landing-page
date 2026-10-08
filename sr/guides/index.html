@@ -80,12 +80,18 @@
               root.style.scrollBehavior = "";
               return scrollY;
             };
-            var landed = go();
-            if (document.fonts) {
-              document.fonts.ready.then(function () {
-                if (scrollY === landed) go();
-              });
-            }
+            // Once the stylesheet is in (it holds the first paint, but not DOMContentLoaded).
+            var css = document.querySelector('link[rel="stylesheet"]');
+            var start = function () {
+              var landed = go();
+              if (document.fonts) {
+                document.fonts.ready.then(function () {
+                  if (scrollY === landed) go();
+                });
+              }
+            };
+            if (!css || css.sheet) start();
+            else css.addEventListener("load", start);
           });
         }
       })();

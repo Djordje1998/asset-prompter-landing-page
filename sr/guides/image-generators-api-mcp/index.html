@@ -80,12 +80,18 @@
               root.style.scrollBehavior = "";
               return scrollY;
             };
-            var landed = go();
-            if (document.fonts) {
-              document.fonts.ready.then(function () {
-                if (scrollY === landed) go();
-              });
-            }
+            // Once the stylesheet is in (it holds the first paint, but not DOMContentLoaded).
+            var css = document.querySelector('link[rel="stylesheet"]');
+            var start = function () {
+              var landed = go();
+              if (document.fonts) {
+                document.fonts.ready.then(function () {
+                  if (scrollY === landed) go();
+                });
+              }
+            };
+            if (!css || css.sheet) start();
+            else css.addEventListener("load", start);
           });
         }
       })();
@@ -484,7 +490,7 @@
                 <tr>
                   <th scope="row">Krea</th>
                   <td data-i18n="g.api.b.3.1"><code>https://api.krea.ai/mcp</code>; prijavljuješ se svojim Krea nalogom (OAuth) ili koristiš API token.</td>
-                  <td data-i18n="g.api.b.3.2">Kad si prijavljen: računske jedinice (compute units) radnog prostora koji izabereš, kao i aplikacija. Sa tokenom: API stanje radnog prostora u dolarima, koje je odvojeno.</td>
+                  <td data-i18n="g.api.b.3.2">Uz prijavu: računske jedinice (compute units) radnog prostora koji izabereš, kao i aplikacija. Sa tokenom: API stanje radnog prostora u dolarima, koje je odvojeno.</td>
                   <td data-i18n="g.api.b.3.3"><span class="src"><a href="https://www.krea.ai/docs/developers/mcp" target="_blank" rel="noopener">Krea: MCP</a>; <a href="https://www.krea.ai/docs/developers/api-keys-and-billing" target="_blank" rel="noopener">Krea: API ključevi i naplata</a></span></td>
                 </tr>
                 <tr>
@@ -573,7 +579,7 @@
           <div class="prose">
             <h2 id="checked" data-i18n="g.api.how.h">Kako je ovo provereno</h2>
             <p data-i18n="g.api.how.p1">Svaki red je proveren 8. oktobra 2026. u dokumentaciji, centru za pomoć ili GitHub repozitorijumu samog proizvođača, koji su navedeni u redu. Gde izjava samog proizvođača nije pronađena, ćelija to i kaže. Cene su izostavljene: menjaju se češće od ove stranice.</p>
-            <p data-i18n="g.api.how.p2">Nazivi proizvoda pripadaju svojim vlasnicima. Asset Prompter je nezavisan projekat: nije povezan ni sa jednim od njih, niti ga iko od njih podržava. Našao si grešku? <a href="https://github.com/Djordje1998/asset-prompter/issues" target="_blank" rel="noopener">Prijavi je na GitHubu</a>.</p>
+            <p data-i18n="g.api.how.p2">Nazivi proizvoda pripadaju svojim vlasnicima. Asset Prompter je nezavisan projekat: nije povezan ni sa jednim od njih, niti ga iko od njih podržava. Vidiš grešku? <a href="https://github.com/Djordje1998/asset-prompter/issues" target="_blank" rel="noopener">Prijavi je na GitHubu</a>.</p>
             <h2 id="changes" data-i18n="g.api.log.h">Šta se promenilo</h2>
             <ul data-i18n="g.api.log.list"><li><time datetime="2026-10-08">8. oktobra 2026.</time>: prva verzija.</li></ul>
           </div>
