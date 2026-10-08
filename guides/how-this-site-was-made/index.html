@@ -4,13 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title data-i18n="g.made.title">How this site's art was made with Google Flow</title>
-    <meta name="description" data-i18n-content="g.made.description" content="The real files behind this site&#x27;s illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
+    <meta name="description" data-i18n-content="g.made.description" content="The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="author" content="Đorđe Novaković" />
     <!-- A guide sits two folders down, so every address in it starts at the root, as in 404.html. Its Serbian copy,
-         when there is one, is the same path under /sr/ and is named by a third hreflang link. -->
+         made by tools/build-sr.mjs, is the same path under /sr/; both name both in their hreflang links. -->
     <link rel="canonical" href="https://assetprompter.com/guides/how-this-site-was-made/" />
     <link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/how-this-site-was-made/" />
+    <link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/guides/how-this-site-was-made/" />
     <link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/how-this-site-was-made/" />
     <!-- The language. A reader who chose Serbian (with the language link of a guide, or the menu of the home page; both
          keep the choice in localStorage) and opens an English guide goes on to its Serbian copy, which the hreflang
@@ -30,14 +31,68 @@
           if (root.lang === "en" && (asked === "sr" || (saved === "sr" && asked !== "en"))) location.replace(path + location.hash);
           else if (root.lang !== "en" && asked === "en") location.replace(path + "?lang=en" + location.hash);
         }
-        // Following a language link keeps that choice, as the menu of the home page does.
+        // The parts of the page, the same in both languages. A place is one of them and how far into it the window's
+        // top is, since the other language's text runs to other heights (as main.js does on the home page).
+        var parts = function () {
+          return document.querySelectorAll("main > section, body > footer");
+        };
+        // Following a language link keeps that choice, as the menu of the home page does, and the reader's place. The
+        // other page takes the place of this one in the history, so Back does not lead to a page the choice sends on.
+        // With a modifier the link opens as any link does.
         document.addEventListener("click", function (event) {
           var link = event.target.closest && event.target.closest("a[data-lang]");
-          if (!link) return;
+          if (!link || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          var lang = link.getAttribute("data-lang");
+          var kept = false;
           try {
-            localStorage.setItem("lang", link.getAttribute("data-lang"));
+            localStorage.setItem("lang", lang);
+            kept = localStorage.getItem("lang") === lang;
           } catch (e) {}
+          try {
+            var all = parts();
+            for (var i = all.length - 1; i >= 0; i--) {
+              var box = all[i].getBoundingClientRect();
+              if (box.top <= 0 || i === 0) {
+                sessionStorage.setItem("guide-place", JSON.stringify({ i: i, f: Math.max(0, Math.min(1, -box.top / box.height)), at: Date.now() }));
+                break;
+              }
+            }
+          } catch (e) {}
+          event.preventDefault();
+          // A Serbian choice that could not be replaced would send the English guide back to the Serbian one.
+          location.replace(link.getAttribute("href") + (lang === "en" && !kept ? "?lang=en" : ""));
         });
+        // Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
+        var place = null;
+        try {
+          place = JSON.parse(sessionStorage.getItem("guide-place"));
+          sessionStorage.removeItem("guide-place");
+        } catch (e) {}
+        if (place && Date.now() - place.at < 10000) {
+          document.addEventListener("DOMContentLoaded", function () {
+            var part = parts()[place.i];
+            if (!part) return;
+            var go = function () {
+              // At once: the stylesheet's smooth scrolling would ease it.
+              root.style.scrollBehavior = "auto";
+              scrollTo(0, Math.round(part.getBoundingClientRect().top + scrollY + part.offsetHeight * place.f));
+              root.style.scrollBehavior = "";
+              return scrollY;
+            };
+            // Once the stylesheet is in (it holds the first paint, but not DOMContentLoaded).
+            var css = document.querySelector('link[rel="stylesheet"]');
+            var start = function () {
+              var landed = go();
+              if (document.fonts) {
+                document.fonts.ready.then(function () {
+                  if (scrollY === landed) go();
+                });
+              }
+            };
+            if (!css || css.sheet) start();
+            else css.addEventListener("load", start);
+          });
+        }
       })();
     </script>
     <meta name="theme-color" content="#19171d" />
@@ -46,8 +101,9 @@
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Asset Prompter" />
     <meta property="og:locale" data-i18n-content="og.locale" content="en_US" />
-    <meta property="og:title" data-i18n-content="g.made.title" content="How this site&#x27;s art was made with Google Flow" />
-    <meta property="og:description" data-i18n-content="g.made.description" content="The real files behind this site&#x27;s illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
+    <meta property="og:locale:alternate" data-i18n-content="og.locale.alt" content="sr_RS" />
+    <meta property="og:title" data-i18n-content="g.made.title" content="How this site's art was made with Google Flow" />
+    <meta property="og:description" data-i18n-content="g.made.description" content="The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
     <meta property="og:url" content="https://assetprompter.com/guides/how-this-site-was-made/" />
     <meta property="og:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
@@ -58,8 +114,8 @@
     <meta property="article:modified_time" content="2026-10-08" />
     <meta property="article:author" content="https://github.com/Djordje1998" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" data-i18n-content="g.made.title" content="How this site&#x27;s art was made with Google Flow" />
-    <meta name="twitter:description" data-i18n-content="g.made.description" content="The real files behind this site&#x27;s illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
+    <meta name="twitter:title" data-i18n-content="g.made.title" content="How this site's art was made with Google Flow" />
+    <meta name="twitter:description" data-i18n-content="g.made.description" content="The real files behind this site's illustrations and clips: Asset Prompter slots, Google Flow, frame sheets, a motion map and the exports, step by step." />
     <meta name="twitter:image" data-i18n-content="og.image" content="https://assetprompter.com/assets/og.jpg" />
     <meta name="twitter:image:alt" data-i18n-content="og.alt" content="Asset Prompter: your agent writes the prompt, you make the picture. A robot and a person on either side of a shared folder." />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -70,7 +126,7 @@
     <meta name="apple-mobile-web-app-title" content="Asset Prompter" />
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=w2-044" />
+    <link rel="stylesheet" href="/styles.css?v=w2-045" />
     <!-- What search engines and AI answers read about the guide. The page's name and description are the title and
          the description above, the article's headline is the h1, the breadcrumb's names are those above the h1. The
          site, the app and the author are described on the home page (the same @id); the author is repeated in short. -->
@@ -181,6 +237,7 @@
       <symbol id="logo" viewBox="0 0 16 16"><rect x="12" y="1" width="1" height="1" fill="#c08ab5"/><rect x="11" y="2" width="3" height="1" fill="#c08ab5"/><rect x="1" y="3" width="9" height="1" fill="#4a4652"/><rect x="12" y="3" width="1" height="1" fill="#c08ab5"/><rect x="1" y="4" width="1" height="1" fill="#4a4652"/><rect x="9" y="4" width="1" height="1" fill="#4a4652"/><rect x="1" y="5" width="1" height="1" fill="#4a4652"/><rect x="4" y="5" width="11" height="1" fill="#6e6878"/><rect x="1" y="6" width="1" height="1" fill="#4a4652"/><rect x="4" y="6" width="1" height="1" fill="#6e6878"/><rect x="14" y="6" width="1" height="1" fill="#6e6878"/><rect x="1" y="7" width="1" height="1" fill="#4a4652"/><rect x="4" y="7" width="1" height="1" fill="#6e6878"/><rect x="6" y="7" width="2" height="1" fill="#d9a441"/><rect x="14" y="7" width="1" height="1" fill="#6e6878"/><rect x="1" y="8" width="1" height="1" fill="#4a4652"/><rect x="4" y="8" width="1" height="1" fill="#6e6878"/><rect x="6" y="8" width="2" height="1" fill="#d9a441"/><rect x="14" y="8" width="1" height="1" fill="#6e6878"/><rect x="1" y="9" width="3" height="1" fill="#4a4652"/><rect x="4" y="9" width="1" height="1" fill="#6e6878"/><rect x="12" y="9" width="1" height="1" fill="#6cc4b8"/><rect x="14" y="9" width="1" height="1" fill="#6e6878"/><rect x="4" y="10" width="1" height="1" fill="#6e6878"/><rect x="11" y="10" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="10" width="1" height="1" fill="#6e6878"/><rect x="4" y="11" width="1" height="1" fill="#6e6878"/><rect x="7" y="11" width="1" height="1" fill="#6cc4b8"/><rect x="10" y="11" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="11" width="1" height="1" fill="#6e6878"/><rect x="4" y="12" width="1" height="1" fill="#6e6878"/><rect x="6" y="12" width="3" height="1" fill="#6cc4b8"/><rect x="9" y="12" width="1" height="1" fill="#4f9e94"/><rect x="10" y="12" width="4" height="1" fill="#6cc4b8"/><rect x="14" y="12" width="1" height="1" fill="#6e6878"/><rect x="4" y="13" width="1" height="1" fill="#6e6878"/><rect x="5" y="13" width="4" height="1" fill="#6cc4b8"/><rect x="9" y="13" width="3" height="1" fill="#4f9e94"/><rect x="12" y="13" width="2" height="1" fill="#6cc4b8"/><rect x="14" y="13" width="1" height="1" fill="#6e6878"/><rect x="4" y="14" width="11" height="1" fill="#6e6878"/></symbol>
       <symbol id="i-star" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM4 2h4v1h-4zM4 3h4v1h-4zM0 4h12v1h-12zM1 5h10v1h-10zM2 6h8v1h-8zM3 7h6v1h-6zM2 8h8v1h-8zM2 9h3v1h-3zM7 9h3v1h-3zM1 10h2v1h-2zM9 10h2v1h-2z"/></symbol>
       <symbol id="i-download" viewBox="0 0 12 12"><path d="M5 0h2v1h-2zM5 1h2v1h-2zM5 2h2v1h-2zM5 3h2v1h-2zM2 4h2v1h-2zM5 4h2v1h-2zM8 4h2v1h-2zM3 5h6v1h-6zM4 6h4v1h-4zM5 7h2v1h-2zM1 9h2v1h-2zM9 9h2v1h-2zM1 10h10v1h-10z"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 12 12"><path d="M3 0h5v1h-5zM2 1h1v1h-1zM4 1h1v1h-1zM6 1h1v1h-1zM8 1h1v1h-1zM1 2h1v1h-1zM3 2h1v1h-1zM7 2h1v1h-1zM9 2h1v1h-1zM0 3h1v1h-1zM3 3h1v1h-1zM7 3h1v1h-1zM10 3h1v1h-1zM0 4h1v1h-1zM3 4h1v1h-1zM7 4h1v1h-1zM10 4h1v1h-1zM0 5h11v1h-11zM0 6h1v1h-1zM3 6h1v1h-1zM7 6h1v1h-1zM10 6h1v1h-1zM0 7h1v1h-1zM3 7h1v1h-1zM7 7h1v1h-1zM10 7h1v1h-1zM1 8h1v1h-1zM3 8h1v1h-1zM7 8h1v1h-1zM9 8h1v1h-1zM2 9h1v1h-1zM4 9h1v1h-1zM6 9h1v1h-1zM8 9h1v1h-1zM3 10h5v1h-5z"/></symbol>
       <symbol id="i-spark" viewBox="0 0 12 12"><path d="M5 0h1v1h-1zM5 1h1v1h-1zM4 2h3v1h-3zM2 3h7v1h-7zM4 4h3v1h-3zM5 5h1v1h-1zM10 5h1v1h-1zM5 6h1v1h-1zM9 6h3v1h-3zM10 7h1v1h-1zM3 8h1v1h-1zM2 9h3v1h-3zM3 10h1v1h-1z"/></symbol>
       <symbol id="i-check" viewBox="0 0 12 12"><path d="M10 1h2v1h-2zM9 2h3v1h-3zM8 3h3v1h-3zM1 4h2v1h-2zM7 4h3v1h-3zM1 5h3v1h-3zM6 5h3v1h-3zM2 6h5v1h-5zM3 7h3v1h-3zM4 8h1v1h-1z"/></symbol>
       <symbol id="i-info" viewBox="0 0 12 12"><path d="M3 0h6v1h-6zM2 1h1v1h-1zM9 1h1v1h-1zM1 2h1v1h-1zM5 2h2v1h-2zM10 2h1v1h-1zM1 3h1v1h-1zM10 3h1v1h-1zM1 4h1v1h-1zM5 4h2v1h-2zM10 4h1v1h-1zM1 5h1v1h-1zM5 5h2v1h-2zM10 5h1v1h-1zM1 6h1v1h-1zM5 6h2v1h-2zM10 6h1v1h-1zM1 7h1v1h-1zM5 7h2v1h-2zM10 7h1v1h-1zM2 8h1v1h-1zM9 8h1v1h-1zM3 9h6v1h-6z"/></symbol>
@@ -194,8 +251,7 @@
         <svg class="logo" width="24" height="24" aria-hidden="true"><use href="#logo" /></svg>
         Asset Prompter
       </a>
-      <!-- The home page's sections, and the guides. The language link (a.btn.lang-btn, data-lang) goes first in
-           .bar-right once the guide has a Serbian copy. -->
+      <!-- The home page's sections, and the guides. -->
       <nav class="bar-links" aria-label="Site" data-i18n-aria-label="g.nav.label">
         <a href="/#loop" data-i18n="nav.loop">The loop</a>
         <a href="/#mcp" data-i18n="nav.mcp">Compared with MCP</a>
@@ -203,6 +259,12 @@
         <a href="/guides/" aria-current="true" data-i18n="foot.guides">Guides</a>
       </nav>
       <div class="bar-right">
+        <!-- The language: a plain link to this page in the other language, drawn like the home page's language button, which works
+             without a script. The script at the top keeps the choice and the reader's place. -->
+        <a class="btn lang-btn" href="/sr/guides/how-this-site-was-made/" hreflang="sr" lang="sr-Latn" data-lang="sr" aria-label="Srpski: ova stranica na srpskom">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-globe" /></svg>
+          <span class="lang-code">SR</span>
+        </a>
         <a class="btn bar-github" href="https://github.com/Djordje1998/asset-prompter" target="_blank" rel="noopener" aria-label="Star on GitHub: Asset Prompter" data-i18n-aria-label="star.label">
           <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-star" /></svg>
           <span class="bar-github-text" data-i18n="star">Star<span class="bar-github-on"> on GitHub</span></span>
@@ -262,7 +324,7 @@
                   <th scope="row"><code>loop-relay</code></th>
                   <td data-i18n="g.made.t.1.kind">A picture and its clip</td>
                   <td data-i18n="g.made.t.1.where">The top of the page, and <a href="/#agent">"It checks a clip it can't play"</a></td>
-                  <td><code>assets/art/loop-relay.webp</code>, 1280 × 714; <code>loop-relay.mp4</code> and <code>loop-relay-av1.mp4</code></td>
+                  <td data-i18n="g.made.t.1.file"><code>assets/art/loop-relay.webp</code>, 1280 × 714; <code>loop-relay.mp4</code> and <code>loop-relay-av1.mp4</code></td>
                 </tr>
                 <tr>
                   <th scope="row"><code>loop-relay-clip</code></th>
@@ -292,7 +354,7 @@
                   <th scope="row"><code>gallery-full</code></th>
                   <td data-i18n="g.made.t.6.kind">A picture and its clip</td>
                   <td data-i18n="g.made.t.6.where">The closing section, "Give your agent a way to ask for pictures."</td>
-                  <td><code>assets/art/gallery-full.webp</code>, 1280 × 714; <code>gallery-full.mp4</code> and <code>gallery-full-av1.mp4</code></td>
+                  <td data-i18n="g.made.t.6.file"><code>assets/art/gallery-full.webp</code>, 1280 × 714; <code>gallery-full.mp4</code> and <code>gallery-full-av1.mp4</code></td>
                 </tr>
               </tbody>
             </table>

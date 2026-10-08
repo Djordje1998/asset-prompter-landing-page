@@ -14,4 +14,60 @@
     <xhtml:link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://assetprompter.com/" />
   </url>
+  <url>
+    <loc>https://assetprompter.com/guides/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/" />
+    <xhtml:link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/guides/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/" />
+  </url>
+  <url>
+    <loc>https://assetprompter.com/sr/guides/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/" />
+    <xhtml:link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/guides/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/" />
+  </url>
+  <url>
+    <loc>https://assetprompter.com/guides/how-this-site-was-made/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/how-this-site-was-made/" />
+    <xhtml:link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/guides/how-this-site-was-made/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/how-this-site-was-made/" />
+  </url>
+  <url>
+    <loc>https://assetprompter.com/sr/guides/how-this-site-was-made/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/how-this-site-was-made/" />
+    <xhtml:link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/guides/how-this-site-was-made/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/how-this-site-was-made/" />
+  </url>
+  <url>
+    <loc>https://assetprompter.com/guides/image-generators-api-mcp/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/image-generators-api-mcp/" />
+    <xhtml:link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/guides/image-generators-api-mcp/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/image-generators-api-mcp/" />
+  </url>
+  <url>
+    <loc>https://assetprompter.com/sr/guides/image-generators-api-mcp/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/image-generators-api-mcp/" />
+    <xhtml:link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/guides/image-generators-api-mcp/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/image-generators-api-mcp/" />
+  </url>
+  <url>
+    <loc>https://assetprompter.com/guides/get-images-into-coding-agent-project/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/get-images-into-coding-agent-project/" />
+    <xhtml:link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/guides/get-images-into-coding-agent-project/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/get-images-into-coding-agent-project/" />
+  </url>
+  <url>
+    <loc>https://assetprompter.com/sr/guides/get-images-into-coding-agent-project/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://assetprompter.com/guides/get-images-into-coding-agent-project/" />
+    <xhtml:link rel="alternate" hreflang="sr" href="https://assetprompter.com/sr/guides/get-images-into-coding-agent-project/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://assetprompter.com/guides/get-images-into-coding-agent-project/" />
+  </url>
 </urlset>

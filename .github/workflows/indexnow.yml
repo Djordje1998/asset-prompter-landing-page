@@ -8,7 +8,7 @@ name: IndexNow
 on:
   push:
     branches: [main]
-    paths: [index.html, sr/index.html, llms.txt, llms-full.txt, sitemap.xml]
+    paths: [index.html, sr/index.html, "guides/**", "sr/guides/**", llms.txt, llms-full.txt, sitemap.xml]
   workflow_dispatch:
     inputs:
       all:

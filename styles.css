@@ -4352,6 +4352,17 @@ li.is-pulse .f-front::after {
 /* The pages under /guides/: longer reading in the same look. They load no script, so nothing here waits for one, and
    every rule is on a class of their own: the home page does not use any of them. */
 
+/* Small grey text that is read here (sources, captions, the byline, the folder's notes) takes a lighter --faint:
+   4.5:1 on the card colour as on both grounds. */
+.crumbs,
+.guide-meta,
+.guide-fig,
+.guide-tree,
+.guide-facts,
+.guide-table {
+  --faint: #928d9c;
+}
+
 /* The page head: the breadcrumb, the heading and its lead, and the byline, closer to the bar than a section is. */
 .guide-top {
   padding-block: clamp(48px, 7vw, 96px) clamp(40px, 5vw, 72px);
@@ -4601,11 +4612,25 @@ li.is-pulse .f-front::after {
   text-transform: uppercase;
 }
 
+/* The row's name stays at the left edge while a phone scrolls the table sideways. */
 .guide-table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
   min-width: 140px;
-  white-space: nowrap;
+  background: var(--card);
   color: var(--text);
   font-weight: 600;
+}
+
+.guide-table thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.guide-table tbody th code {
+  white-space: nowrap;
 }
 
 .guide-table td {
@@ -4724,5 +4749,10 @@ li.is-pulse .f-front::after {
   .guide-table th,
   .guide-table td {
     padding: 10px 12px;
+  }
+
+  .guide-table tbody th {
+    min-width: 0;
+    max-width: 8.5em;
   }
 }
