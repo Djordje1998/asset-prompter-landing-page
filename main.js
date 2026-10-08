@@ -32,12 +32,14 @@ if (bar) {
   // The thread on the lower edge of the window fills as the page is read. --read goes on the thread itself: written on
   // <html>, it would make the browser restyle the whole page on every frame of a scroll.
   const thread = document.querySelector(".read-progress") || root;
+  let read = "";
   const stick = oncePerFrame(() => {
     // Measure first, then write, so the class does not make the browser lay the page out again before the measure.
     const y = scrollY;
     const span = root.scrollHeight - innerHeight;
     bar.classList.toggle("is-stuck", y > 8);
-    thread.style.setProperty("--read", span > 0 ? Math.min(1, Math.max(0, y / span)).toFixed(4) : "0");
+    const now = span > 0 ? Math.min(1, Math.max(0, y / span)).toFixed(4) : "0";
+    if (now !== read) thread.style.setProperty("--read", (read = now));
   });
   addEventListener("scroll", stick, { passive: true });
   addEventListener("resize", stick, { passive: true });
@@ -149,10 +151,11 @@ if (uses.length && root.classList.contains("motion")) {
     const tops = uses.map((card) => card.getBoundingClientRect().top);
     uses.forEach((card, i) => {
       const raw = Math.min(1, Math.max(0, (innerHeight - tops[i]) / (innerHeight * SPAN)));
-      // Slow at first, fast at the end: they hit rather than land.
-      card.style.setProperty("--p", (raw * raw).toFixed(4));
+      // Slow at first, fast at the end: they hit rather than land. Written only when it has changed.
+      const p = (raw * raw).toFixed(4);
+      if (p !== card.p) card.style.setProperty("--p", (card.p = p));
       if (raw < 1) {
-        card.classList.remove("is-joined", "is-hit");
+        if (card.classList.contains("is-joined") || card.classList.contains("is-hit")) card.classList.remove("is-joined", "is-hit");
       } else if (!card.classList.contains("is-joined")) {
         card.classList.add("is-joined");
         // Already joined when the page opens: no hit for that.
@@ -456,7 +459,7 @@ if (hub) {
     if (wasFloating && !floating) {
       for (const node of nodes) {
         node.dy = 0;
-        node.li.style.transform = "";
+        node.li.style.transform = node.bob = "";
       }
     }
     svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
@@ -513,7 +516,8 @@ if (hub) {
   }
 
   layout();
-  new ResizeObserver(layout).observe(hub);
+  if ("ResizeObserver" in window) new ResizeObserver(layout).observe(hub);
+  else addEventListener("resize", layout, { passive: true });
   if (document.fonts) document.fonts.ready.then(layout);
   addEventListener("load", layout);
   // Another language moves the folder without always changing the hub's size.
@@ -632,7 +636,8 @@ if (hub) {
           if (!node.rest) continue;
           if (floating) {
             node.dy = Math.sin((now / node.period) * Math.PI * 2 + node.phase) * BOB;
-            node.li.style.transform = `translate3d(0,${node.dy.toFixed(2)}px,0)`;
+            const bob = `translate3d(0,${node.dy.toFixed(2)}px,0)`;
+            if (bob !== node.bob) node.li.style.transform = node.bob = bob;
             place(node);
           }
           face(node, box);
@@ -667,8 +672,10 @@ if (hub) {
           for (const layer of layers) {
             const { line, length } = layer;
             if (points !== layer.drawn) line.setAttribute("points", (layer.drawn = points));
-            line.setAttribute("stroke-dasharray", `${length} ${total + 400}`);
-            line.setAttribute("stroke-dashoffset", length - Math.min(head, total + length));
+            const dash = `${length} ${total + 400}`;
+            if (dash !== layer.dash) line.setAttribute("stroke-dasharray", (layer.dash = dash));
+            const offset = String(length - Math.min(head, total + length));
+            if (offset !== layer.offset) line.setAttribute("stroke-dashoffset", (layer.offset = offset));
           }
           // On the way out the thread is the agent's until it has passed the folder, then yours.
           const folder = lengthOf(trip.back ? pair.gen.pts : pair.agent.pts);
@@ -681,8 +688,8 @@ if (hub) {
           }
           if (head < total) {
             const [x, y] = pointAt(pts, head);
-            spark.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
-            load.style.transform = spark.style.transform;
+            const at = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+            if (at !== spark.at) spark.style.transform = load.style.transform = spark.at = at;
           }
           // The folder answers as the thread goes through it, and the cube at the far end as the thread enters its glass.
           if (!trip.passed && head >= folder) {
@@ -814,7 +821,9 @@ if (hub) {
       }
     }
 
-    new IntersectionObserver(([entry]) => setRunning(entry.isIntersecting && !document.hidden), { threshold: 0.05 }).observe(hub);
+    if (hasObserver) {
+      new IntersectionObserver(([entry]) => setRunning(entry.isIntersecting && !document.hidden), { threshold: 0.05 }).observe(hub);
+    } else setRunning(true);
     document.addEventListener("visibilitychange", () => setRunning(!document.hidden && hub.getBoundingClientRect().bottom > 0));
   }
 }
