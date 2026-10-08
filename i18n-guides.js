@@ -45,7 +45,7 @@ const SR = {
     "Piše u podnožju: ilustracije su generisane ručno u alatu Google Flow, preko Asset Promptera. Evo slotova, fajlova i koraka iza njih.",
   "g.made.1.h": "Jedan projekat, slot za svaki aset",
   "g.made.1.p1":
-    'Svaka ilustracija i svaki klip na <a href="/">početnoj stranici</a> nastali su u jednom projektu Asset Promptera, <code>asset-prompter-landing</code>. Svaki je tražen kao <strong>slot</strong>, folder za jedan aset. Svaki fajl na sajtu nosi ime slota svoje slike: <code>&lt;slot&gt;.webp</code> za sliku, <code>&lt;slot&gt;.mp4</code> za klip koji počinje njome. Ilustracije su generisane ručno u alatu Google Flow.',
+    'Svaka ilustracija i svaki klip u folderu <code>assets/art/</code> ovog sajta nastali su u jednom projektu Asset Promptera, <code>asset-prompter-landing</code>. Svaki je tražen kao <strong>slot</strong>, folder za jedan aset. Svaki od tih fajlova nosi ime slota svoje slike: <code>&lt;slot&gt;.webp</code> za sliku, <code>&lt;slot&gt;.mp4</code> za klip koji počinje njome. Ilustracije su generisane ručno u alatu Google Flow. Dve generisane fotografije u delu <a href="/#uses">„Čemu služi”</a> na početnoj stranici su rezultati iz projekta <code>orbital-eats</code>, iz kog potiču snimci ekrana aplikacije.',
   "g.made.t.caption": "Slotovi iza fajlova na početnoj stranici i gde su ti fajlovi. Dimenzije su izmerene na fajlovima 8. oktobra 2026.",
   "g.made.t.slot": "Slot",
   "g.made.t.kind": "Vrsta",
@@ -188,7 +188,7 @@ const SR = {
   "g.api.a.4.1":
     '<span class="tag t-review">Odvojeno</span> Za samu aplikaciju Dreamina nije pronađen. BytePlus prodaje njene modele kao API na platformi ModelArk: <q lang="en">Dreamina Seedance 2.0 is now available through ModelArk on BytePlus, giving businesses and developers API access</q>, a ModelArk-ov API za generisanje slika ima modele Seedream.',
   "g.api.a.4.2":
-    'ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom. BytePlus: <q lang="en">BytePlus is not available in the United States.</q>',
+    'ModelArk je poseban BytePlus nalog, sa svojim API ključevima i naplatom.',
   "g.api.a.4.3": '<span class="tag t-review">Nije pronađeno</span>',
   "g.api.a.4.4":
     '<span class="src"><a href="https://www.byteplus.com/en/blog/dreamina-seedance2-0" target="_blank" rel="noopener">BytePlus: Dreamina Seedance 2.0</a>; <a href="https://docs.byteplus.com/en/docs/ModelArk/1541523" target="_blank" rel="noopener">ModelArk: API za generisanje slika</a></span>',
@@ -317,12 +317,12 @@ const SR = {
   "g.ways.facts.5": "Izaberi ovo kada",
   "g.ways.1.1": "Agent.",
   "g.ways.1.2":
-    "Na Codexu ništa pored ChatGPT Plus, Pro ili Business pretplate: potezi sa slikama troše njene Codex limite, brže od ostalih poteza; generisanje slika nije dostupno na besplatnoj pretplati. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.",
+    "Na Codexu ništa pored ChatGPT Plus, Pro ili Business pretplate dok se ne potroše njeni Codex limiti: potezi sa slikama ih troše brže od ostalih poteza, a posle toga generisanje slika troši kredite. Generisanje slika nije dostupno na besplatnoj pretplati. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.",
   "g.ways.1.3": "Sliku koju je napravio.",
   "g.ways.1.4":
     "Tamo gde ih alat čuva. Cursor ih podrazumevano čuva u folderu <code>assets/</code> projekta. Codex ih drži u <code>$CODEX_HOME/generated_images/</code>, a njegov skill za slike kaže agentu da ono što projekat koristi kopira u projekat, kao nov fajl, na primer <code>hero-v2.png</code>, a ne preko starog.",
   "g.ways.1.5": "Agentov model je dovoljno dobar za tu sliku, a ne treba ti određeni generator.",
-  "g.ways.2.h": "2. Zvanični MCP server",
+  "g.ways.2.h": "2. MCP server generatora",
   "g.ways.2.p":
     "Higgsfield, Ideogram, Krea, Kling i Runway imaju MCP servere na koje se prijavljuješ svojim nalogom; Leonardo.Ai ima server koji radi preko svog API-ja, a Lumina GitHub organizacija ima jedan koji radi preko Luminog.",
   "g.ways.2.1": "Agent.",
@@ -379,7 +379,7 @@ const SR = {
   "g.ways.cmp.1.4": '<span class="tag t-approved">Da</span>',
   "g.ways.cmp.1.5": '<span class="tag t-review">Zavisi</span>',
   "g.ways.cmp.1.6": '<span class="tag t-generate">Ne</span>',
-  "g.ways.cmp.2": "Zvanični MCP server",
+  "g.ways.cmp.2": "MCP server generatora",
   "g.ways.cmp.2.1": "Agent",
   "g.ways.cmp.2.2": "Tvoja pretplata ili API krediti",
   "g.ways.cmp.2.3": '<span class="tag t-approved">Da</span>',
