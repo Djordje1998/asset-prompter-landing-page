@@ -3,3 +3,5 @@ tools/cards/
 node_modules/
 # Local preview configuration of the Claude desktop app.
 .claude/
+# Lighthouse reports of a local run (README.md, Checks).
+lh/

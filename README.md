@@ -14,9 +14,43 @@ Open `index.html` in a browser, or serve the folder:
 python -m http.server 4790 --bind 127.0.0.1
 ```
 
+or with `node tools/serve.mjs . 4790`, which serves it as GitHub Pages does: `/sr/` from `sr/index.html`, `404.html` with status 404 for an address with no file, text compressed, kept ten minutes.
+
 ## Hosting
 
 GitHub Pages serves the root of the `main` branch (Settings, Pages, Deploy from a branch) at `https://assetprompter.com/`: `CNAME` names the domain, and at the registrar the apex has A records for GitHub Pages and `www` a CNAME to `djordje1998.github.io`. The empty `.nojekyll` file tells Pages to publish the files as they are.
+
+## Checks
+
+Two workflows run on GitHub. Neither builds nor changes the site; Pages still publishes `main` as it is.
+
+- `.github/workflows/check.yml` (Check) runs on every pull request and every push to `main`, in two jobs:
+  - Files: `node tools/build-sr.mjs --check`; `node tools/check-site.mjs`; and html-validate 11.16.0 on `index.html`, `sr/index.html`, `404.html` and `tools/og.html`, with `.htmlvalidate.json` (the recommended rules, in the page's own style: `<!doctype html>` in lower case, empty elements closed as `<meta ... />`). On a pull request that changes `index.html` or `i18n.js` but no `lastmod` in `sitemap.xml`, it also warns (only warns: not every change is a change of the text).
+  - Lighthouse, after Files: serves the folder with `tools/serve.mjs`, runs Lighthouse 13.5.0 as a phone three times on `/` and on `/sr/` (performance, accessibility, best practices, SEO and agentic browsing), and `tools/lh-assert.mjs` checks the median of the runs: SEO, Best Practices and Accessibility 100; every Agentic Browsing audit that applies passes; layout shift at most 0.05 (warns above 0.01), blocking time at most 400 ms (warns above 200), the bytes of the page at most 1.5 MB (warns above 1.3 MB). Largest Contentful Paint only warns, above 3.5 s: the headline fades in on load, on purpose, which holds it at about 2.7 s on `/` and 3.1 s on `/sr/` (October 2026). The reports are kept for 14 days with the run (`lighthouse`). When the page grows on purpose, raise the numbers at the top of `tools/lh-assert.mjs`.
+- `tools/check-site.mjs` needs no browser and no packages. It checks that every address on this site that a page, the stylesheet, the JSON-LD, the manifest, `robots.txt`, the sitemap or `llms.txt` names is a real file, and every `#anchor` has its id; that each page has one canonical address, its own, and `hreflang` links that name each page once plus `x-default`, the same in both pages and in the sitemap; that each page links the other with an `<a href>`; that no address carries `?lang=` (the script at the top of the `<head>` still reads it, for old links); that the JSON-LD parses, has what each kind of node needs and every `@id` it points to; that the page's `dateModified` is its `lastmod` in `sitemap.xml`; that `sr/index.html` is up to date; and the `?v=` stamps and the IndexNow key file. It lists every problem it finds.
+- `.github/workflows/indexnow.yml` (IndexNow) runs on a push to `main` that changes `index.html`, `sr/index.html`, `llms.txt`, `llms-full.txt` or `sitemap.xml`. `tools/indexnow.mjs` finds the addresses that changed since the commit before the push (a page whose file or `lastmod` changed, and `llms.txt` or `llms-full.txt` themselves), waits until `https://assetprompter.com` serves the files of the push byte for byte (it sends anyway after ten minutes, with a warning) and sends them to `api.indexnow.org`, which passes them to Bing, Yandex, Seznam, Naver and Yep. Google does not take IndexNow; it reads the sitemap. The key is `499fbef4b8b0fa3e781fec30a6f1ad91.txt` at the root, which holds its own name: keep it. When IndexNow is down or busy the run only warns; a refusal of the request itself (key, host) fails it. Then `tools/live-check.mjs` checks the live site: both pages answer with their own canonical, the three `hreflang` links and no `noindex`, `robots.txt`, the sitemap, `llms.txt`, `llms-full.txt` and the key are served, and an address with no file answers 404. A failure there is mailed to the owner like any failed run. It can also be run by hand (Actions, IndexNow, Run workflow), by default for every address of the sitemap: do that once after the first merge; IndexNow answers 202 the first time, while it checks the key, and 200 after.
+- To stop a change that fails the checks from reaching `main`, the owner adds a ruleset (Settings, Rules, Rulesets, New branch ruleset) for the default branch with "Require a pull request before merging" and "Require status checks to pass" with the checks `Files` and `Lighthouse` (source GitHub Actions). Until then the checks only report.
+- The actions are pinned to the commit of a release (the version is beside it). `.github/dependabot.yml` asks Dependabot for a pull request when an action has a new release, once a month and only for a release at least 14 days old. html-validate and lighthouse are pinned in `check.yml` and raised by hand, to a version at least two weeks old; change the numbers here with them.
+
+To run the same checks on your machine (Node 22.22 or later, which html-validate needs; a Chrome or Chromium for Lighthouse, `CHROME_PATH` if it is not found):
+
+```
+node tools/check-site.mjs
+npx --yes html-validate@11.16.0 index.html sr/index.html 404.html tools/og.html
+node tools/serve.mjs . 8080
+```
+
+and, while the server runs, in a second terminal (bash):
+
+```
+mkdir -p lh
+for i in 1 2 3; do for page in / /sr/; do name=$(echo "$page" | tr -d /); name=${name:-en}
+  npx --yes lighthouse@13.5.0 "http://127.0.0.1:8080$page" --quiet --only-categories=performance,accessibility,best-practices,seo,agentic-browsing --chrome-flags="--headless=new --no-sandbox" --output=json --output=html --output-path="lh/$name-$i"
+done; done
+node tools/lh-assert.mjs lh/*.report.json
+```
+
+`lh/` is ignored by git. `node tools/indexnow.mjs --all --dry-run` shows what would be sent and whether the site serves it yet, without sending; `node tools/live-check.mjs` checks the live site, or another address given after it (`node tools/live-check.mjs http://127.0.0.1:8080`).
 
 ## Languages
 
