@@ -1,5 +1,6 @@
 // Checks the published site itself, after a push to main has gone live (run by .github/workflows/indexnow.yml): both
-// pages answer 200 with their own canonical address, the three hreflang links and no noindex; robots.txt lets crawlers
+// home pages answer 200 with their own canonical address, the three hreflang links and no noindex, and /guides/ with
+// its canonical and no noindex; robots.txt lets crawlers
 // in and names the sitemap; the sitemap, llms.txt, llms-full.txt and the IndexNow key are served; an address with no
 // file answers 404. The checks before merging cannot see these; a failure here means the deploy went wrong.
 //   node tools/live-check.mjs [origin=https://assetprompter.com]   exit 1, listing every problem, if anything is wrong
@@ -38,6 +39,17 @@ for (const path of ["/", "/sr/"]) {
   const alts = Object.fromEntries(links.filter((t) => attr(t, "rel") === "alternate" && attr(t, "hreflang")).map((t) => [attr(t, "hreflang"), attr(t, "href")]));
   expect(JSON.stringify(alts, Object.keys(HREFLANG)) === JSON.stringify(HREFLANG) && Object.keys(alts).length === 3, path, `hreflang links are ${JSON.stringify(alts)}`);
   expect(!/<meta[^>]+name="robots"[^>]+noindex/i.test(head) && !/noindex/i.test(headers.get("x-robots-tag") ?? ""), path, "says noindex");
+}
+// The guides' index stands for the guides: it answers with its own canonical and no noindex.
+{
+  const path = "/guides/";
+  const { status, headers, text } = await get(path);
+  if (expect(status === 200, path, `HTTP ${status} ${status ? "" : text}`)) {
+    const head = text.split("</head>")[0];
+    const canonical = [...head.matchAll(/<link\b[^>]*>/g)].map((m) => m[0]).filter((t) => attr(t, "rel") === "canonical").map((t) => attr(t, "href"));
+    expect(canonical.length === 1 && canonical[0] === SITE + path, path, `canonical is ${canonical.join(", ") || "missing"}`);
+    expect(!/<meta[^>]+name="robots"[^>]+noindex/i.test(head) && !/noindex/i.test(headers.get("x-robots-tag") ?? ""), path, "says noindex");
+  }
 }
 const robots = await get("/robots.txt");
 expect(robots.status === 200, "/robots.txt", `HTTP ${robots.status}`);
