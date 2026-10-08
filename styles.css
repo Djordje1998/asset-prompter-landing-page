@@ -56,9 +56,9 @@
   --primary-hover: #e4b458;
   --on-primary: #1a1408;
 
-  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "Spline Sans Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --display: "Bricolage Grotesque", "Bricolage Grotesque Fallback", "Segoe UI", system-ui, sans-serif;
+  --body: "Instrument Sans", "Instrument Sans Fallback", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Spline Sans Mono", "Spline Sans Mono Fallback", ui-monospace, "Cascadia Mono", Consolas, monospace;
 
   --wrap: 1180px;
   --bar-h: 52px;
@@ -280,6 +280,68 @@
   font-display: swap;
   src: url("assets/fonts/spline-sans-mono-v13-sr.woff2") format("woff2");
   unicode-range: U+0106-0107, U+010C-010D, U+0110-0111, U+0160-0161, U+017D-017E;
+}
+
+/* While a font is on its way, the text stands in Arial (Liberation Sans or Arimo on Linux and ChromeOS, Helvetica
+   where there is no Arial) or Courier New (Liberation Mono, Cousine), sized to take the room the font will take, so
+   that the page moves as little as it can when the font comes in. Each size-adjust is how wide the page's own text is in
+   the font against the stand-in, laid out at 360 to 1920 px in both languages; the ascent and descent are the font's
+   (hhea, the same as its typo metrics), divided by it. The range is only the letters all three fonts have: any other
+   still falls to the system's font, as without these rules, so the page looks the same once the fonts are in.
+   On a system without any of these (Android), the next font in the list stands in, as before. */
+@font-face {
+  font-family: "Bricolage Grotesque Fallback";
+  font-weight: 100 900;
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"), local("Arimo Bold"), local("Arimo-Bold"), local("Helvetica Bold"), local("Helvetica-Bold");
+  size-adjust: 100.0%;
+  ascent-override: 93.00%;
+  descent-override: 27.00%;
+  line-gap-override: 0%;
+  unicode-range: U+0020-007E, U+00A0-00A3, U+00A5, U+00A7-00AB, U+00AE-00B0, U+00B4, U+00B6-00B8, U+00BA-00BB, U+00BF-0107, U+010A-0113, U+0116-011B, U+011E-0123, U+0126-0127, U+012A-012B, U+012E-0133, U+0136-0137, U+0139-013E, U+0141-0148, U+014A-014D, U+0150-015B, U+015E-0161, U+0164-0165, U+016A-017E, U+0218-021B, U+0237, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+2039-203A;
+}
+
+@font-face {
+  font-family: "Instrument Sans Fallback";
+  font-weight: 100 449;
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("LiberationSans"), local("Arimo"), local("Helvetica");
+  size-adjust: 102.5%;
+  ascent-override: 94.63%;
+  descent-override: 24.39%;
+  line-gap-override: 0%;
+  unicode-range: U+0020-007E, U+00A0-00A3, U+00A5, U+00A7-00AB, U+00AE-00B0, U+00B4, U+00B6-00B8, U+00BA-00BB, U+00BF-0107, U+010A-0113, U+0116-011B, U+011E-0123, U+0126-0127, U+012A-012B, U+012E-0133, U+0136-0137, U+0139-013E, U+0141-0148, U+014A-014D, U+0150-015B, U+015E-0161, U+0164-0165, U+016A-017E, U+0218-021B, U+0237, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+2039-203A;
+}
+
+@font-face {
+  font-family: "Instrument Sans Fallback";
+  font-weight: 450 549;
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("LiberationSans"), local("Arimo"), local("Helvetica");
+  size-adjust: 105.0%;
+  ascent-override: 92.38%;
+  descent-override: 23.81%;
+  line-gap-override: 0%;
+  unicode-range: U+0020-007E, U+00A0-00A3, U+00A5, U+00A7-00AB, U+00AE-00B0, U+00B4, U+00B6-00B8, U+00BA-00BB, U+00BF-0107, U+010A-0113, U+0116-011B, U+011E-0123, U+0126-0127, U+012A-012B, U+012E-0133, U+0136-0137, U+0139-013E, U+0141-0148, U+014A-014D, U+0150-015B, U+015E-0161, U+0164-0165, U+016A-017E, U+0218-021B, U+0237, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+2039-203A;
+}
+
+@font-face {
+  font-family: "Instrument Sans Fallback";
+  font-weight: 550 900;
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"), local("Arimo Bold"), local("Arimo-Bold"), local("Helvetica Bold"), local("Helvetica-Bold");
+  size-adjust: 95.5%;
+  ascent-override: 101.57%;
+  descent-override: 26.18%;
+  line-gap-override: 0%;
+  unicode-range: U+0020-007E, U+00A0-00A3, U+00A5, U+00A7-00AB, U+00AE-00B0, U+00B4, U+00B6-00B8, U+00BA-00BB, U+00BF-0107, U+010A-0113, U+0116-011B, U+011E-0123, U+0126-0127, U+012A-012B, U+012E-0133, U+0136-0137, U+0139-013E, U+0141-0148, U+014A-014D, U+0150-015B, U+015E-0161, U+0164-0165, U+016A-017E, U+0218-021B, U+0237, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+2039-203A;
+}
+
+@font-face {
+  font-family: "Spline Sans Mono Fallback";
+  font-weight: 100 900;
+  src: local("Courier New"), local("CourierNewPSMT"), local("Liberation Mono"), local("LiberationMono"), local("Cousine");
+  size-adjust: 100.0%;
+  ascent-override: 96.35%;
+  descent-override: 23.65%;
+  line-gap-override: 0%;
+  unicode-range: U+0020-007E, U+00A0-00A3, U+00A5, U+00A7-00AB, U+00AE-00B0, U+00B4, U+00B6-00B8, U+00BA-00BB, U+00BF-0107, U+010A-0113, U+0116-011B, U+011E-0123, U+0126-0127, U+012A-012B, U+012E-0133, U+0136-0137, U+0139-013E, U+0141-0148, U+014A-014D, U+0150-015B, U+015E-0161, U+0164-0165, U+016A-017E, U+0218-021B, U+0237, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+2039-203A;
 }
 
 *,
