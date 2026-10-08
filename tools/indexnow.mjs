@@ -8,8 +8,8 @@
 //   add --dry-run to see what would be sent and whether the site serves it yet, without sending
 // The key is the name of the <32 hex>.txt file at the root, which holds the same text. Before sending, it waits until
 // the site serves the files of this commit byte for byte (GitHub Pages publishes a push within a few minutes), so the
-// crawlers that come read the new text; after 10 minutes it sends anyway, with a warning. When IndexNow itself is
-// down or busy it warns and ends without failing; only a refusal of our own request (a wrong key or host) fails.
+// crawlers that come read the new text; after 10 minutes it sends anyway, with a warning. It fails when the addresses
+// were not taken, so the workflow's next run (which sends what changed since the last run that succeeded) sends them again.
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
@@ -89,7 +89,7 @@ if (dry) {
 }
 // 200: received. 202: received, the key is still being checked (the first time). 400, 403, 422: our request is wrong
 // (the key, the host, an address of another site), so fail. 429 (too many requests), 5xx or no answer: try twice
-// more, then warn; the next push sends again.
+// more, then fail too, so that this run does not count as sent: the next run sends these addresses again.
 for (let attempt = 1; ; attempt++) {
   let status, text;
   try {
@@ -105,8 +105,9 @@ for (let attempt = 1; ; attempt++) {
     process.exit(1);
   }
   if (attempt === 3) {
-    warn(`IndexNow did not take the addresses (${status ? `HTTP ${status}` : text}); they go with the next push, or run the workflow by hand`);
-    break;
+    const msg = `IndexNow did not take the addresses (${status ? `HTTP ${status}` : text}); they go with the next run: re-run this one, or wait for the next push`;
+    console.log(process.env.GITHUB_ACTIONS ? `::error title=IndexNow::${msg}` : `error: ${msg}`);
+    process.exit(1);
   }
   await new Promise((r) => setTimeout(r, attempt * 60_000));
 }

@@ -1,6 +1,8 @@
 # After a push to main, tells the IndexNow engines (Bing, Yandex, Seznam, Naver, Yep) which pages changed, once
 # GitHub Pages serves them, then checks the live site. Google does not take IndexNow; it reads sitemap.xml.
-# It starts on the push itself: tools/indexnow.mjs waits until the site serves the commit's files.
+# It starts on the push itself: tools/indexnow.mjs waits until the site serves the commit's files. It sends what changed
+# since the commit of the last run that succeeded, not since the push's "before": GitHub keeps one waiting run per group
+# and cancels the one before it, so a push's own run may never come; the next one sends its addresses too.
 name: IndexNow
 
 on:
@@ -10,12 +12,13 @@ on:
   workflow_dispatch:
     inputs:
       all:
-        description: Send every address in sitemap.xml (otherwise those the last commit changed)
+        description: Send every address in sitemap.xml (otherwise those changed since the last run that succeeded)
         type: boolean
         default: true
 
 permissions:
   contents: read
+  actions: read # to find the last run that succeeded
 
 concurrency:
   group: indexnow
@@ -29,22 +32,24 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0 # the push's "before" commit, to see what changed
+          fetch-depth: 0 # the commit of the last run that succeeded, to see what changed
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
       - name: Send the changed addresses once the site serves them
         env:
-          BEFORE: ${{ github.event.before }}
+          GH_TOKEN: ${{ github.token }}
           ALL: ${{ inputs.all }}
         run: |
-          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
-            if [ "$ALL" = false ]; then node tools/indexnow.mjs HEAD~1 HEAD; else node tools/indexnow.mjs --all; fi
-          elif [ -z "$BEFORE" ] || [ "$BEFORE" = 0000000000000000000000000000000000000000 ] || ! git cat-file -e "$BEFORE^{commit}"; then
+          # The commit of the last run on main that succeeded; none (the first run, or no answer): every address.
+          LAST=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow indexnow.yml --branch main --status success \
+            --limit 1 --json headSha --jq '.[0].headSha // empty' || true)
+          echo "last run that succeeded: ${LAST:-none}"
+          if [ "$ALL" = true ] || [ -z "$LAST" ] || ! git cat-file -e "$LAST^{commit}"; then
             node tools/indexnow.mjs --all
           else
-            node tools/indexnow.mjs "$BEFORE" "$GITHUB_SHA"
+            node tools/indexnow.mjs "$LAST" "$GITHUB_SHA"
           fi
       - name: The live site
         if: success() || failure()
