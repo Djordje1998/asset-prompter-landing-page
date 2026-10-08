@@ -9,15 +9,16 @@
 // The addresses in these texts are the English page's (/, /#loop, /guides/...): the build points them at /sr/.
 // What stays English, with lang="en": the words quoted from a vendor's page or from the app (they are its own words),
 // the app's labels in „…” (as in i18n.js), and what goes into a prompt.
+// A date is written <time></time>: the build takes it from the English page's <time datetime> and says it in Serbian.
 
 const SR = {
   /* ---- shared by the guides ---- */
   "g.nav.label": "Sajt",
   "g.crumbs.label": "Putanja",
   "g.crumbs.home": "Asset Prompter",
-  "g.updated": 'Ažurirano <time datetime="2026-10-08">8. oktobra 2026.</time>',
+  "g.updated": "Ažurirano <time></time>",
   "g.byline":
-    'Piše <a href="https://github.com/Djordje1998" target="_blank" rel="noopener author">Đorđe Novaković</a>, autor Asset Promptera · Ažurirano <time datetime="2026-10-08">8. oktobra 2026.</time>',
+    'Piše <a href="https://github.com/Djordje1998" target="_blank" rel="noopener author">Đorđe Novaković</a>, autor Asset Promptera · Ažurirano <time></time>',
 
   /* ---- /guides/: the list ---- */
   "g.hub.title": "Asset Prompter vodiči: agenti, alati za slike i video",
@@ -294,7 +295,7 @@ const SR = {
   "g.api.how.p2":
     'Nazivi proizvoda pripadaju svojim vlasnicima. Asset Prompter je nezavisan projekat: nije povezan ni sa jednim od njih, niti ga iko od njih podržava. Vidiš grešku? <a href="https://github.com/Djordje1998/asset-prompter/issues" target="_blank" rel="noopener">Prijavi je na GitHubu</a>.',
   "g.api.log.h": "Šta se promenilo",
-  "g.api.log.list": '<li><time datetime="2026-10-08">8. oktobra 2026.</time>: prva verzija.</li>',
+  "g.api.log.list": "<li><time></time>: prva verzija.</li>",
 
   /* ---- /guides/get-images-into-coding-agent-project/ ---- */
   "g.ways.title": "5 načina da AI slike stignu u projekat agenta",
