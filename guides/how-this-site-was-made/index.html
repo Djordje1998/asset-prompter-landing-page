@@ -488,8 +488,8 @@
               <div class="pipe-pic">
                 <div class="art">
                   <video controls muted playsinline preload="none" poster="/assets/art/loop-relay.webp" width="1280" height="720" data-i18n-aria-label="g.made.clip.alt" aria-label="The clip from the top of the home page: the robot holds a prompt sheet toward the shared folder and the person lifts a picture out of it.">
-                    <source src="/assets/art/loop-relay-av1.mp4" type='video/mp4; codecs="av01.0.05M.08"' />
                     <source src="/assets/art/loop-relay.mp4" type='video/mp4; codecs="avc1.64001F"' />
+                    <source src="/assets/art/loop-relay-av1.mp4" type='video/mp4; codecs="av01.0.05M.08"' />
                   </video>
                 </div>
               </div>
@@ -532,8 +532,8 @@
             <p data-i18n="g.made.4.p2">
               The AV1 copies are about half the bytes: <code>loop-relay</code> is 365 KiB against 776 KiB in H.264, and
               <code>gallery-full</code> 245 KiB against 536 KiB. The lowest frame SSIM of the two was 0.9956. The home page takes the
-              AV1 file only where the browser answers “probably” when asked whether it plays it and, where it can tell, decodes
-              it in hardware; the H.264 file everywhere else.
+              AV1 file only where the browser answers “probably” when asked whether it plays it, and also says, where it can tell,
+              that it decodes AV1 in hardware, or plays no H.264 at all; otherwise, or if the AV1 file fails, the H.264 file.
             </p>
             <h3 data-i18n="g.made.4.exports.h">Sizes and crops come from the approved file</h3>
             <p data-i18n="g.made.4.p3">

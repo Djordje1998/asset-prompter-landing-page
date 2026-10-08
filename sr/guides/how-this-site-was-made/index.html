@@ -457,8 +457,8 @@
               <div class="pipe-pic">
                 <div class="art">
                   <video controls muted playsinline preload="none" poster="/assets/art/loop-relay.webp" width="1280" height="720" data-i18n-aria-label="g.made.clip.alt" aria-label="Klip sa vrha početne stranice: robot pruža list sa promptom ka zajedničkom folderu, a osoba iz njega vadi sliku.">
-                    <source src="/assets/art/loop-relay-av1.mp4" type='video/mp4; codecs="av01.0.05M.08"' />
                     <source src="/assets/art/loop-relay.mp4" type='video/mp4; codecs="avc1.64001F"' />
+                    <source src="/assets/art/loop-relay-av1.mp4" type='video/mp4; codecs="av01.0.05M.08"' />
                   </video>
                 </div>
               </div>
@@ -493,7 +493,7 @@
               <li>Za klip, sačuvaj <code>final.mp4</code> kao <code>assets/art/&lt;slot&gt;.mp4</code>, bez zvuka.</li>
               <li>Napravi AV1 kopiju klipa i zadrži je samo ako svaki njen frejm ima SSIM od najmanje 0,995 u odnosu na H.264 frejm:</li></ol>
             <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -svtav1-params tune=0 -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
-            <p data-i18n="g.made.4.p2">AV1 kopije imaju otprilike upola manje bajtova: <code>loop-relay</code> ima 365 KiB naspram 776 KiB u H.264, a <code>gallery-full</code> 245 KiB naspram 536 KiB. Najniži SSIM jednog frejma u ta dva klipa bio je 0,9956. Početna stranica uzima AV1 fajl samo tamo gde pregledač na pitanje da li ga pušta odgovori <span lang="en">„probably”</span> i, gde to može da kaže, dekodira ga hardverski; H.264 fajl svuda drugde.</p>
+            <p data-i18n="g.made.4.p2">AV1 kopije imaju otprilike upola manje bajtova: <code>loop-relay</code> ima 365 KiB naspram 776 KiB u H.264, a <code>gallery-full</code> 245 KiB naspram 536 KiB. Najniži SSIM jednog frejma u ta dva klipa bio je 0,9956. Početna stranica uzima AV1 fajl samo tamo gde pregledač na pitanje da li ga pušta odgovori <span lang="en">„probably”</span> i uz to, gde to može da utvrdi, kaže da AV1 dekodira hardverski, ili uopšte ne pušta H.264; inače, ili ako AV1 fajl javi grešku, uzima H.264 fajl.</p>
             <h3 data-i18n="g.made.4.exports.h">Dimenzije i isečci nastaju iz odobrenog fajla</h3>
             <p data-i18n="g.made.4.p3">Folder <code>exports/</code> u slotu sadrži ono što agent napravi od konačnog fajla: isečke, druge dimenzije, druge formate i sitne izmene, bez novog generisanja. Aplikacija ih prikazuje pored konačne slike, svaku sa dugmetom „Copy image”. Dijalog ispod je iz slota <code>hero-space-diner</code> u projektu <code>orbital-eats</code>, iz kog potiču snimci ekrana aplikacije na početnoj stranici, a ne iz projekta ovog sajta.</p>
           </div>
