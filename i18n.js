@@ -282,4 +282,5 @@ const SR = {
   "closing.h2": "Daj svom agentu način da traži slike.",
   "closing.lead": "Preuzmi folder, pokreni setup, nalepi jednu poruku.",
   "foot.art": "Ilustracije su generisane ručno u alatu Google Flow, preko Asset Promptera.",
+  "foot.guides": "Vodiči",
 };

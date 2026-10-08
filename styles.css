@@ -12,6 +12,7 @@
     3. Buttons, tags     7. Hero and the hub           11. For the agent         15. Closing, footer
     4. Bar, grounds,     8. The loop                   12. Uses, trade-offs      16. Narrower screens
        frames                                                                    17. Reduced motion
+                                                                                 18. Guides
 
   Motion animates transform and opacity only. Everything that hides something first sits under .motion,
   which main.js sets only when the reader has not asked for less motion, or in the load sequence of the hero,
@@ -3974,6 +3975,18 @@ li.is-pulse .f-front::after {
   text-decoration-color: var(--primary);
 }
 
+/* Two links (the guides, the repository) go to the right edge together, and wrap to the next line together. */
+.foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin-left: auto;
+}
+
+.foot-links a {
+  margin-left: 0;
+}
+
 /* ================= 16. Narrower screens ================= */
 
 @media (min-width: 901px) {
@@ -4201,7 +4214,8 @@ li.is-pulse .f-front::after {
     content: none;
   }
 
-  .foot a {
+  .foot a,
+  .foot-links {
     margin-left: 0;
   }
 }
@@ -4330,5 +4344,379 @@ li.is-pulse .f-front::after {
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* ================= 18. Guides ================= */
+
+/* The pages under /guides/: longer reading in the same look. They load no script, so nothing here waits for one, and
+   every rule is on a class of their own: the home page does not use any of them. */
+
+/* The page head: the breadcrumb, the heading and its lead, and the byline, closer to the bar than a section is. */
+.guide-top {
+  padding-block: clamp(48px, 7vw, 96px) clamp(40px, 5vw, 72px);
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 8px;
+  margin-bottom: 22px;
+  color: var(--faint);
+  font: 500 12px/1.4 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.crumbs li + li::before {
+  content: "/";
+  margin-right: 8px;
+  color: var(--edge-strong);
+}
+
+.crumbs a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.crumbs a:hover {
+  color: var(--text);
+}
+
+/* Who wrote it and when, under the lead. */
+.guide-meta {
+  margin-top: 18px;
+  color: var(--faint);
+  font: 400 13px/1.5 var(--mono);
+  letter-spacing: 0.02em;
+}
+
+.guide-meta a {
+  color: var(--muted);
+  text-decoration-color: var(--edge-strong);
+  text-underline-offset: 3px;
+}
+
+.guide-meta a:hover {
+  color: var(--text);
+  text-decoration-color: var(--primary);
+}
+
+/* A guide's section: one question and its answer. Less air than a section of the home page, since it holds reading. */
+.section.guide-sec {
+  padding-block: clamp(56px, 7.5vw, 104px);
+}
+
+/* Running text: the page's body face at a readable measure, muted like the leads, words that matter in full colour. */
+.prose {
+  max-width: 70ch;
+  margin-inline: auto;
+  color: var(--muted);
+  font-size: clamp(16.5px, 1.3vw, 18px);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.prose > * + * {
+  margin-top: 1em;
+}
+
+.prose h2 {
+  color: var(--text);
+  font-size: clamp(1.75rem, 3vw, 2.4rem);
+}
+
+.prose h3 {
+  margin-top: 1.8em;
+  color: var(--text);
+}
+
+.prose > h2 + *,
+.prose > h3 + * {
+  margin-top: 0.7em;
+}
+
+.prose strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.prose a,
+.guide-table a,
+.guide-facts a {
+  color: var(--text);
+  text-decoration-color: var(--primary);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.prose a:hover,
+.guide-table a:hover,
+.guide-facts a:hover {
+  color: var(--primary-hover);
+}
+
+/* The reset takes the markers off every list; running text wants them back, in the edge colour. */
+.prose ul,
+.prose ol {
+  padding-left: 1.3em;
+}
+
+.prose ul {
+  list-style: square;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: 0.45em;
+}
+
+.prose li::marker {
+  color: var(--faint);
+}
+
+.prose code,
+.guide-table code,
+.guide-facts code {
+  padding: 1px 5px;
+  background: var(--well);
+  border: var(--line);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 0.86em;
+  overflow-wrap: anywhere;
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 14px 16px;
+  background: var(--well);
+  border: var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-small);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+  border: 0;
+  font-size: inherit;
+  overflow-wrap: normal;
+}
+
+/* Words quoted from the app or a source: the agent's violet down the side. */
+.prose blockquote {
+  margin-inline: 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--agent);
+  color: var(--text);
+}
+
+/* A picture, a strip or a table between paragraphs: as wide as the section, with the same air above and below. */
+.guide-wide {
+  margin-top: clamp(32px, 4vw, 48px);
+}
+
+.guide-wide + .prose {
+  margin-top: clamp(32px, 4vw, 48px);
+}
+
+.guide-fig {
+  max-width: 800px;
+  margin-inline: auto;
+}
+
+.guide-fig.is-small {
+  max-width: 560px;
+}
+
+.guide-fig figcaption {
+  margin-top: 14px;
+  color: var(--faint);
+  font-size: 14.5px;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: pretty;
+}
+
+/* The slot folder of the loop, standing alone at the size it has beside the six steps. It scrolls inside its frame
+   rather than widening a narrow page. */
+.guide-tree {
+  max-width: 420px;
+  margin-inline: auto;
+  overflow-x: auto;
+}
+
+/* A table is a surface like a picture: the card colour, the hard shadow and the lit inner edge. On a phone it scrolls
+   sideways inside its frame; the page does not. */
+.table-wrap {
+  overflow-x: auto;
+  background: var(--card);
+  border: 1px solid var(--edge-strong);
+  border-radius: 8px;
+  box-shadow:
+    var(--shadow),
+    var(--shadow-soft),
+    inset 0 1px 0 var(--hi);
+}
+
+.guide-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.guide-table.is-narrow {
+  min-width: 600px;
+}
+
+.guide-table caption {
+  padding: 14px 16px 12px;
+  color: var(--faint);
+  font-size: 13.5px;
+  text-align: left;
+}
+
+.guide-table th,
+.guide-table td {
+  padding: 12px 16px;
+  border-top: var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.guide-table thead th {
+  background: var(--well);
+  color: var(--text);
+  font: 500 12px/1.4 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guide-table tbody th {
+  min-width: 140px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.guide-table td {
+  color: var(--muted);
+}
+
+/* Where a cell's facts come from, under them. */
+.guide-table .src {
+  display: block;
+  margin-top: 6px;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+.guide-table .tag {
+  margin-bottom: 4px;
+}
+
+/* The same few questions answered for each way, as a list of terms. */
+.guide-facts {
+  display: grid;
+  grid-template-columns: minmax(0, 13em) minmax(0, 1fr);
+  gap: 0 20px;
+  border-top: var(--line);
+}
+
+.guide-facts dt,
+.guide-facts dd {
+  padding-block: 10px;
+  border-bottom: var(--line);
+}
+
+.guide-facts dt {
+  color: var(--faint);
+  font: 500 12.5px/1.6 var(--mono);
+  letter-spacing: 0.02em;
+}
+
+.guide-facts dd {
+  color: var(--muted);
+}
+
+/* An aside in the reading: a quiet card with your mustard down its side. */
+.guide-note {
+  padding: 18px 20px;
+  background: var(--card);
+  border: 1px solid var(--edge-strong);
+  border-left: 3px solid var(--generate);
+  border-radius: var(--radius);
+  box-shadow:
+    var(--shadow-small),
+    inset 0 1px 0 var(--hi);
+}
+
+.guide-note > * + * {
+  margin-top: 0.6em;
+}
+
+.guide-note h3 {
+  margin-top: 0;
+}
+
+/* The guides listed on /guides/: the rows of "What the folder gives your agent", one per guide, with the date
+   under the text. */
+.guide-list .row-text .guide-meta {
+  margin-top: 16px;
+}
+
+.guide-list .row-text h2 a {
+  text-decoration: none;
+}
+
+.guide-list .row-text h2 a:hover {
+  color: var(--primary-hover);
+}
+
+/* The fit columns, as a pair under the reading rather than beside a picture. */
+.guide-fit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 64px);
+  max-width: 980px;
+  margin-inline: auto;
+}
+
+@media (max-width: 760px) {
+  .guide-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .guide-facts dt {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .guide-facts dd {
+    padding-top: 2px;
+  }
+
+  .guide-fit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .guide-table {
+    font-size: 14px;
+  }
+
+  .guide-table th,
+  .guide-table td {
+    padding: 10px 12px;
   }
 }
