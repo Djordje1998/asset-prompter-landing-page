@@ -161,7 +161,7 @@ li > .cube > .cube-body > i.f.f-back, .f-bottom, .f-left, .f-right, i.cube-glow,
 - Copy: the button turns green and says Copied, as the app's does, and the message lights up from its first letter to its last (`.ask.is-copied`). One click on the message selects all of it.
 - Questions: an answer opens and closes with an animated height (`.faq-a` is the wrapper that is animated; with reduced motion or no script the native `<details>` behaviour stays).
 - The slot folder beside the six steps marks the files the current step added, and the square of the step being read is ringed (`.turn.is-current`).
-- What follows the scroll or the pointer (the bar and its thread, the slot folder, the uses, the light, the hub) is done in the frame's jobs (`inFrame()` in `main.js`): every job measures first, then every job writes, so the browser lays the page out once a frame. A new job keeps to that: measure in the job, write in the function it returns.
+- What follows the scroll or the pointer (the bar and its thread, the slot folder, the uses, the light, the hub) is done in the frame's jobs (`inFrame()` in `main.js`): every job measures first, then every job writes, so the browser lays the page out once a frame. A new job keeps to that: measure in the job, write in the function it returns. A job that throws is reported as an uncaught error and the frame's other jobs still run.
 - Clips play only while they are on screen. A clip is fetched only after the page has loaded and once its picture is within a screen and a half of the window; until it can play, the still stands in its place. The hero's clip is shown twice on the page; the second picture waits until the first has its file, and takes it from the browser's cache.
 
 ### Motion rules kept

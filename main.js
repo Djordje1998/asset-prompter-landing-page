@@ -22,10 +22,31 @@ const say = (key, english) => sayings[key] ?? english;
 /* The work of the coming frame. A job measures what it needs and returns a function that writes; every job of a frame
    measures before any job writes, so the browser restyles and lays the page out once per frame, not once per job. */
 let jobs = [];
+/** A job that throws is reported as an uncaught error would be, and the frame's other jobs still run. */
+function reportJobError(error) {
+  if (window.reportError) reportError(error);
+  else
+    setTimeout(() => {
+      throw error;
+    });
+}
 const runJobs = (now) => {
   const due = jobs;
   jobs = [];
-  for (const write of due.map((job) => job(now))) if (write) write();
+  const writes = due.map((job) => {
+    try {
+      return job(now);
+    } catch (error) {
+      reportJobError(error);
+    }
+  });
+  for (const write of writes) {
+    try {
+      if (write) write();
+    } catch (error) {
+      reportJobError(error);
+    }
+  }
 };
 const inFrame = (job) => {
   if (!jobs.length) requestAnimationFrame(runJobs);
@@ -859,8 +880,10 @@ if (hub) {
       if (turn !== node.turn) node.body.style.transform = node.turn = turn;
     }
 
-    /** A frame of the hub, in the frame's jobs: the hub is measured with everything else, then drawn. */
+    /** A frame of the hub, in the frame's jobs: the hub is measured with everything else, then drawn. Not ticking until
+        the drawing asks for the next one, so a frame that throws leaves the hub to start again at the next wake(). */
     const frame = (now) => {
+      ticking = false;
       const box = running && hub.getBoundingClientRect();
       return () => draw(now, box);
     };
@@ -945,8 +968,7 @@ if (hub) {
           }
         }
       }
-      if (running || trip) inFrame(frame);
-      else ticking = false;
+      if (running || trip) wake();
     }
 
     function wake() {
