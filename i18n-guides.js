@@ -117,7 +117,7 @@ const SR = {
     "              <li>Za klip, sačuvaj <code>final.mp4</code> kao <code>assets/art/&lt;slot&gt;.mp4</code>, bez zvuka.</li>\n" +
     "              <li>Napravi AV1 kopiju klipa i zadrži je samo ako svaki njen frejm ima SSIM od najmanje 0,995 u odnosu na H.264 frejm:</li>",
   "g.made.4.p2":
-    'AV1 kopije imaju otprilike upola manje bajtova: <code>loop-relay</code> ima 365 KiB naspram 776 KiB u H.264, a <code>gallery-full</code> 245 KiB naspram 536 KiB. Najniži SSIM jednog frejma u ta dva klipa bio je 0,9956. Početna stranica uzima AV1 fajl samo tamo gde pregledač na pitanje da li ga pušta odgovori <span lang="en">„probably”</span>, a H.264 fajl svuda drugde.',
+    'AV1 kopije imaju otprilike upola manje bajtova: <code>loop-relay</code> ima 365 KiB naspram 776 KiB u H.264, a <code>gallery-full</code> 245 KiB naspram 536 KiB. Najniži SSIM jednog frejma u ta dva klipa bio je 0,9956. Početna stranica uzima AV1 fajl samo tamo gde pregledač na pitanje da li ga pušta odgovori <span lang="en">„probably”</span> i, gde to može da kaže, dekodira ga hardverski; H.264 fajl svuda drugde.',
   "g.made.4.exports.h": "Dimenzije i isečci nastaju iz odobrenog fajla",
   "g.made.4.p3":
     "Folder <code>exports/</code> u slotu sadrži ono što agent napravi od konačnog fajla: isečke, druge dimenzije, druge formate i sitne izmene, bez novog generisanja. Aplikacija ih prikazuje pored konačne slike, svaku sa dugmetom „Copy image”. Dijalog ispod je iz slota <code>hero-space-diner</code> u projektu <code>orbital-eats</code>, iz kog potiču snimci ekrana aplikacije na početnoj stranici, a ne iz projekta ovog sajta.",

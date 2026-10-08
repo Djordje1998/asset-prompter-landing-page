@@ -477,9 +477,27 @@ const fetchClip = (video, src) => {
   fetching.set(src, turn);
 };
 
-// A clip comes in AV1 (data-video-av1), half the bytes, where the browser says for sure that it plays it, and in H.264
-// (data-video), which every browser plays, elsewhere (Safari on most Apple devices) or when the AV1 file fails.
-const playsAV1 = document.createElement("video").canPlayType('video/mp4; codecs="av01.0.05M.08"') === "probably";
+// A clip comes in AV1 (data-video-av1), half the bytes, and in H.264 (data-video), which nearly every browser plays.
+// AV1 is taken where the browser says for sure that it plays it and, where it can tell (mediaCapabilities), that it
+// decodes it in hardware, or where it plays no H.264: a phone that would decode AV1 in software spends more battery
+// every second the clip plays than the bytes save once. H.264 elsewhere (Safari on most Apple devices), and when the
+// AV1 file fails. Asked once, for the larger clip (1280 x 720, 24 frames a second, 380 kbit/s), when a clip is needed.
+let av1Answer;
+const askAV1 = () => {
+  const video = document.createElement("video");
+  if (video.canPlayType('video/mp4; codecs="av01.0.05M.08"') !== "probably") return Promise.resolve(false);
+  if (!navigator.mediaCapabilities || !video.canPlayType('video/mp4; codecs="avc1.64001F"')) return Promise.resolve(true);
+  return navigator.mediaCapabilities
+    .decodingInfo({
+      type: "file",
+      video: { contentType: 'video/mp4; codecs="av01.0.05M.08"', width: 1280, height: 720, bitrate: 380000, framerate: 24 },
+    })
+    .then(
+      (info) => info.powerEfficient,
+      () => true,
+    );
+};
+const playsAV1 = () => av1Answer || (av1Answer = askAV1());
 
 for (const art of document.querySelectorAll(".art[data-slot]")) {
   const img = art.querySelector("img");
@@ -496,7 +514,7 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
 
   const ready = () => {
     if (!art.dataset.video || reducedMotion) return;
-    const sources = [playsAV1 && art.dataset.videoAv1, art.dataset.video].filter(Boolean);
+    const sources = [art.dataset.video];
     const video = document.createElement("video");
     Object.assign(video, { muted: true, loop: true, autoplay: true, playsInline: true, poster: img.currentSrc || img.src });
     // The still stays until the clip can really play; with no clip, it stays for good.
@@ -516,7 +534,11 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
         fetchClip(video, sources[0]);
       }
     });
-    const fetchNow = () => loaded.then(() => fetchClip(video, sources[0]));
+    const fetchNow = () =>
+      Promise.all([playsAV1(), loaded]).then(([av1]) => {
+        if (av1 && art.dataset.videoAv1) sources.unshift(art.dataset.videoAv1);
+        fetchClip(video, sources[0]);
+      });
     if (!near) return fetchNow();
     whenNear.set(art, fetchNow);
     near.observe(art);
