@@ -15,8 +15,9 @@
 // - the canonical address and og:url are https://assetprompter.com/sr/. The hreflang links stay: both pages name both.
 // - the link to the page as Markdown (rel="alternate" type="text/markdown") is left out: that text is English only.
 // - the fonts' latin-ext files are preloaded with the latin ones, for the letters with marks.
-// - the JSON-LD takes the Serbian of every text it copies from the page, of the features (ld.feature.N) and of the
-//   other texts no element shows (LD_KEYS); the page's own nodes (WebPage, FAQPage) move to /sr/ and say
+// - the JSON-LD takes the Serbian of every text it copies from the page, of the features (ld.feature.N), the keywords
+//   (ld.keywords), the names of the app's topics (ld.about.N) and the other texts no element shows (LD_KEYS); the
+//   page's own nodes (WebPage, FAQPage) move to /sr/ and say
 //   "inLanguage": "sr-Latn". It stops if one of the texts it should copy is not on the page any more.
 // - the few texts main.js writes itself (say("key", ...)) go in as a small JSON block, #say.
 
@@ -176,16 +177,29 @@ function translateLd(json, english, SR) {
   }
   const missing = [];
   const left = [];
-  const features = Object.keys(SR)
-    .filter((key) => /^ld\.feature\.\d+$/.test(key))
-    .sort((a, b) => a.split(".")[2] - b.split(".")[2])
-    .map((key) => SR[key]);
+  /** The Serbian of a numbered list (ld.feature.1, ld.feature.2, ...), in its order. */
+  const numbered = (name) =>
+    Object.keys(SR)
+      .filter((key) => new RegExp(`^ld\\.${name}\\.\\d+$`).test(key))
+      .sort((a, b) => a.split(".")[2] - b.split(".")[2])
+      .map((key) => SR[key]);
+  const features = numbered("feature");
+  const topics = numbered("about");
 
   function visit(value, key, owner) {
     if (Array.isArray(value)) {
       if (key === "featureList") {
         if (value.length !== features.length) throw new Error(`featureList has ${value.length} features, i18n.js has ${features.length} (ld.feature.N)`);
         return features;
+      }
+      if (key === "keywords") {
+        if (SR["ld.keywords"] === undefined) left.push(`${owner["@type"]} keywords`);
+        return SR["ld.keywords"]?.split(/\s*,\s*/) ?? value;
+      }
+      // The app's topics: each keeps its Wikidata item, and its name is in Serbian.
+      if (key === "about" && value.every((item) => item?.["@type"] === "Thing")) {
+        if (value.length !== topics.length) throw new Error(`about has ${value.length} topics, i18n.js has ${topics.length} (ld.about.N)`);
+        return value.map((item, n) => ({ ...item, name: topics[n] }));
       }
       return value.map((item) => visit(item, key, owner));
     }

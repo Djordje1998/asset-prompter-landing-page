@@ -43,6 +43,14 @@ const SR = {
     "Bun; ffmpeg za listove sa frejmovima i mapu pokreta video klipova. Setup instalira oba na Windowsu i Linuxu; na macOS-u Bun instaliraš ručno.",
   "ld.audience":
     "Ljudi koji sa agentom za programiranje prave sajtove, aplikacije i druge projekte, a slike i video za njih prave ručno u generatoru kao što su Midjourney, Google Flow ili ChatGPT Images",
+  /* the app's keywords, one list separated by commas, and the names of its topics (about), in its order */
+  "ld.keywords":
+    "promptovi za slike od agenta za programiranje, promptovi za video od agenta za programiranje, Claude Code slike, Codex slike, Cursor slike, Midjourney, Google Flow, ChatGPT Images, prenos promptova za slike, AI slike i video za sajt, bez API ključa, alternativa MCP serveru za generatore bez API-ja, lokalna aplikacija, Windows, Linux, besplatno",
+  "ld.about.1": "Generativna veštačka inteligencija",
+  "ld.about.2": "Model za generisanje slika iz teksta",
+  "ld.about.3": "Model za generisanje videa iz teksta",
+  "ld.about.4": "Prompt inženjering",
+  "ld.about.5": "Agent veštačke inteligencije",
 
   /* ---- top bar ---- */
   skip: "Preskoči na sadržaj",
