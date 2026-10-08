@@ -12,7 +12,8 @@
 // What changes on the way, and nothing more:
 // - every marked text takes its Serbian: data-i18n the element's whole content (it may hold markup), data-i18n-text
 //   the element's own text (its first text that is more than space), data-i18n-alt, -aria-label and -content the
-//   attribute. A mark with no Serbian stays English. The Serbian of a key is in i18n.js or in i18n-guides.js.
+//   attribute. A mark with no Serbian stays English, and --check fails on it. The Serbian of a key is in i18n.js or in
+//   i18n-guides.js.
 // - <html lang> is sr-Latn, the language button shows SR, and the menu checks Srpski. What stays English on purpose,
 //   the message for the agent (.ask-text) and the app's status tags (.tag), says lang="en". A guide's language link
 //   (a[data-lang] that is not a menu item) leads back to the English guide, and says English (EN on a phone).
@@ -446,7 +447,7 @@ function build(page, SR, seen) {
   const HEADER = header(page);
   out = out.replace(/^(<!doctype html>\n)/i, `$1${HEADER}\n`);
   if (!out.includes(HEADER)) out = `${HEADER}\n${out}`;
-  if (unknown.size) console.warn(`build-sr: ${page.file}: no Serbian in i18n.js or i18n-guides.js, left in English: ${[...unknown].join(", ")}`);
+  if (unknown.size) noSerbian.push(`${page.file}: ${[...unknown].join(", ")}`);
   return out;
 }
 
@@ -454,6 +455,8 @@ const check = process.argv.includes("--check");
 const keep = new Set(process.argv.flatMap((a) => (a.startsWith("--keep=") ? a.slice(7).split(",") : [])));
 const stale = [];
 const seen = new Map();
+// The marked texts with no Serbian at all, a line per page: left in English, and --check fails on them.
+const noSerbian = [];
 const SR = (() => {
   try {
     return serbian();
@@ -514,13 +517,17 @@ for (const key of [...seen.keys()].sort()) {
 const recorded = `{\n${Object.entries(next).map(([key, pair]) => `  ${JSON.stringify(key)}: ${JSON.stringify(pair)}`).join(",\n")}\n}\n`;
 const recordStale = (fs.existsSync(path.join(ROOT, RECORD)) ? read(RECORD) : "") !== recorded;
 if (!check && recordStale) fs.writeFileSync(path.join(ROOT, RECORD), recorded);
+if (noSerbian.length) {
+  const say = check ? console.error : console.warn;
+  for (const line of noSerbian) say(`build-sr: no Serbian for ${line}: add them to i18n.js or i18n-guides.js`);
+}
 if (untranslated.length) {
   const say = check ? console.error : console.warn;
   say(`build-sr: the English of these texts changed and their Serbian did not: ${untranslated.join(", ")}`);
   say(`  change the Serbian in i18n.js or i18n-guides.js, or, if it still says the same, run node tools/build-sr.mjs --keep=${untranslated.join(",")}`);
 }
 if (check) {
-  if (stale.length || leftOver.length || untranslated.length || recordStale) {
+  if (stale.length || leftOver.length || untranslated.length || noSerbian.length || recordStale) {
     for (const file of stale) console.error(`${file} is out of date: run node tools/build-sr.mjs and commit it`);
     if (recordStale) console.error(`${RECORD} is out of date: run node tools/build-sr.mjs and commit it`);
     process.exit(1);
