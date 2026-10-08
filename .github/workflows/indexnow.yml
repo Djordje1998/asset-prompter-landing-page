@@ -1,0 +1,51 @@
+# After a push to main, tells the IndexNow engines (Bing, Yandex, Seznam, Naver, Yep) which pages changed, once
+# GitHub Pages serves them, then checks the live site. Google does not take IndexNow; it reads sitemap.xml.
+# It starts on the push itself: tools/indexnow.mjs waits until the site serves the commit's files.
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths: [index.html, sr/index.html, llms.txt, llms-full.txt, sitemap.xml]
+  workflow_dispatch:
+    inputs:
+      all:
+        description: Send every address in sitemap.xml (otherwise those the last commit changed)
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    name: IndexNow
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the push's "before" commit, to see what changed
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Send the changed addresses once the site serves them
+        env:
+          BEFORE: ${{ github.event.before }}
+          ALL: ${{ inputs.all }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            if [ "$ALL" = false ]; then node tools/indexnow.mjs HEAD~1 HEAD; else node tools/indexnow.mjs --all; fi
+          elif [ -z "$BEFORE" ] || [ "$BEFORE" = 0000000000000000000000000000000000000000 ] || ! git cat-file -e "$BEFORE^{commit}"; then
+            node tools/indexnow.mjs --all
+          else
+            node tools/indexnow.mjs "$BEFORE" "$GITHUB_SHA"
+          fi
+      - name: The live site
+        if: success() || failure()
+        run: node tools/live-check.mjs
