@@ -5,7 +5,8 @@
 //   the page must pass by itself: a yes/no audit with 1, a measured one (layout shift) with 0.9, Lighthouse's own line.
 // - Layout shift, blocking time and the bytes the page loads have a budget: the numbers of October 2026 (CLS 0, TBT
 //   50 to 120 ms, 0.71 MB on /, 0.73 MB on /sr/ with the first clip in AV1; 1.13 and 1.19 MB with it in H.264, which
-//   headless Chrome most likely takes, as it decodes AV1 only in software) with room for a slower machine. Above "warn" it only warns, above "fail" it fails.
+//   headless Chrome most likely takes, as it decodes AV1 only in software) with room for a slower machine. Above
+//   "warn" it only warns, above "fail" it fails.
 // - Largest Contentful Paint only warns: the headline fades in on load (kept on purpose), which holds the mobile lab
 //   LCP at about 2.7 s on / and 3.1 s on /sr/, over the 2.5 s Google calls good.
 //   node tools/lh-assert.mjs <report.json>...
