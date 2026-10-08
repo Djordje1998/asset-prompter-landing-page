@@ -28,10 +28,10 @@
 // - the link to the page as Markdown (rel="alternate" type="text/markdown") is left out: that text is English only.
 // - the Serbian file of each preloaded font (-sr, the letters with marks; see tools/sr-fonts.mjs) is preloaded too.
 // - the JSON-LD takes the Serbian of every text it copies from the page, of the features (ld.feature.N), the keywords
-//   (ld.keywords), the names of the app's topics (ld.about.N) and the other texts no element shows (LD_KEYS); the
-//   page's own nodes (WebPage, FAQPage, a guide's Article and breadcrumb) move to its Serbian address, as do the
-//   guides it names, and say "inLanguage": "sr-Latn". It stops if one of the texts it should copy is not on the page
-//   any more.
+//   (ld.keywords), the names of the app's topics (ld.about.N, also where a guide names one as its own) and the other
+//   texts no element shows (LD_KEYS); the page's own nodes (WebPage, FAQPage, a guide's Article and breadcrumb) move to
+//   its Serbian address, as do the guides it names, and say "inLanguage": "sr-Latn". It stops if one of the texts it
+//   should copy is not on the page any more.
 // - the few texts main.js writes itself (say("key", ...)) go in as a small JSON block, #say, on a page that loads it.
 //
 // tools/sr-english.json keeps, for every marked text, a short hash of its English and of its Serbian as they were when
@@ -278,6 +278,10 @@ function translateLd(json, english, SR, page) {
       .map((key) => SR[key]);
   const features = numbered("feature");
   const topics = numbered("about");
+  // The English name of each of the app's topics (its about in index.html), and its Serbian.
+  const home = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(read("index.html"))[1]);
+  const app = (home["@graph"] ?? [home]).find((node) => node["@type"] === "SoftwareApplication");
+  const TOPICS = new Map((app?.about ?? []).map((item, n) => [item.name, topics[n]]));
 
   function visit(value, key, owner) {
     if (Array.isArray(value)) {
@@ -289,8 +293,10 @@ function translateLd(json, english, SR, page) {
         if (SR["ld.keywords"] === undefined) left.push(`${owner["@type"]} keywords`);
         return SR["ld.keywords"]?.split(/\s*,\s*/) ?? value;
       }
-      // The app's topics: each keeps its Wikidata item, and its name is in Serbian.
+      // The app's topics: each keeps its Wikidata item, and its name is in Serbian. A guide's topic that is one of the
+      // app's takes that one's Serbian; another (a name, as Model Context Protocol) stays as it is.
       if (key === "about" && value.every((item) => item?.["@type"] === "Thing")) {
+        if (owner["@type"] !== "SoftwareApplication") return value.map((item) => ({ ...item, name: TOPICS.get(item.name) ?? item.name }));
         if (value.length !== topics.length) throw new Error(`about has ${value.length} topics, i18n.js has ${topics.length} (ld.about.N)`);
         return value.map((item, n) => ({ ...item, name: topics[n] }));
       }
