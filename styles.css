@@ -744,7 +744,7 @@ h3 {
 }
 
 /* How far down the page the reader is: a thread along the lower edge of the window, violet at its tail
-   and mustard at its head, as in the hero. main.js writes --read (0 to 1) on <html>; without it the thread
+   and mustard at its head, as in the hero. main.js writes --read (0 to 1) on .read-progress; without it the thread
    stays out of sight. It is outside the bar, whose backdrop-filter would hold a fixed child inside it. */
 .read-progress {
   position: fixed;
