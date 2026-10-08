@@ -7,7 +7,9 @@
          tools/build-sr.mjs, with this same script). It runs first, before anything is fetched or drawn: a reader who
          chose Serbian in the menu goes from here to the Serbian page, and an old link with ?lang= goes to its language.
          ?lang=en keeps the English page even for that reader, so no address sends back to the one it came from. With
-         the script the language menu shows (.i18n); main.js runs it, so without main.js the menu goes again. -->
+         the script the language menu shows (.i18n); main.js runs it, so without main.js the menu goes again. A page
+         opened by the menu (main.js keeps the reader's place for it) plays no entrance (.lang-switched) and holds its
+         transitions until main.js has set it as it was (.lang-settling), as when the text changed in place. -->
     <script>
       (function () {
         var root = document.documentElement;
@@ -24,8 +26,12 @@
           location.replace("../" + index + "?lang=en" + location.hash);
         }
         root.classList.add("i18n");
+        try {
+          var place = JSON.parse(sessionStorage.getItem("lang-place"));
+          if (place && Date.now() - place.at < 10000) root.classList.add("lang-switched", "lang-settling");
+        } catch (e) {}
         document.addEventListener("DOMContentLoaded", function () {
-          if (!root.classList.contains("js")) root.classList.remove("i18n");
+          if (!root.classList.contains("js")) root.classList.remove("i18n", "lang-settling");
         });
       })();
     </script>
@@ -93,7 +99,7 @@
          with marks (tools/build-sr.mjs adds them). -->
     <link rel="preload" href="assets/fonts/bricolage-grotesque-v9-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/fonts/instrument-sans-v4-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=w2-036" />
+    <link rel="stylesheet" href="./styles.css?v=w2-038" />
     <!-- What search engines and AI answers read about the page. Its texts are copies of the page's: the page's name and
          description are the title and the description above, the app's description is hero.sub, the questions and answers
          are faq.1.q to faq.7.a word for word, without markup. Only the features, the app's subcategory, its requirements
@@ -1048,6 +1054,6 @@
     </footer>
 
     <script src="./assets/vendor/lenis.min.js?v=1.3.26" defer></script>
-    <script src="./main.js?v=w2-037" defer></script>
+    <script src="./main.js?v=w2-038" defer></script>
   </body>
 </html>

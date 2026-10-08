@@ -1203,6 +1203,19 @@ h3 {
   animation-delay: calc(var(--n, 0) * 90ms);
 }
 
+/* After a change of language the page opens where the reader was: what was seen already stands where it is
+   (main.js adds .is-shown with .is-in), and nothing moves into its state on the way (.lang-settling, for two frames). */
+.motion [data-reveal].is-shown,
+.motion [data-reveal-group].is-shown > * {
+  animation: none;
+}
+
+.lang-settling *,
+.lang-settling *::before,
+.lang-settling *::after {
+  transition: none !important;
+}
+
 [data-reveal-group] > :nth-child(2) {
   --n: 1;
 }
@@ -2304,6 +2317,23 @@ li.is-pulse .f-front::after {
   .hub-fine {
     animation: fade 1s ease 1.2s backwards;
   }
+
+  /* Not on a page opened by the language menu (.lang-switched): the hero stood there already. */
+  .lang-switched .hero h1 .line,
+  .lang-switched .hero h1 .who-agent::after,
+  .lang-switched .hero h1 .who-you::after,
+  .lang-switched .hero-sub,
+  .lang-switched .hub .ask,
+  .lang-switched .hub .cta,
+  .lang-switched .hero-facts,
+  .lang-switched .hero-stage,
+  .lang-switched .hub-label,
+  .lang-switched .hub-col li > .cube,
+  .lang-switched .hub-col li > .hub-name,
+  .lang-switched .hub-wires,
+  .lang-switched .hub-fine {
+    animation: none;
+  }
 }
 
 /* ================= 8. The loop: the folder on the left, six turns on the right ================= */
@@ -2895,6 +2925,15 @@ li.is-pulse .f-front::after {
 
 .motion .lanes.is-in .lane-end.is-you {
   animation-delay: 1.12s;
+}
+
+/* Drawn already, when the page opened after a change of language (see Entrances). */
+.motion .lanes.is-shown .lane-wire,
+.motion .lanes.is-shown .lane-node,
+.motion .lanes.is-shown .lane-step,
+.motion .lanes.is-shown .lane-fork::before,
+.motion .lanes.is-shown .lane-end {
+  animation: none;
 }
 
 /* Then a light runs the path every five seconds. It reaches the server on one run and you on the next. */

@@ -55,6 +55,12 @@ const PLACE = "lang-place";
 const parts = () => [...document.querySelectorAll("main > section, body > footer")];
 
 // Coming from the other language: start where the reader was. Once more when the fonts are in, if nothing has moved.
+// The script at the top of the <head> has marked such a page: no entrance plays (.lang-switched, styles.css), and no
+// transition until the frame after this script has set the bar, the folder and the rest as they were (.lang-settling).
+const switched = root.classList.contains("lang-switched");
+if (root.classList.contains("lang-settling")) {
+  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("lang-settling")));
+}
 try {
   const place = JSON.parse(sessionStorage.getItem(PLACE));
   sessionStorage.removeItem(PLACE);
@@ -330,7 +336,19 @@ if (!reducedMotion && hasObserver) {
     },
     { threshold: [0, 0.15, 0.3], rootMargin: "0px 0px -7% 0px" },
   );
-  for (const el of document.querySelectorAll("[data-reveal], [data-reveal-group]")) seen.observe(el);
+  for (const el of document.querySelectorAll("[data-reveal], [data-reveal-group]")) {
+    // After a change of language, what the reader had already seen stands where it is (.is-shown): all that is above
+    // the window, and what in it the observer would let in at once.
+    if (switched) {
+      const box = el.getBoundingClientRect();
+      const inView = Math.min(box.bottom, innerHeight * 0.93) - Math.max(box.top, 0);
+      if (box.bottom <= 0 || (inView > 0 && (inView >= box.height * 0.15 || inView >= innerHeight * 0.3))) {
+        el.classList.add("is-in", "is-shown");
+        continue;
+      }
+    }
+    seen.observe(el);
+  }
 }
 
 /* ---- smooth scrolling: Lenis (assets/vendor) eases the wheel, so what follows the scroll moves evenly instead of in steps.
@@ -1014,8 +1032,8 @@ if (hub) {
     async function loop() {
       if (looping) return;
       looping = true;
-      // The first round waits for the hero's entrance to finish.
-      if (!count) await wait(1900);
+      // The first round waits for the hero's entrance to finish; after a change of language there is none.
+      if (!count && !switched) await wait(1900);
       while (running) {
         // Agent and generator are drawn at random, each from its own shuffled bag.
         await round(nextAgent(), nextGen());
