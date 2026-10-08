@@ -156,7 +156,7 @@ They come from a second app instance, never from the one you work in, so nothing
 1. Write a config with another port (the scripts expect 4796), an empty folder as `projectsDir`, no `externalProjects` and `"openBrowser": false`, and start a second app instance from the app's repository with `ASSET_PROMPTER_CONFIG=<that config> NO_OPEN=1 bun src/server/index.ts`.
 2. Run the scripts. For each state they rebuild a copy of `observation-dining-room` in that folder with only the files that exist at that point (prompt only; with the result; with your change request; with version 2 and both reviews; approved), open the app and cut out the card.
 3. Convert the PNGs to WebP (wide: 1600 px; narrow: padded to 880 px with the page colour #1d1b21) and stop the second instance.
-4. Run `tools/sizes.mjs` (it needs `playwright-core` and a Chromium or Edge, as the other scripts) to make the smaller copies, and check the widths in `srcset` in `index.html`.
+4. Run `tools/sizes.mjs` (it needs `playwright-core` and a Chromium or Edge, as the other scripts) to make the smaller copies (it deletes the old copies of a picture first), and check the widths in `srcset` in `index.html`.
 
 For the two pictures in `assets/shots/`, copy `orbital-eats` to the scratch folder as well and approve `observation-dining-room` v2 (pick 2.png) in the copy. Capture in dark mode with `tutorial:seen` set in localStorage. `version-results.webp`: Details of `observation-dining-room` at a 480 px wide window and device scale 3, cut across the card from the top of `.results-strip` to 10 px under `.changes`; WebP, quality 90. `variants-dialog.webp`: the variants dialog of `hero-space-diner` at device scale 2, cut to `.modal`; WebP at most 1680 px wide, quality 85.
 

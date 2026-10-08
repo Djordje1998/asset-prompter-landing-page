@@ -8,7 +8,7 @@
 // are pixel art and are never scaled or encoded again.
 // Needs playwright-core and a Chromium or Edge (CHROME, or EDGE, overrides the path). Run it again after retaking a picture.
 import { chromium } from "playwright-core";
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -22,7 +22,13 @@ const browser = await chromium.launch({ executablePath: BROWSER });
 const page = await browser.newPage();
 for (const folder of FOLDERS) {
   // A copy is named after its width; it is not scaled again.
-  for (const file of readdirSync(join(ROOT, folder)).filter((f) => f.endsWith(".webp") && !/-\d+\.webp$/.test(f))) {
+  const files = readdirSync(join(ROOT, folder));
+  for (const file of files.filter((f) => f.endsWith(".webp") && !/-\d+\.webp$/.test(f))) {
+    // The copies made before go first, so a picture retaken at another size leaves no copy of its old size behind.
+    const stem = file.replace(/\.webp$/, "");
+    for (const old of files.filter((f) => f.startsWith(stem + "-") && /^\d+\.webp$/.test(f.slice(stem.length + 1)))) {
+      rmSync(join(ROOT, folder, old));
+    }
     const data = `data:image/webp;base64,${readFileSync(join(ROOT, folder, file)).toString("base64")}`;
     const copies = await page.evaluate(
       async ({ data, shares, quality }) => {
