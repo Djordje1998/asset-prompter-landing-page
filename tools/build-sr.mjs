@@ -35,7 +35,7 @@ const DIR = "/sr/";
 const TAG = "sr-Latn";
 const CODE = "SR";
 const ATTRS = ["alt", "aria-label", "content"];
-const URL_ATTRS = new Set(["href", "src", "srcset", "poster", "data-video", "data-src", "data-poster", "imagesrcset", "action"]);
+const URL_ATTRS = new Set(["href", "src", "srcset", "poster", "data-video", "data-video-av1", "data-src", "data-poster", "imagesrcset", "action"]);
 // The nodes of the JSON-LD that describe this page rather than the site, the app or the author.
 const PAGE_TYPES = new Set(["WebPage", "FAQPage", "Question", "Answer", "HowTo", "HowToStep", "BreadcrumbList"]);
 // The JSON-LD keys whose values are texts a reader could see on the page; names of things, kinds and addresses stay.

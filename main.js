@@ -477,6 +477,10 @@ const fetchClip = (video, src) => {
   fetching.set(src, turn);
 };
 
+// A clip comes in AV1 (data-video-av1), half the bytes, where the browser says for sure that it plays it, and in H.264
+// (data-video), which every browser plays, elsewhere (Safari on most Apple devices) or when the AV1 file fails.
+const playsAV1 = document.createElement("video").canPlayType('video/mp4; codecs="av01.0.05M.08"') === "probably";
+
 for (const art of document.querySelectorAll(".art[data-slot]")) {
   const img = art.querySelector("img");
 
@@ -491,8 +495,8 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
   };
 
   const ready = () => {
-    const src = art.dataset.video;
-    if (!src || reducedMotion) return;
+    if (!art.dataset.video || reducedMotion) return;
+    const sources = [playsAV1 && art.dataset.videoAv1, art.dataset.video].filter(Boolean);
     const video = document.createElement("video");
     Object.assign(video, { muted: true, loop: true, autoplay: true, playsInline: true, poster: img.currentSrc || img.src });
     // The still stays until the clip can really play; with no clip, it stays for good.
@@ -506,7 +510,13 @@ for (const art of document.querySelectorAll(".art[data-slot]")) {
       },
       { once: true },
     );
-    const fetchNow = () => loaded.then(() => fetchClip(video, src));
+    video.addEventListener("error", () => {
+      if (sources.length > 1) {
+        sources.shift();
+        fetchClip(video, sources[0]);
+      }
+    });
+    const fetchNow = () => loaded.then(() => fetchClip(video, sources[0]));
     if (!near) return fetchNow();
     whenNear.set(art, fetchNow);
     near.observe(art);

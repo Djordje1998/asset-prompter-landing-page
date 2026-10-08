@@ -88,7 +88,7 @@ function checkRefs(file, html) {
   const body = stripScripts(html);
   // The 404 page is shown at any depth, so its addresses must start at the root.
   const rootOnly = file === "404.html";
-  for (const [, a, v] of [...scripts, ...body.matchAll(/\s(href|src|poster|data-video|data-src)="([^"]*)"/g)]) {
+  for (const [, a, v] of [...scripts, ...body.matchAll(/\s(href|src|poster|data-video|data-video-av1|data-src)="([^"]*)"/g)]) {
     if (v.startsWith("#")) {
       if (v.length > 1 && !ids.has(v.slice(1))) fail(file, `${a}="${v}" has no element with that id`);
       continue;
