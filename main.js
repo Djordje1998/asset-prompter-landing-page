@@ -110,29 +110,29 @@ if (langBox) {
     button.setAttribute("aria-expanded", String(on));
   };
 
-  /** Every latin-ext font file the stylesheet names; or, where its rules cannot be read (a page opened from a file), the
-      latin-ext file of each preloaded font. */
-  const latinExt = () => {
+  /** Every Serbian font file (-sr) the stylesheet names; or, where its rules cannot be read (a page opened from a file),
+      the Serbian file of each preloaded font. */
+  const serbianFonts = () => {
     const files = new Set();
     try {
       for (const sheet of document.styleSheets) {
         for (const rule of sheet.cssRules) {
-          const src = /url\(["']?([^"')]*-latin-ext\.woff2)/.exec(rule.style?.getPropertyValue("src") || "");
+          const src = /url\(["']?([^"')]*-sr\.woff2)/.exec(rule.style?.getPropertyValue("src") || "");
           if (src) files.add(new URL(src[1], sheet.href || location.href).href);
         }
       }
     } catch {}
-    if (!files.size) for (const font of document.querySelectorAll('link[rel="preload"][as="font"]')) files.add(font.href.replace("-latin.", "-latin-ext."));
+    if (!files.size) for (const font of document.querySelectorAll('link[rel="preload"][as="font"]')) files.add(font.href.replace("-latin.", "-sr."));
     return [...files];
   };
 
   // As soon as the reader reaches for the menu, the other page is fetched, so the switch is quick; and from the English
-  // page the fonts' latin-ext files too, which hold the Serbian letters with marks. Browsers without prefetch skip it.
+  // page the fonts' Serbian files too, which hold the letters with marks. Browsers without prefetch skip it.
   let warmed = false;
   const warm = () => {
     if (warmed) return;
     warmed = true;
-    const fonts = document.querySelector('link[rel="preload"][href*="-latin-ext."]') ? [] : latinExt();
+    const fonts = document.querySelector('link[rel="preload"][href*="-sr."]') ? [] : serbianFonts();
     for (const href of [...items.filter((item) => item !== current).map((item) => homes.get(item)), ...fonts]) {
       const link = document.createElement("link");
       if (!link.relList?.supports?.("prefetch")) return;

@@ -16,7 +16,7 @@
 // - the canonical address and og:url are https://assetprompter.com/sr/. The hreflang links stay: both pages name both.
 //   An address with a mark (og.image) takes its Serbian, in the JSON-LD too (primaryImageOfPage).
 // - the link to the page as Markdown (rel="alternate" type="text/markdown") is left out: that text is English only.
-// - the fonts' latin-ext files are preloaded with the latin ones, for the letters with marks.
+// - the Serbian file of each preloaded font (-sr, the letters with marks; see tools/sr-fonts.mjs) is preloaded too.
 // - the JSON-LD takes the Serbian of every text it copies from the page, of the features (ld.feature.N), the keywords
 //   (ld.keywords), the names of the app's topics (ld.about.N) and the other texts no element shows (LD_KEYS); the
 //   page's own nodes (WebPage, FAQPage) move to /sr/ and say
@@ -309,10 +309,10 @@ function build() {
       edit(html.lastIndexOf("\n", el.start), el.tagEnd, "");
       continue;
     }
-    // The latin-ext file of a preloaded font goes right after it.
+    // The Serbian file of a preloaded font goes right after it.
     const href = attr(el, "href")?.value ?? "";
     if (el.name === "link" && rel === "preload" && /-latin\.woff2$/.test(href)) {
-      const tag = html.slice(el.start, el.tagEnd).replace(href, fromSr(href.replace(/-latin\.woff2$/, "-latin-ext.woff2")));
+      const tag = html.slice(el.start, el.tagEnd).replace(href, fromSr(href.replace(/-latin\.woff2$/, "-sr.woff2")));
       const indent = /[ \t]*$/.exec(html.slice(0, el.start))[0];
       edit(el.tagEnd, el.tagEnd, `\n${indent}${tag}`);
     }
