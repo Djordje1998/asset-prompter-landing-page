@@ -1346,8 +1346,11 @@ h3 {
   user-select: all;
 }
 
+/* The "> " is drawn, not read: the second rule gives it no text for screen readers; browsers without the "/ alt"
+   form drop that rule and keep the first. */
 .ask-text::before {
   content: "> ";
+  content: "> " / "";
   color: var(--agent);
 }
 
@@ -3772,6 +3775,11 @@ li.is-pulse .f-front::after {
 .foot .brand {
   color: var(--text);
   font-size: 15px;
+}
+
+/* The line about the illustrations is a little lighter than --faint, so it is readable on both footer colours (4.5:1). */
+.foot [data-i18n="foot.art"] {
+  color: #8a8595;
 }
 
 .foot a {
