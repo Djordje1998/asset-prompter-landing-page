@@ -1,7 +1,10 @@
 // The smaller copies of the screenshots in assets/app/ and assets/shots/, which index.html offers in srcset beside the
-// full picture: half and three quarters of its width, as <name>-<width>.webp. A phone or a screen of normal density
-// takes one of them; a sharper screen still gets the full picture. WebP at quality 90, scaled in the browser at its
-// best quality. The illustrations and the clips are pixel art and are never scaled or encoded again.
+// full picture, as <name>-<width>.webp: about half and three quarters of its width. A phone or a screen of normal
+// density takes one of them; a sharper screen still gets the full picture. A copy keeps the exact shape of the full
+// picture (width and height divided by the same number), because the page lays a picture out by the shape of the file
+// it got: a copy a fraction of a pixel taller would move everything under it. A picture whose shape allows no such
+// size near three quarters gets only the half, or only the full picture. WebP at quality 90, scaled in the browser at
+// its best quality. The illustrations and the clips are pixel art and are never scaled or encoded again.
 // Needs playwright-core and a Chromium or Edge (CHROME, or EDGE, overrides the path). Run it again after retaking a picture.
 import { chromium } from "playwright-core";
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -26,10 +29,14 @@ for (const folder of FOLDERS) {
         img.src = data;
         await img.decode();
         const out = [];
-        for (const share of shares) {
-          // Even widths, and the height that keeps the picture's shape.
-          const w = Math.round((img.naturalWidth * share) / 2) * 2;
-          const h = Math.round((img.naturalHeight * w) / img.naturalWidth);
+        // The smallest size with the picture's exact shape; every exact size is a whole number of it.
+        const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+        const step = img.naturalWidth / gcd(img.naturalWidth, img.naturalHeight);
+        const widths = new Set(shares.map((share) => Math.round((img.naturalWidth * share) / step) * step));
+        for (const w of widths) {
+          // Too close to the full picture to be worth a file.
+          if (!w || w > img.naturalWidth * 0.85) continue;
+          const h = (img.naturalHeight * w) / img.naturalWidth;
           const canvas = document.createElement("canvas");
           canvas.width = w;
           canvas.height = h;
