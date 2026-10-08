@@ -195,7 +195,7 @@ Yes. Remove the approval in Details to reopen the slot, or clone the slot to try
 
 ## Guides
 
-Each guide is dated 8 October 2026 and links its sources. List: https://assetprompter.com/guides/
+Each guide is dated 8 October 2026 and links its sources. List: https://assetprompter.com/guides/ (in Serbian: https://assetprompter.com/sr/guides/, each guide at the same path under /sr/)
 
 ### How the pictures on this site were made
 
@@ -226,6 +226,7 @@ You don't need Asset Prompter if your agent's own tool or a generator's MCP serv
 - Website (English): https://assetprompter.com/
 - Website (Serbian): https://assetprompter.com/sr/
 - Guides: https://assetprompter.com/guides/
+- Guides (Serbian): https://assetprompter.com/sr/guides/
 - Short index for AI assistants: https://assetprompter.com/llms.txt
 - Source code (MIT): https://github.com/Djordje1998/asset-prompter
 - App README: https://github.com/Djordje1998/asset-prompter/blob/master/README.md

@@ -53,6 +53,7 @@ const SR = {
   "g.made.t.file": "Fajl na sajtu",
   "g.made.t.1.kind": "Slika i njen klip",
   "g.made.t.1.where": 'Vrh stranice i <a href="/#agent">„Proverava klip koji ne može da pusti”</a>',
+  "g.made.t.1.file": "<code>assets/art/loop-relay.webp</code>, 1280 × 714; <code>loop-relay.mp4</code> i <code>loop-relay-av1.mp4</code>",
   "g.made.t.2.kind": "Video slot",
   "g.made.t.2.where": 'List sa frejmovima 003 i mapa pokreta njegove verzije 2, u <a href="/#agent">„Proverava klip koji ne može da pusti”</a>',
   "g.made.t.3.kind": "Slika",
@@ -63,6 +64,7 @@ const SR = {
   "g.made.t.5.where": '<a href="/#tradeoffs">„Sam ne generiše ništa”</a>',
   "g.made.t.6.kind": "Slika i njen klip",
   "g.made.t.6.where": "Završna sekcija, „Daj svom agentu način da traži slike.”",
+  "g.made.t.6.file": "<code>assets/art/gallery-full.webp</code>, 1280 × 714; <code>gallery-full.mp4</code> i <code>gallery-full-av1.mp4</code>",
   "g.made.1.p2":
     "Na stranici su prvo bili slotovi, pa tek onda slike. Dok fajl slota ne postoji, stranica na mestu koje će on zauzeti crta isprekidani okvir sa imenom slota i opisom onoga što slika treba da prikaže, pod istom oznakom „Needs generating” koju aplikacija stavlja na karticu koja čeka na tebe:",
   "g.made.missing.hint":
