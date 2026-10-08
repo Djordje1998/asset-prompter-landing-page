@@ -1,6 +1,7 @@
 // Checks the published files without a browser and without packages (Node 18 or later), as the "files" job of
 // .github/workflows/check.yml does before a change reaches main:
-// - sr/index.html is what tools/build-sr.mjs makes from the current index.html and i18n.js;
+// - the Serbian pages (sr/index.html, sr/guides/...) are what tools/build-sr.mjs makes from the current English pages,
+//   i18n.js and i18n-guides.js;
 // - the pages are every index.html in the folder (the home page, the guides, their Serbian copies under sr/); a page X
 //   and sr/X, when it exists, are one page in two languages;
 // - every address on this site that a page, the stylesheet, the JSON-LD, the manifest, robots.txt, the sitemap or
@@ -8,8 +9,9 @@
 // - the head of each page: one canonical, its own address (og:url too); hreflang links that name each language of the
 //   page once, plus x-default (the English one), the same in each language and in the sitemap; title and description
 //   lengths; one h1; no noindex; the pages below the home pages use root addresses only, as 404.html does;
-// - each page links its other language with an <a href>, and no address on the pages, in the JSON-LD, the sitemap or
-//   llms.txt carries ?lang= (the script at the top of the <head> still reads it, for old links);
+// - each page links its other language with an <a href>, its other links to pages stay in its language (/sr/ links
+//   /sr/guides/), and no address on the pages, in the JSON-LD, the sitemap or llms.txt carries ?lang= (the script at the
+//   top of the <head> still reads it, for old links);
 // - the JSON-LD parses, has what each kind of node needs, every @id is defined once in a page and every reference to
 //   one resolves on some page (a guide points at the site, the app and the author of the home page), the page's name
 //   and description are its title and description, an article's headline is its h1, the questions are as many as the
@@ -180,6 +182,18 @@ function checkLinks(file, url, html) {
   for (const other of Object.values(languagesOf(file)))
     if (other !== file && !targets.has(ORIGIN + PAGES[other])) fail(file, `no <a href> to the other language, ${ORIGIN + PAGES[other]}`);
   for (const [, a, v] of body.matchAll(/\s([a-z-]+)="([^"]*)"/g)) if (hasLang(v)) fail(file, `${a}="${v}" carries ?lang=`);
+  // Every other link to a page stays in the page's language when that page is in it (/sr/ links /sr/guides/, not
+  // /guides/); a language link says hreflang.
+  const lang = file.startsWith("sr/") ? "sr" : "en";
+  for (const t of tags(body, "a")) {
+    const href = attr(t, "href");
+    if (!href || attr(t, "hreflang") !== undefined || href.startsWith("#")) continue;
+    const target = resolve(href, url);
+    if (!target.startsWith(ORIGIN + "/")) continue;
+    const page = Object.keys(PAGES).find((f) => ORIGIN + PAGES[f] === target);
+    const own = page && languagesOf(page)[lang];
+    if (own && own !== page) fail(file, `<a href="${href}"> leads to ${target}; in this language it is ${ORIGIN + PAGES[own]}`);
+  }
 }
 
 const ldIds = new Set(); // every @id a page defines
@@ -256,9 +270,9 @@ function checkJsonLd(file, url, html) {
   }
 }
 
-// ---- the Serbian page is up to date
+// ---- the Serbian pages are up to date
 const sr = spawnSync(process.execPath, [join(ROOT, "tools/build-sr.mjs"), "--check"], { encoding: "utf8" });
-if (sr.status !== 0) fail("sr/index.html", (sr.stderr || sr.stdout).trim() || "tools/build-sr.mjs --check failed");
+if (sr.status !== 0) fail("sr/", (sr.stderr || sr.stdout).trim() || "tools/build-sr.mjs --check failed");
 
 // ---- pages
 const pages = Object.entries(PAGES).filter(([f]) => existsSync(join(ROOT, f)));
