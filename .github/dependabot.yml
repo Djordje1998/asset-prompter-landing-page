@@ -1,0 +1,10 @@
+# Proposes a pull request when an action in .github/workflows has a new release, at most once a month and only for a
+# release at least 14 days old. html-validate and lighthouse are pinned in check.yml (npx) and are raised by hand.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 14
