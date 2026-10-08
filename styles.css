@@ -3997,6 +3997,23 @@ li.is-pulse .f-front::after {
   }
 }
 
+/* On a tablet held sideways (1024px) the footer stays one row, as it was before the guides link: the brand and the
+   line keep their places, and the two links come 10px from the line and from each other. */
+@media (min-width: 1001px) and (max-width: 1060px) {
+  .foot-row {
+    column-gap: 0;
+  }
+
+  .foot .brand {
+    margin-right: 28px;
+  }
+
+  .foot-links {
+    column-gap: 10px;
+    padding-left: 10px;
+  }
+}
+
 @media (max-width: 1020px) {
   .bar-links {
     display: none;

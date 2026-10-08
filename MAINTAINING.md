@@ -204,7 +204,7 @@ For the two pictures in `assets/shots/`, copy `orbital-eats` to the scratch fold
 
 ## Guides
 
-Longer answers that do not fit the one page, each a page of its own under `guides/`, with its Serbian copy at the same path under `sr/` (`/sr/guides/`, `/sr/guides/how-this-site-was-made/` and so on), linked from the footer of both home pages ("Guides", "Vodiči" on `/sr/`, which links `/sr/guides/`; `foot.guides`; the footer's two links sit together in `.foot-links`, at the right edge, and wrap together):
+Longer answers that do not fit the one page, each a page of its own under `guides/`, with its Serbian copy at the same path under `sr/` (`/sr/guides/`, `/sr/guides/how-this-site-was-made/` and so on), linked from the footer of both home pages ("Guides", "Vodiči" on `/sr/`, which links `/sr/guides/`; `foot.guides`; the footer's two links sit together in `.foot-links`, at the right edge, and wrap together. The link costs the footer a second row where it had one: at 360px one more line, and from 901px to about 1000px (1020px in Serbian) the links drop under the line where before only the repository link did, below about 967px (987px). Between 1001px and 1060px the links come closer, so a tablet held sideways keeps the one row it had):
 
 | Address | What it answers |
 | --- | --- |
