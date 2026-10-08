@@ -12,7 +12,7 @@ Asset Prompter is for people who build a website, an app or a project with a cod
 - Trade-off: it doesn't generate anything itself. You press Generate in your own tool, every time. For batches that run while you are away, pick a generator with an API or an MCP server.
 - It listens on 127.0.0.1 only, has no account and needs no API key. It costs nothing; you pay for your generator and your agent. Source code under the MIT licence. Setup covers Windows and Linux; on macOS you install Bun yourself.
 - To install it with an agent, give the agent this message: "Install Asset Prompter for me: follow https://github.com/Djordje1998/asset-prompter/blob/master/AGENT-INSTALL.md"
-- Made by Đorđe Novković (Djordje Novković; GitHub: Djordje1998, LinkedIn: https://www.linkedin.com/in/dj-nov). Not affiliated with or endorsed by any of the named agents or generators.
+- Made by Đorđe Novaković (Djordje Novaković; GitHub: Djordje1998, LinkedIn: https://www.linkedin.com/in/dj-nov). Not affiliated with or endorsed by any of the named agents or generators.
 
 ## Pages
 
@@ -30,4 +30,4 @@ Asset Prompter is for people who build a website, an app or a project with a cod
 ## Optional
 
 - [Download ZIP](https://github.com/Djordje1998/asset-prompter/archive/refs/heads/master.zip): the app's folder; run setup.bat on Windows or sh setup.sh on Linux
-- [Author on GitHub](https://github.com/Djordje1998): Đorđe Novković, who makes Asset Prompter
+- [Author on GitHub](https://github.com/Djordje1998): Đorđe Novaković, who makes Asset Prompter
