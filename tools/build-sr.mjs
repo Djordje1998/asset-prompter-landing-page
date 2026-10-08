@@ -3,6 +3,8 @@
 //
 //   node tools/build-sr.mjs           write the Serbian pages
 //   node tools/build-sr.mjs --check   only say whether they are up to date (exit 1 if one is not, or is left over)
+//   node tools/build-sr.mjs --keep=<key>,<key>   build, and take the Serbian of those keys as still right for their
+//                                    changed English (see tools/sr-english.json below)
 //
 // Run it after any change to an English page, i18n.js, i18n-guides.js or the say() texts in main.js, and commit the
 // sr/ pages with them. It needs Node 18 or later and nothing else.
@@ -28,7 +30,13 @@
 //   guides it names, and say "inLanguage": "sr-Latn". It stops if one of the texts it should copy is not on the page
 //   any more.
 // - the few texts main.js writes itself (say("key", ...)) go in as a small JSON block, #say, on a page that loads it.
+//
+// tools/sr-english.json keeps, for every marked text, a short hash of its English and of its Serbian as they were when
+// the Serbian was last written. A key whose English has changed since while its Serbian has not is named, and --check
+// fails on it: change the Serbian with the English, or, if it still says the same (a typo fixed in English), build
+// with --keep=<key>. The build writes the file; commit it with the pages.
 
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
@@ -301,7 +309,7 @@ function translateLd(json, english, SR, page) {
 
 /* ---- the page ---- */
 
-function build(page, SR) {
+function build(page, SR, seen) {
   const html = read(page.file);
   const doc = parse(html);
   const edits = [];
@@ -316,7 +324,10 @@ function build(page, SR) {
   // English and Serbian of every marked text, for the JSON-LD.
   const english = new Map();
   const pair = (key, en) => {
-    if (SR[key] !== undefined) english.set(plain(en), plain(SR[key]));
+    if (SR[key] === undefined) return;
+    english.set(plain(en), plain(SR[key]));
+    if (!seen.has(key)) seen.set(key, new Set());
+    seen.get(key).add(en.replace(/\s+/g, " ").trim());
   };
   const unknown = new Set();
   const serbianOf = (key) => {
@@ -439,7 +450,9 @@ function build(page, SR) {
 }
 
 const check = process.argv.includes("--check");
+const keep = new Set(process.argv.flatMap((a) => (a.startsWith("--keep=") ? a.slice(7).split(",") : [])));
 const stale = [];
+const seen = new Map();
 const SR = (() => {
   try {
     return serbian();
@@ -452,7 +465,7 @@ for (const page of PAGES) {
   const file = "sr/" + page.file;
   let built;
   try {
-    built = build(page, SR);
+    built = build(page, SR, seen);
   } catch (error) {
     console.error(`build-sr: ${error.message}`);
     process.exit(1);
@@ -479,9 +492,36 @@ const look = (dir) => {
 };
 look("sr");
 for (const file of leftOver) console.warn(`build-sr: ${file} has no English page any more; delete it`);
+
+// The English each Serbian was written for. A key is taken as translated when it is new, when its English is what it
+// was, when its Serbian has changed too, or when --keep names it; otherwise it keeps its old hashes and is named.
+const RECORD = "tools/sr-english.json";
+const hash = (text) => crypto.createHash("sha256").update(text).digest("hex").slice(0, 12);
+const record = fs.existsSync(path.join(ROOT, RECORD)) ? JSON.parse(read(RECORD)) : {};
+const next = {};
+const untranslated = [];
+for (const key of [...seen.keys()].sort()) {
+  const now = [hash([...seen.get(key)].sort().join("\n")), hash(SR[key])];
+  const was = record[key];
+  if (!was || was[0] === now[0] || was[1] !== now[1] || keep.has(key)) next[key] = now;
+  else {
+    next[key] = was;
+    untranslated.push(key);
+  }
+}
+// One key a line, so a change shows in a diff as the keys it touches.
+const recorded = `{\n${Object.entries(next).map(([key, pair]) => `  ${JSON.stringify(key)}: ${JSON.stringify(pair)}`).join(",\n")}\n}\n`;
+const recordStale = (fs.existsSync(path.join(ROOT, RECORD)) ? read(RECORD) : "") !== recorded;
+if (!check && recordStale) fs.writeFileSync(path.join(ROOT, RECORD), recorded);
+if (untranslated.length) {
+  const say = check ? console.error : console.warn;
+  say(`build-sr: the English of these texts changed and their Serbian did not: ${untranslated.join(", ")}`);
+  say(`  change the Serbian in i18n.js or i18n-guides.js, or, if it still says the same, run node tools/build-sr.mjs --keep=${untranslated.join(",")}`);
+}
 if (check) {
-  if (stale.length || leftOver.length) {
+  if (stale.length || leftOver.length || untranslated.length || recordStale) {
     for (const file of stale) console.error(`${file} is out of date: run node tools/build-sr.mjs and commit it`);
+    if (recordStale) console.error(`${RECORD} is out of date: run node tools/build-sr.mjs and commit it`);
     process.exit(1);
   }
   console.log(`the Serbian pages are up to date (${PAGES.length})`);
