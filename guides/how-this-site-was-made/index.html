@@ -202,7 +202,7 @@
             "about": {
               "@id": "https://assetprompter.com/#app"
             },
-            "image": "https://assetprompter.com/assets/og.jpg",
+            "image": ["https://assetprompter.com/assets/art/loop-relay.webp", "https://assetprompter.com/assets/og.jpg"],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
@@ -529,14 +529,15 @@
             <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
             <p data-i18n="g.made.4.p2">
               The AV1 copies are about half the bytes: <code>loop-relay</code> is 365 KiB against 776 KiB in H.264, and
-              <code>gallery-full</code> 245 KiB against 536 KiB. The lowest frame SSIM of the two was 0.9956. The page takes the AV1
-              file only where the browser answers “probably” when asked whether it plays it, and the H.264 file everywhere else.
+              <code>gallery-full</code> 245 KiB against 536 KiB. The lowest frame SSIM of the two was 0.9956. The home page takes the
+              AV1 file only where the browser answers “probably” when asked whether it plays it, and the H.264 file everywhere else.
             </p>
             <h3 data-i18n="g.made.4.exports.h">Sizes and crops come from the approved file</h3>
             <p data-i18n="g.made.4.p3">
               A slot's <code>exports/</code> folder holds what the agent makes from the final file: crops, other sizes, other formats
               and small edits, with no new generation. The app shows them beside the final picture, each with a Copy image button.
-              The dialog below is from <code>hero-space-diner</code> in the app's demo project <code>orbital-eats</code>, not from this site.
+              The dialog below is from <code>hero-space-diner</code> in <code>orbital-eats</code>, the project the screenshots of the app on
+              the home page come from, not from this site's project.
             </p>
           </div>
           <figure class="guide-wide guide-fig">
@@ -553,8 +554,8 @@
           <div class="prose">
             <h2 id="revision" data-i18n="g.made.5.h">One revision, as the app shows it</h2>
             <p data-i18n="g.made.5.p1">
-              The screenshots of the app on the home page come from that demo project, from the slot
-              <code>observation-dining-room</code>. In the real project that slot is still waiting for approval; the screenshots
+              The screenshots of the app on the home page come from that project, from the slot
+              <code>observation-dining-room</code>. In the project itself that slot is still waiting for approval; the screenshots
               show a staged copy. Read off the cards, its revision went like this:
             </p>
             <ul data-i18n="g.made.5.list">

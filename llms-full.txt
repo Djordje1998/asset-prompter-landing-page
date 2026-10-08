@@ -213,7 +213,7 @@ In short, as checked on 8 October 2026: Midjourney and Google Flow have no publi
 
 https://assetprompter.com/guides/get-images-into-coding-agent-project/
 
-1. The agent's own image tool (Codex, Cursor, Antigravity, Gemini CLI): the agent presses Generate; pick it when its model is good enough.
+1. The agent's own image tool (Codex, Cursor, Antigravity, Gemini CLI; Claude Code has none of its own): the agent presses Generate; pick it when its model is good enough.
 2. An official MCP server: the agent presses Generate on your plan or on API credits; pick it for batches that run while you are away.
 3. A paid API: the agent writes and runs a script, and you pay per generation.
 4. Copy and paste by hand: you press Generate; fine for one or two pictures.

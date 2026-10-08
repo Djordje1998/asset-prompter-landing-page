@@ -205,7 +205,10 @@
             "about": {
               "@id": "https://assetprompter.com/#app"
             },
-            "image": "https://assetprompter.com/assets/og-sr.jpg",
+            "image": [
+              "https://assetprompter.com/assets/art/problem-courier.webp",
+              "https://assetprompter.com/assets/og-sr.jpg"
+            ],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
@@ -353,7 +356,7 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="short" data-i18n="g.ways.short.h">Kratak odgovor</h2>
-            <p data-i18n="g.ways.short.p">Ako tvoj agent ima ugrađen alat za slike i njegov model je dovoljno dobar, koristi njega. Ako tvoj generator ima zvanični MCP server u okviru tvoje pretplate, poveži ga. Ako ima samo API, možeš da ga plaćaš po slici. Ako nema ništa od toga, kao Midjourney i Google Flow, fajlove prenosiš ti: ručno ili preko zajedničkog foldera kao što je onaj u Asset Prompteru. Načini ispod idu od onog koji od tebe traži najmanje posla do onog koji traži najviše; činjenice iza svakog su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora i agenata</a>, proverenoj 8. oktobra 2026.</p>
+            <p data-i18n="g.ways.short.p">Ako tvoj agent ima ugrađen alat za slike i njegov model je dovoljno dobar, koristi njega; Claude Code nema svoj. Ako tvoj generator ima zvanični MCP server u okviru tvoje pretplate, poveži ga. Ako ima samo API, možeš da ga plaćaš po slici. Ako nema ništa od toga, kao Midjourney i Google Flow, fajlove prenosiš ti: ručno ili preko zajedničkog foldera kao što je onaj u Asset Prompteru. Načini ispod idu od onog koji od tebe traži najmanje posla do onog koji traži najviše; činjenice iza svakog su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora i agenata</a>, proverenoj 8. oktobra 2026.</p>
           </div>
         </div>
       </section>
@@ -362,12 +365,12 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="builtin" data-i18n="g.ways.1.h">1. Agentov sopstveni alat za slike</h2>
-            <p data-i18n="g.ways.1.p">Codex ima ugrađeni alat <code>image_gen</code>, Cursorov agent generiše slike od verzije 2.4, agent u Antigravityju sam odlučuje kada da pozove model za slike, a Gemini CLI ima proširenje <code>nanobanana</code>.</p>
+            <p data-i18n="g.ways.1.p">Codex ima ugrađeni alat <code>image_gen</code>, Cursorov agent generiše slike od verzije 2.4, agent u Antigravityju sam odlučuje kada da pozove model za slike, a Gemini CLI ima proširenje <code>nanobanana</code>. Claude Code nema sopstveno generisanje slika: <a href="https://support.claude.com/en/articles/9002504-can-claude-produce-images" target="_blank" rel="noopener">centar za pomoć kompanije Anthropic</a> kaže <q lang="en">Claude doesn’t generate photos or illustrations the way image-generation tools do.</q></p>
             <dl class="guide-facts">
               <dt data-i18n="g.ways.facts.1">Ko pritiska „Generate”</dt>
               <dd data-i18n="g.ways.1.1">Agent.</dd>
               <dt data-i18n="g.ways.facts.2">Šta plaćaš dodatno</dt>
-              <dd data-i18n="g.ways.1.2">Na Codexu ništa pored plaćene ChatGPT pretplate: potezi sa slikama troše njene Codex limite, brže od ostalih poteza, a besplatna pretplata ih nema. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.</dd>
+              <dd data-i18n="g.ways.1.2">Na Codexu ništa pored ChatGPT Plus, Pro ili Business pretplate: potezi sa slikama troše njene Codex limite, brže od ostalih poteza, a besplatna pretplata ih nema. Proširenju za Gemini CLI treba Gemini API ključ, dakle naplata API-ja. Cursor i Antigravity to ne navode.</dd>
               <dt data-i18n="g.ways.facts.3">Šta agent vidi</dt>
               <dd data-i18n="g.ways.1.3">Sliku koju je napravio.</dd>
               <dt data-i18n="g.ways.facts.4">Gde stoje verzije</dt>
@@ -556,7 +559,7 @@
           <div class="prose guide-wide">
             <aside class="guide-note" aria-labelledby="automation">
               <h3 id="automation" data-i18n="g.ways.note.h">A upravljanje veb-aplikacijom koja nema API?</h3>
-              <p data-i18n="g.ways.note.p">Neki alati trećih strana upravljaju veb-stranicom servisa Midjourney ili Flow umesto agenta. To radi dok ne prestane: uslovi korišćenja servisa Midjourney zabranjuju automatizovan pristup, a alat koji klikće kroz veb-stranicu prestaje da radi kad god se stranica promeni. Izvori su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora</a>.</p>
+              <p data-i18n="g.ways.note.p">Neki alati trećih strana upravljaju veb-stranicom servisa Midjourney umesto agenta. To radi dok ne prestane: uslovi korišćenja servisa Midjourney zabranjuju automatizovan pristup, a alat koji klikće kroz veb-stranicu prestaje da radi kad god se stranica promeni. Izvori su u <a href="/sr/guides/image-generators-api-mcp/">tabeli generatora</a>.</p>
             </aside>
           </div>
         </div>

@@ -202,7 +202,7 @@
             "about": {
               "@id": "https://assetprompter.com/#app"
             },
-            "image": "https://assetprompter.com/assets/og.jpg",
+            "image": ["https://assetprompter.com/assets/art/problem-courier.webp", "https://assetprompter.com/assets/og.jpg"],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
@@ -354,7 +354,7 @@
           <div class="prose">
             <h2 id="short" data-i18n="g.ways.short.h">The short answer</h2>
             <p data-i18n="g.ways.short.p">
-              If your agent has an image tool built in and its model is good enough, use that. If your generator has an official MCP
+              If your agent has an image tool built in and its model is good enough, use that; Claude Code has none of its own. If your generator has an official MCP
               server on your plan, connect it. If it has only an API, you can pay for it per image. If it has none, as with
               Midjourney and Google Flow, you carry the files yourself: by hand, or through a shared folder like Asset Prompter's.
               The ways below go from the least of your own work to the most; the facts behind each are in the
@@ -368,12 +368,12 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="builtin" data-i18n="g.ways.1.h">1. The agent's own image tool</h2>
-            <p data-i18n="g.ways.1.p">Codex has a built-in <code>image_gen</code> tool, Cursor's agent has generated images since version 2.4, Antigravity's agent decides by itself when to call an image model, and Gemini CLI has the <code>nanobanana</code> extension.</p>
+            <p data-i18n="g.ways.1.p">Codex has a built-in <code>image_gen</code> tool, Cursor's agent has generated images since version 2.4, Antigravity's agent decides by itself when to call an image model, and Gemini CLI has the <code>nanobanana</code> extension. Claude Code has no image generation of its own: <a href="https://support.claude.com/en/articles/9002504-can-claude-produce-images" target="_blank" rel="noopener">Anthropic's help centre</a> says <q>Claude doesn’t generate photos or illustrations the way image-generation tools do.</q></p>
             <dl class="guide-facts">
               <dt data-i18n="g.ways.facts.1">Who presses Generate</dt>
               <dd data-i18n="g.ways.1.1">The agent.</dd>
               <dt data-i18n="g.ways.facts.2">What you pay on top</dt>
-              <dd data-i18n="g.ways.1.2">On Codex, nothing on top of a paid ChatGPT plan: image turns use its Codex limits, faster than other turns, and the Free plan has none. Gemini CLI's extension needs a Gemini API key, so API billing. Cursor and Antigravity don't say.</dd>
+              <dd data-i18n="g.ways.1.2">On Codex, nothing on top of a ChatGPT Plus, Pro or Business plan: image turns use its Codex limits, faster than other turns, and the Free plan has none. Gemini CLI's extension needs a Gemini API key, so API billing. Cursor and Antigravity don't say.</dd>
               <dt data-i18n="g.ways.facts.3">What the agent sees</dt>
               <dd data-i18n="g.ways.1.3">The picture it made.</dd>
               <dt data-i18n="g.ways.facts.4">Where the versions live</dt>
@@ -566,7 +566,7 @@
             <aside class="guide-note" aria-labelledby="automation">
               <h3 id="automation" data-i18n="g.ways.note.h">And driving a web app that has no API?</h3>
               <p data-i18n="g.ways.note.p">
-                Some third-party tools drive Midjourney's or Flow's web page for an agent. It works until it doesn't: Midjourney's
+                Some third-party tools drive Midjourney's web page for an agent. It works until it doesn't: Midjourney's
                 Terms of Service forbid automated access to it, and a tool that clicks through a web page breaks whenever the page
                 changes. The sources are in the <a href="/guides/image-generators-api-mcp/">table of generators</a>.
               </p>

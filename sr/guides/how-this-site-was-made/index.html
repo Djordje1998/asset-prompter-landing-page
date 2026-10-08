@@ -205,7 +205,10 @@
             "about": {
               "@id": "https://assetprompter.com/#app"
             },
-            "image": "https://assetprompter.com/assets/og-sr.jpg",
+            "image": [
+              "https://assetprompter.com/assets/art/loop-relay.webp",
+              "https://assetprompter.com/assets/og-sr.jpg"
+            ],
             "datePublished": "2026-10-08",
             "dateModified": "2026-10-08",
             "mentions": [
@@ -428,7 +431,7 @@
           </div>
           <div class="prose">
             <h3 data-i18n="g.made.2.flow.h">Šta Google Flow traži od prompta</h3>
-            <p data-i18n="g.made.2.flow.p">Agent generator upoznaje iz njegovog preseta. <a href="https://github.com/Djordje1998/asset-prompter/blob/master/presets/google-flow.md" target="_blank" rel="noopener">Preset za Google Flow</a> u Asset Prompteru (proveren 6. oktobra 2026) mu, između ostalog, kaže:</p>
+            <p data-i18n="g.made.2.flow.p">Agent generator upoznaje iz njegovog preseta. <a href="https://github.com/Djordje1998/asset-prompter/blob/master/presets/google-flow.md" target="_blank" rel="noopener">Preset za Google Flow</a> u Asset Prompteru (proveren 6. oktobra 2026.) mu, između ostalog, kaže:</p>
             <ul data-i18n="g.made.2.flow.list"><li>Flow nema negativni prompt ni seed, pa ono što treba izostaviti ide u sam prompt (<span lang="en">„no people, no text”</span>).</li>
               <li>Video samo iz prompta je režim <code>frames</code> bez početnog frejma.</li>
               <li>Video stiže sa generisanim zvukom, a Flow nema prekidač za zvuk po klipu: opiši zvuk u promptu ili napiši <span lang="en">„no sound”</span>.</li>
@@ -490,9 +493,9 @@
               <li>Za klip, sačuvaj <code>final.mp4</code> kao <code>assets/art/&lt;slot&gt;.mp4</code>, bez zvuka.</li>
               <li>Napravi AV1 kopiju klipa i zadrži je samo ako svaki njen frejm ima SSIM od najmanje 0,995 u odnosu na H.264 frejm:</li></ol>
             <pre tabindex="0"><code>ffmpeg -i assets/art/&lt;slot&gt;.mp4 -c:v libsvtav1 -preset 3 -crf 30 -g 192 -pix_fmt yuv420p -an -movflags +faststart assets/art/&lt;slot&gt;-av1.mp4</code></pre>
-            <p data-i18n="g.made.4.p2">AV1 kopije imaju otprilike upola manje bajtova: <code>loop-relay</code> ima 365 KiB naspram 776 KiB u H.264, a <code>gallery-full</code> 245 KiB naspram 536 KiB. Najniži SSIM jednog frejma u ta dva klipa bio je 0,9956. Stranica uzima AV1 fajl samo tamo gde pregledač na pitanje da li ga pušta odgovori <span lang="en">„probably”</span>, a H.264 fajl svuda drugde.</p>
+            <p data-i18n="g.made.4.p2">AV1 kopije imaju otprilike upola manje bajtova: <code>loop-relay</code> ima 365 KiB naspram 776 KiB u H.264, a <code>gallery-full</code> 245 KiB naspram 536 KiB. Najniži SSIM jednog frejma u ta dva klipa bio je 0,9956. Početna stranica uzima AV1 fajl samo tamo gde pregledač na pitanje da li ga pušta odgovori <span lang="en">„probably”</span>, a H.264 fajl svuda drugde.</p>
             <h3 data-i18n="g.made.4.exports.h">Dimenzije i isečci nastaju iz odobrenog fajla</h3>
-            <p data-i18n="g.made.4.p3">Folder <code>exports/</code> u slotu sadrži ono što agent napravi od konačnog fajla: isečke, druge dimenzije, druge formate i sitne izmene, bez novog generisanja. Aplikacija ih prikazuje pored konačne slike, svaku sa dugmetom „Copy image”. Dijalog ispod je iz slota <code>hero-space-diner</code> u demo projektu aplikacije, <code>orbital-eats</code>, a ne sa ovog sajta.</p>
+            <p data-i18n="g.made.4.p3">Folder <code>exports/</code> u slotu sadrži ono što agent napravi od konačnog fajla: isečke, druge dimenzije, druge formate i sitne izmene, bez novog generisanja. Aplikacija ih prikazuje pored konačne slike, svaku sa dugmetom „Copy image”. Dijalog ispod je iz slota <code>hero-space-diner</code> u projektu <code>orbital-eats</code>, iz kog potiču snimci ekrana aplikacije na početnoj stranici, a ne iz projekta ovog sajta.</p>
           </div>
           <figure class="guide-wide guide-fig">
             <div class="appshot">
@@ -507,7 +510,7 @@
         <div class="wrap">
           <div class="prose">
             <h2 id="revision" data-i18n="g.made.5.h">Jedna revizija, onako kako je aplikacija prikazuje</h2>
-            <p data-i18n="g.made.5.p1">Snimci ekrana aplikacije na početnoj stranici potiču iz tog demo projekta, iz slota <code>observation-dining-room</code>. U pravom projektu taj slot još čeka odobrenje; snimci prikazuju pripremljenu kopiju. Kako se čita sa kartica, njegova revizija je tekla ovako:</p>
+            <p data-i18n="g.made.5.p1">Snimci ekrana aplikacije na početnoj stranici potiču iz tog projekta, iz slota <code>observation-dining-room</code>. U samom projektu taj slot još čeka odobrenje; snimci prikazuju pripremljenu kopiju. Kako se čita sa kartica, njegova revizija je tekla ovako:</p>
             <ul data-i18n="g.made.5.list"><li><code>slot.md</code>: <q lang="en">Atmospheric photograph for the 'About Our Dining Experience' section of the website. It must show the spacious seating area and the realistic observation lounge overlooking outer space.</q></li>
               <li>Verzija 1: Image, 16:9, Nano Banana Pro, prompt od 374 znaka koji počinje sa <q lang="en">Eye-level wide photograph of the main observation dining hall in an orbital restaurant.</q></li>
               <li>Zahtev za izmenu na verziji 1: <q lang="en">Too cold and empty. Make the booths warm cognac leather, add warm ceiling lights, and let the sun rise over the horizon.</q></li>
