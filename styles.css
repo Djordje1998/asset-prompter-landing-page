@@ -4352,6 +4352,17 @@ li.is-pulse .f-front::after {
 /* The pages under /guides/: longer reading in the same look. They load no script, so nothing here waits for one, and
    every rule is on a class of their own: the home page does not use any of them. */
 
+/* Small grey text that is read here (sources, captions, the byline, the folder's notes) takes a lighter --faint:
+   4.5:1 on the card colour as on both grounds. */
+.crumbs,
+.guide-meta,
+.guide-fig,
+.guide-tree,
+.guide-facts,
+.guide-table {
+  --faint: #928d9c;
+}
+
 /* The page head: the breadcrumb, the heading and its lead, and the byline, closer to the bar than a section is. */
 .guide-top {
   padding-block: clamp(48px, 7vw, 96px) clamp(40px, 5vw, 72px);
