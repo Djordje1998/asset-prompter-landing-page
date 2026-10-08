@@ -1,6 +1,6 @@
 // The Serbian text of the page. The page does not load this file: tools/build-sr.mjs reads it and writes the Serbian
-// page, sr/index.html, from index.html with these texts in. After editing this file or index.html, run
-// `node tools/build-sr.mjs` and commit sr/index.html with them.
+// page, sr/index.html, from index.html with these texts in. After editing this file, index.html or a say() text in
+// main.js, run `node tools/build-sr.mjs` and commit sr/index.html with them.
 //
 // English is the text in index.html and is written only there. A text is marked in index.html with its key:
 //   data-i18n="key"             the whole content of the element (the Serbian text may hold markup)
