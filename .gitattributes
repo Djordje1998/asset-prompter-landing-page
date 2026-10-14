@@ -1,0 +1,9 @@
+# Text files are LF everywhere, also in a Windows checkout: tools/build-sr.mjs, the checks and the published site all
+# expect the bytes CI sees.
+* text=auto eol=lf
+*.woff2 binary
+*.webp binary
+*.png binary
+*.jpg binary
+*.ico binary
+*.mp4 binary
