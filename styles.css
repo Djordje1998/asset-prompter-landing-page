@@ -64,7 +64,6 @@
   --bar-h: 52px;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.34, 1.45, 0.64, 1);
 
   /* light: the lit inner edge of a surface, and the soft shadow that sits under the hard one */
   --hi: rgb(255 255 255 / 0.06);
@@ -86,20 +85,6 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 72px;
-}
-
-/* With Lenis running (main.js), it eases the scroll and the anchors itself. */
-html.lenis {
-  scroll-behavior: auto;
-}
-
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-html.lenis.lenis-stopped {
-  overflow: hidden;
 }
 
 body {
@@ -146,6 +131,13 @@ button {
   font: inherit;
   color: inherit;
   cursor: pointer;
+}
+
+/* Every pressable thing here answers the press itself (:active), so the browser's grey tap flash is not needed. */
+a,
+button,
+summary {
+  -webkit-tap-highlight-color: transparent;
 }
 
 code,
@@ -275,7 +267,7 @@ h1 .who-you::after,
   background: var(--tone);
   opacity: 0.65;
   transform-origin: left;
-  transition: transform 0.8s var(--ease-out) 0.55s;
+  transition: transform 0.7s var(--ease-out) 0.45s;
 }
 
 .motion [data-reveal-group]:not(.is-in) .lead .who-agent::after,
@@ -284,7 +276,7 @@ h1 .who-you::after,
 }
 
 .motion [data-reveal-group].is-in .lead .who-you::after {
-  transition-delay: 0.8s;
+  transition-delay: 0.65s;
 }
 
 /* Tones for tags, cards and notes. */
@@ -428,7 +420,7 @@ h3 {
     color 0.2s ease;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .btn:hover {
     background: #35323c;
     border-color: #5c5764;
@@ -466,7 +458,7 @@ h3 {
   pointer-events: none;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .btn-primary:hover {
     background: linear-gradient(180deg, #eabd5f, var(--primary-hover) 62%);
     border-color: var(--primary-hover);
@@ -495,7 +487,7 @@ h3 {
     inset 0 1px 0 rgb(255 255 255 / 0.42);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .btn-lg:hover {
     box-shadow:
       5px 5px 0 var(--ink),
@@ -577,6 +569,21 @@ h3 {
   }
 }
 
+/* A reader who asked for less transparency, or more contrast, gets a solid bar; with more contrast its edge is drawn harder. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .js .bar.is-stuck {
+    background: var(--bar);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .js .bar.is-stuck {
+    border-bottom-color: var(--edge-strong);
+  }
+}
+
 .js .bar:not(.is-stuck) {
   background: transparent;
   border-bottom-color: transparent;
@@ -600,8 +607,8 @@ h3 {
 }
 
 /* How far down the page the reader is: a thread along the lower edge of the window, violet at its tail
-   and mustard at its head, as in the hero. main.js writes --read (0 to 1) on <html>; without it the thread
-   stays out of sight. It is outside the bar, whose backdrop-filter would hold a fixed child inside it. */
+   and mustard at its head, as in the hero. Where the browser can, the scroll itself drives it; elsewhere main.js
+   writes --read (0 to 1) on it. Without either the thread stays out of sight. It is outside the bar, whose backdrop-filter would hold a fixed child inside it. */
 .read-progress {
   position: fixed;
   inset: auto 0 0;
@@ -623,6 +630,22 @@ h3 {
   );
   transform: translateX(calc((var(--read, 0) - 1) * 100%));
   will-change: transform;
+}
+
+@keyframes read {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .read-progress::before {
+    animation: read linear both;
+    animation-timeline: scroll(root);
+  }
 }
 
 .brand {
@@ -651,7 +674,12 @@ h3 {
   text-decoration: none;
   transition:
     color 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    transform 0.16s var(--ease-out);
+}
+
+.bar-links a:active {
+  transform: scale(0.97);
 }
 
 /* The mark under the link of the section in view. */
@@ -665,10 +693,10 @@ h3 {
   background: var(--primary);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.35s var(--ease-out);
+  transition: transform 0.3s var(--ease-out);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .bar-links a:hover {
     background: color-mix(in srgb, var(--text) 7%, transparent);
     color: var(--text);
@@ -692,10 +720,10 @@ h3 {
 /* The link to the repository asks for a star: the star is mustard and grows a little under the pointer. */
 .bar-github .icon {
   color: var(--primary);
-  transition: transform 0.35s var(--ease-out);
+  transition: transform 0.28s var(--ease-out);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .bar-github:hover .icon {
     transform: scale(1.18);
   }
@@ -767,14 +795,19 @@ h3 {
   text-align: left;
   transition:
     color 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    transform 0.16s var(--ease-out);
+}
+
+.lang-menu button:active {
+  transform: scale(0.97);
 }
 
 .lang-menu button:focus-visible {
   outline-offset: -2px;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lang-menu button:hover {
     background: color-mix(in srgb, var(--text) 7%, transparent);
     color: var(--text);
@@ -793,6 +826,13 @@ h3 {
 
 .lang-menu [aria-checked="true"] .icon {
   visibility: visible;
+}
+
+/* Switching language crossfades the page (i18n.js). Only opacity changes, so it stays with less motion too. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.2s;
+  animation-timing-function: ease;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -896,6 +936,7 @@ h3 {
 /* A picture is an object: an outer edge, a lit inner one, the app's hard shadow and a soft one under it. */
 .art,
 .appshot,
+.video,
 .row-pic,
 .pipe-pic,
 .use-pic,
@@ -912,6 +953,7 @@ h3 {
 
 .art::after,
 .appshot::after,
+.video::after,
 .row-pic::after,
 .pipe-pic::after,
 .use-pic::after,
@@ -989,7 +1031,7 @@ h3 {
   background: radial-gradient(460px circle at var(--mx, 50%) var(--my, 0%), rgb(255 255 255 / 0.11), transparent 62%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.45s ease;
+  transition: opacity 0.38s ease;
 }
 
 /* The clip in the pipeline of three pictures is there to be read, like the two beside it. */
@@ -1021,10 +1063,10 @@ h3 {
     linear-gradient(#000 0 0);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.45s ease;
+  transition: opacity 0.38s ease;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .art:hover::before,
   [data-lit]:hover::before {
     opacity: 1;
@@ -1037,7 +1079,7 @@ h3 {
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translate3d(0, 22px, 0);
+    transform: translate3d(0, 16px, 0);
   }
 }
 
@@ -1053,13 +1095,13 @@ h3 {
 }
 
 .motion [data-reveal].is-in {
-  animation: rise 0.9s var(--ease-out) backwards;
+  animation: rise 0.75s var(--ease-out) backwards;
 }
 
 /* A group brings its children in one after another. */
 .motion [data-reveal-group].is-in > * {
-  animation: rise 0.85s var(--ease-out) backwards;
-  animation-delay: calc(var(--n, 0) * 90ms);
+  animation: rise 0.75s var(--ease-out) backwards;
+  animation-delay: calc(var(--n, 0) * 75ms);
 }
 
 [data-reveal-group] > :nth-child(2) {
@@ -1186,12 +1228,13 @@ h3 {
 
 @keyframes pop {
   from {
-    transform: scale(0.4);
+    opacity: 0;
+    transform: scale(0.7);
   }
 }
 
 .copy-btn.is-copied .icon {
-  animation: pop 0.4s var(--ease-spring);
+  animation: pop 0.32s var(--ease-out);
 }
 
 .ask-text {
@@ -1551,7 +1594,7 @@ h3 {
   flex: none;
   width: var(--s);
   height: var(--s);
-  transition: transform 0.4s var(--ease-spring);
+  transition: transform 0.35s var(--ease-out);
 }
 
 /* The app's hard shadow. With the script it is drawn on the ground instead, under the wires. */
@@ -1713,15 +1756,6 @@ html:not(.js) .cube::before {
   }
 }
 
-@keyframes cube-flare {
-  0% {
-    opacity: 0.5;
-  }
-  24% {
-    opacity: 1;
-  }
-}
-
 /* "Any agent", "any tool": the outline of a cube that is not there yet. */
 .is-any .cube .f {
   background: none;
@@ -1768,10 +1802,6 @@ li.is-lit .cube::after {
   opacity: 1;
 }
 
-li.is-pulse .cube-glow {
-  animation: cube-flare 1s ease-out;
-}
-
 li.is-pulse .f-front::after {
   animation: cube-sheen 0.9s var(--ease-out);
 }
@@ -1811,36 +1841,6 @@ li.is-pulse .f-front::after {
     radial-gradient(ellipse 46% 18% at 50% 18.75%, color-mix(in srgb, var(--agent) 16%, transparent), transparent),
     radial-gradient(ellipse 46% 18% at 50% 81.25%, color-mix(in srgb, var(--generate) 13%, transparent), transparent);
   pointer-events: none;
-}
-
-/* The ring that flashes once as a thread goes through the folder. */
-.hero-stage::after {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border: 2px solid var(--tone, var(--agent));
-  border-radius: 13px;
-  opacity: 0;
-  pointer-events: none;
-}
-
-@keyframes stage-pass {
-  0% {
-    opacity: 0;
-    transform: scale(0.99);
-  }
-  20% {
-    opacity: 0.9;
-    transform: none;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.012);
-  }
-}
-
-.hero-stage.is-passing::after {
-  animation: stage-pass 1.1s var(--ease-out);
 }
 
 .hero-art {
@@ -2045,9 +2045,14 @@ li.is-pulse .f-front::after {
     transition: color 0.5s ease;
   }
 
-  li.is-lit .hub-name,
-  .hub-col li:hover .hub-name {
+  li.is-lit .hub-name {
     color: var(--text);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hub-col li:hover .hub-name {
+      color: var(--text);
+    }
   }
 }
 
@@ -2056,16 +2061,16 @@ li.is-pulse .f-front::after {
   @keyframes cube-in {
     from {
       opacity: 0;
-      transform: scale(0.6);
+      transform: scale(0.9);
     }
   }
 
   .hero h1 .line {
-    animation: rise 1s var(--ease-out) backwards;
+    animation: rise 0.85s var(--ease-out) backwards;
   }
 
   .hero h1 .line:nth-child(2) {
-    animation-delay: 0.1s;
+    animation-delay: 0.08s;
   }
 
   @keyframes underline-in {
@@ -2075,45 +2080,45 @@ li.is-pulse .f-front::after {
   }
 
   .hero h1 .who-agent::after {
-    animation: underline-in 0.9s var(--ease-out) 0.9s backwards;
+    animation: underline-in 0.75s var(--ease-out) 0.7s backwards;
   }
 
   .hero h1 .who-you::after {
-    animation: underline-in 0.9s var(--ease-out) 1.15s backwards;
+    animation: underline-in 0.75s var(--ease-out) 0.9s backwards;
   }
 
   .hero-sub {
-    animation: rise 1s var(--ease-out) 0.2s backwards;
+    animation: rise 0.85s var(--ease-out) 0.16s backwards;
   }
 
   .hub .ask {
-    animation: rise 1s var(--ease-out) 0.3s backwards;
+    animation: rise 0.85s var(--ease-out) 0.24s backwards;
   }
 
   .hub .cta {
-    animation: rise 1s var(--ease-out) 0.4s backwards;
+    animation: rise 0.85s var(--ease-out) 0.32s backwards;
   }
 
   .hero-facts {
-    animation: fade 1s ease 0.6s backwards;
+    animation: fade 0.8s ease 0.48s backwards;
   }
 
   .hero-stage {
-    animation: rise 1.1s var(--ease-out) 0.5s backwards;
+    animation: rise 0.9s var(--ease-out) 0.4s backwards;
   }
 
   .hub-label {
-    animation: fade 0.9s ease 0.5s backwards;
+    animation: fade 0.75s ease 0.4s backwards;
   }
 
   .hub-col li > .cube {
-    animation: cube-in 0.7s var(--ease-spring) backwards;
-    animation-delay: calc(0.55s + var(--k, 0) * 70ms);
+    animation: cube-in 0.6s var(--ease-out) backwards;
+    animation-delay: calc(0.44s + var(--k, 0) * 60ms);
   }
 
   .hub-col li > .hub-name {
-    animation: fade 0.7s ease backwards;
-    animation-delay: calc(0.75s + var(--k, 0) * 70ms);
+    animation: fade 0.6s ease backwards;
+    animation-delay: calc(0.6s + var(--k, 0) * 60ms);
   }
 
   .hub-col li:nth-child(2) {
@@ -2139,12 +2144,372 @@ li.is-pulse .f-front::after {
   }
 
   .hub-wires {
-    animation: fade 0.9s ease 1.1s backwards;
+    animation: fade 0.75s ease 0.9s backwards;
   }
 
   .hub-fine {
-    animation: fade 1s ease 1.2s backwards;
+    animation: fade 0.8s ease 1s backwards;
   }
+}
+
+/* ================= 7b. Videos ================= */
+
+/* A video waits as its still with a round Play button in the middle and its length in the corner, as video players show
+   it. The tutorial (.video) then loads YouTube's player in the same frame; the promo (.promo) plays the site's own file. */
+.video {
+  display: block;
+  width: 100%;
+  max-width: 920px;
+  margin: clamp(32px, 4vw, 52px) auto 0;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The promo stands in the hero's frame, where the wires meet. */
+.art.promo {
+  display: block;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  color: inherit;
+  text-decoration: none;
+}
+
+.video,
+.promo,
+.promo-hit {
+  cursor: pointer;
+}
+
+.video > img,
+.video > iframe,
+.promo > img,
+.promo > video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video > img,
+.promo > img {
+  object-fit: cover;
+  transition:
+    transform 0.4s var(--ease-out),
+    filter 0.4s ease;
+}
+
+/* The player comes in over the still once it has loaded, so the frame never flashes empty. */
+.video > iframe {
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video > iframe.is-ready {
+  opacity: 1;
+}
+
+.promo > video {
+  z-index: 3;
+  background: #000;
+}
+
+/* Over the playing promo: a click anywhere on the picture pauses or plays. */
+.promo-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+
+/* ---- The promo's player: a bar in the page's own style along the bottom of the frame ---- */
+.player-bar {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 12px 10px;
+  background: linear-gradient(transparent, rgb(12 11 15 / 0.78) 55%);
+  color: #fff;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s var(--ease-out);
+}
+
+/* While the clip plays and the pointer rests, the bar steps away, and the pointer with it. */
+.promo.is-idle .player-bar {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}
+
+.promo.is-idle,
+.promo.is-idle .promo-hit {
+  cursor: none;
+}
+
+.player-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #fff;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .player-btn:hover {
+    background: rgb(255 255 255 / 0.12);
+    border-color: rgb(255 255 255 / 0.18);
+  }
+}
+
+.player-btn:active {
+  transform: scale(0.92);
+}
+
+/* The play button is the one in the mustard of every main button here. */
+.player-btn[data-act="play"] {
+  background: linear-gradient(180deg, #e2b351, var(--primary) 62%);
+  border-color: var(--primary);
+  box-shadow:
+    2px 2px 0 var(--ink),
+    inset 0 1px 0 rgb(255 255 255 / 0.42);
+  color: var(--on-primary);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .player-btn[data-act="play"]:hover {
+    background: linear-gradient(180deg, #eabd5f, var(--primary-hover) 62%);
+    border-color: var(--primary-hover);
+  }
+}
+
+.player-time {
+  flex: none;
+  margin: 0 6px 0 4px;
+  font: 500 12.5px/1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.player-total {
+  color: rgb(255 255 255 / 0.6);
+}
+
+.player-total::before {
+  content: " / ";
+}
+
+/* The track: what has played is mustard, what has loaded is a lighter grey. Its height grows under the pointer. */
+.player-seek {
+  position: relative;
+  flex: 1;
+  height: 22px;
+  margin-right: 6px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.player-seek::before,
+.player-buffer,
+.player-played {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 1px;
+  transition: transform 0.15s var(--ease-out);
+}
+
+.player-seek::before {
+  background: rgb(255 255 255 / 0.18);
+}
+
+.player-buffer,
+.player-played {
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: none;
+}
+
+.player-buffer {
+  background: rgb(255 255 255 / 0.3);
+}
+
+.player-played {
+  background: var(--primary);
+}
+
+.player-head {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The head is a small square, as everything drawn in this page is pixels. */
+.player-thumb {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  background: var(--primary);
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.35);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s var(--ease-out);
+}
+
+.player-seek:hover .player-thumb,
+.player-seek:focus-visible .player-thumb,
+.promo.is-seeking .player-thumb {
+  opacity: 1;
+  transform: none;
+}
+
+.player-seek:focus-visible {
+  outline: none;
+}
+
+.player-seek:focus-visible::before {
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* Full screen: the frame is the whole screen, and the clip fits inside it. */
+.promo.is-full {
+  border: 0;
+  border-radius: 0;
+}
+
+.promo.is-full > video {
+  object-fit: contain;
+}
+
+.promo.is-full .player-bar {
+  padding: 40px 24px 18px;
+}
+
+@media (max-width: 640px) {
+  .player-bar {
+    gap: 2px;
+    padding: 20px 6px 4px;
+  }
+
+  .player-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .player-time {
+    margin: 0 4px;
+    font-size: 11.5px;
+  }
+}
+
+/* The round Play button: mustard, ringed, with the app's hard shadow. */
+.video-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: clamp(58px, 8vw, 84px);
+  aspect-ratio: 1;
+  background: linear-gradient(180deg, #e8bc5c, var(--primary) 65%);
+  border: 1px solid color-mix(in srgb, var(--primary) 70%, #fff);
+  border-radius: 50%;
+  box-shadow:
+    4px 4px 0 var(--ink),
+    0 0 0 8px rgb(217 164 65 / 0.2),
+    0 12px 40px rgb(0 0 0 / 0.55),
+    inset 0 1px 0 rgb(255 255 255 / 0.45);
+  color: var(--on-primary);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out),
+    opacity 0.2s ease;
+}
+
+/* The triangle's weight is to its left, so it is moved a little right to look centred. */
+.video-play .icon {
+  width: 44%;
+  height: 44%;
+  margin-left: 8%;
+}
+
+/* The length, in the corner, as on any video. */
+.video-time {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 5;
+  padding: 3px 8px;
+  background: rgb(0 0 0 / 0.75);
+  border-radius: 4px;
+  color: #fff;
+  font: 600 13px/1.3 var(--mono);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .video:not(.is-playing):hover > img,
+  .promo:not(.is-started):hover > img {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+  }
+
+  .video:hover .video-play,
+  .promo:hover .video-play {
+    transform: translate(-50%, -50%) scale(1.07);
+    box-shadow:
+      4px 4px 0 var(--ink),
+      0 0 0 12px rgb(217 164 65 / 0.26),
+      0 12px 40px rgb(0 0 0 / 0.55),
+      inset 0 1px 0 rgb(255 255 255 / 0.5);
+  }
+}
+
+.video:active .video-play,
+.promo:active .video-play {
+  transform: translate(-50%, -50%) scale(0.95);
+  transition-duration: 0.08s;
+}
+
+/* Playing, the button steps aside; paused or finished, it comes back to say the clip goes on from here. */
+.video.is-playing .video-play,
+.video.is-playing .video-time,
+.promo.is-started .video-time {
+  opacity: 0;
+}
+
+.promo.is-playing .video-play {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.85);
 }
 
 /* ================= 8. The loop: the folder on the left, six turns on the right ================= */
@@ -2215,8 +2580,8 @@ li.is-pulse .f-front::after {
   padding: 6px 0 6px 18px;
   white-space: nowrap;
   transition:
-    opacity 0.4s ease,
-    transform 0.4s var(--ease-out);
+    opacity 0.35s ease,
+    transform 0.35s var(--ease-out);
 }
 
 /* The files the current step has just added stand on a faint bar of their maker's colour. */
@@ -2228,7 +2593,7 @@ li.is-pulse .f-front::after {
   background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 13%, transparent), transparent 85%);
   border-radius: 4px;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.35s ease;
 }
 
 .tree .tree-root {
@@ -2325,7 +2690,7 @@ li.is-pulse .f-front::after {
   box-shadow:
     3px 3px 0 var(--ink),
     0 0 0 0 color-mix(in srgb, var(--tone) 30%, transparent);
-  transition: box-shadow 0.45s var(--ease-out);
+  transition: box-shadow 0.38s var(--ease-out);
 }
 
 .turn.is-current::before {
@@ -2701,7 +3066,7 @@ li.is-pulse .f-front::after {
 @keyframes lane-pop {
   from {
     opacity: 0;
-    transform: scale(0.5);
+    transform: scale(0.9);
   }
 }
 
@@ -2717,7 +3082,7 @@ li.is-pulse .f-front::after {
 }
 
 .motion .lanes.is-in .lane-node {
-  animation: lane-pop 0.5s var(--ease-spring) backwards;
+  animation: lane-pop 0.5s var(--ease-out) backwards;
   animation-delay: calc(0.4s + var(--i) * 0.13s);
 }
 
@@ -2857,28 +3222,6 @@ li.is-pulse .f-front::after {
     var(--shadow-small),
     inset 0 1px 0 var(--hi);
   font: 500 14.5px/1.3 var(--body);
-  transition:
-    transform 0.2s var(--ease-out),
-    box-shadow 0.2s var(--ease-out),
-    background-color 0.2s ease;
-}
-
-@media (hover: hover) {
-  .name-chips li:hover {
-    background: var(--card-hover);
-    transform: translate(-1px, -1px);
-    box-shadow:
-      3px 3px 0 var(--ink),
-      inset 0 1px 0 var(--hi-strong);
-  }
-
-  .names .is-quiet li:hover {
-    background: none;
-    border-color: var(--muted);
-    color: var(--text);
-    transform: none;
-    box-shadow: none;
-  }
 }
 
 .names .is-quiet dt {
@@ -2890,9 +3233,6 @@ li.is-pulse .f-front::after {
   border: 1px dashed var(--edge-strong);
   box-shadow: none;
   color: var(--muted);
-  transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
 }
 
 /* ================= 10. The courier: the problem, in one picture ================= */
@@ -3042,8 +3382,8 @@ li.is-pulse .f-front::after {
 /* ================= 12. Uses, trade-offs ================= */
 
 /* Each use is a card in two halves, the picture and the words, with the sides swapping from card to card.
-   With motion the halves come in from opposite sides as the card scrolls up, meet, and hold: main.js sets --p,
-   0 while the card is below the window and 1 once its top has passed the middle. Without it they stand joined. */
+   With motion the halves come in from opposite sides as the card scrolls up, meet, and hold (see "The approach"
+   below). Without it they stand joined. */
 .uses {
   display: grid;
   gap: clamp(16px, 2vw, 24px);
@@ -3103,31 +3443,54 @@ li.is-pulse .f-front::after {
   object-fit: cover;
 }
 
-/* The approach: each half starts most of its own width away, on its side, faint. */
-.motion .use-pic,
-.motion .use-text {
-  --away: calc(1 - var(--p, 1));
-  opacity: min(1, var(--p, 1) * 6);
-  will-change: transform, opacity;
+/* The approach: each half starts close to half its own width away, on its side, faint, and meets the other, at an even
+   pace so that it hits rather than lands, once the card's top is 45% of the way up the window. Where the browser can tie an animation to the scroll, the scroll
+   drives it; elsewhere main.js writes --p (0 to 1) on each half and adds .use-js. */
+.use-pic {
+  --dx: -45%;
 }
 
-.motion .use-pic {
-  transform: translate3d(calc(var(--away) * -70%), 0, 0);
+.use-text {
+  --dx: 45%;
 }
 
-.motion .use-text {
-  transform: translate3d(calc(var(--away) * 70%), 0, 0);
+.use:nth-child(even) .use-pic {
+  --dx: 45%;
 }
 
-.motion .use:nth-child(even) .use-pic {
-  transform: translate3d(calc(var(--away) * 70%), 0, 0);
+.use:nth-child(even) .use-text {
+  --dx: -45%;
 }
 
-.motion .use:nth-child(even) .use-text {
-  transform: translate3d(calc(var(--away) * -70%), 0, 0);
+@keyframes use-meet {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--dx), var(--dy, 0px), 0);
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-/* The hit: for half a second the halves press into each other and a light runs down the seam. */
+@supports (animation-timeline: view()) {
+  .motion .use {
+    view-timeline: --use block;
+  }
+
+  .motion .use-pic,
+  .motion .use-text {
+    animation: use-meet linear both;
+    animation-timeline: --use;
+    animation-range: cover 0% cover 45vh;
+  }
+}
+
+/* The hit: as the halves meet they press into each other for a moment and a light runs down the seam.
+   main.js adds .is-hit when the card's top crosses the line where the approach ends. */
 .use-text::before {
   content: "";
   position: absolute;
@@ -3144,14 +3507,15 @@ li.is-pulse .f-front::after {
   inset: 0 0 0 auto;
 }
 
+/* The hit takes the place of the approach, which has ended in the halves' own place, so nothing jumps. */
 .motion .use.is-hit .use-pic {
   transform-origin: right center;
-  animation: hit-left 0.5s var(--ease-out);
+  animation: hit-left 0.4s var(--ease-out);
 }
 
 .motion .use.is-hit .use-text {
   transform-origin: left center;
-  animation: hit-right 0.5s var(--ease-out);
+  animation: hit-right 0.4s var(--ease-out);
 }
 
 .motion .use:nth-child(even).is-hit .use-pic {
@@ -3165,7 +3529,7 @@ li.is-pulse .f-front::after {
 }
 
 .motion .use.is-hit .use-text::before {
-  animation: seam 0.55s ease-out;
+  animation: seam 0.45s ease-out;
 }
 
 @keyframes hit-left {
@@ -3200,6 +3564,14 @@ li.is-pulse .f-front::after {
     opacity: 0;
   }
 }
+
+.use-js .use-pic,
+.use-js .use-text {
+  opacity: min(1, var(--p, 1) * 4.5);
+  transform: translate3d(calc((1 - var(--p, 1)) * var(--dx)), calc((1 - var(--p, 1)) * var(--dy, 0px)), 0);
+  will-change: transform, opacity;
+}
+
 
 .use h3 {
   text-wrap: balance;
@@ -3517,6 +3889,12 @@ li.is-pulse .f-front::after {
   transition: opacity 0.25s ease;
 }
 
+/* Pressed, the row lights at once, on a finger as well as a mouse. */
+.faq-list summary:active::before {
+  opacity: 1;
+  transition-duration: 0s;
+}
+
 /* The plus that becomes a minus: its upright bar lies down when the answer opens. */
 .faq-x {
   position: relative;
@@ -3537,7 +3915,7 @@ li.is-pulse .f-front::after {
   width: 12px;
   height: 2px;
   background: currentColor;
-  transition: transform 0.4s var(--ease-out);
+  transition: transform 0.3s var(--ease-out);
 }
 
 .faq-x::after {
@@ -3552,7 +3930,7 @@ li.is-pulse .f-front::after {
   transform: rotate(180deg);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .faq-list summary:hover {
     color: var(--primary-hover);
   }
@@ -3643,9 +4021,11 @@ li.is-pulse .f-front::after {
     text-decoration-color 0.2s ease;
 }
 
-.foot a:hover {
-  color: var(--text);
-  text-decoration-color: var(--primary);
+@media (hover: hover) and (pointer: fine) {
+  .foot a:hover {
+    color: var(--text);
+    text-decoration-color: var(--primary);
+  }
 }
 
 /* ================= 16. Narrower screens ================= */
@@ -3927,6 +4307,19 @@ li.is-pulse .f-front::after {
     border-radius: 0 0 8px 8px;
   }
 
+  /* Stacked, the halves meet along the seam that runs across: the picture comes down, the words come up. */
+  .use .use-pic,
+  .use:nth-child(even) .use-pic {
+    --dx: 0%;
+    --dy: -24px;
+  }
+
+  .use .use-text,
+  .use:nth-child(even) .use-text {
+    --dx: 0%;
+    --dy: 24px;
+  }
+
   .use .use-text::before,
   .use:nth-child(even) .use-text::before {
     inset: 0 0 auto 0;
@@ -3967,7 +4360,8 @@ li.is-pulse .f-front::after {
 
 /* ================= 17. Reduced motion ================= */
 
-/* Everything stands still and fully visible. main.js does not set .motion either, so nothing waits to be revealed. */
+/* Nothing moves and everything is fully visible; main.js does not set .motion either, so nothing waits to be revealed.
+   What changes state still fades, briefly, so a press or a toggle is not a jump cut. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -3977,6 +4371,17 @@ li.is-pulse .f-front::after {
   *::before,
   *::after {
     animation: none !important;
-    transition: none !important;
+    transition-property: opacity, color, background-color, border-color !important;
+    transition-duration: 0.15s !important;
+    transition-timing-function: ease !important;
+    transition-delay: 0s !important;
+  }
+
+  /* The reading thread follows the scroll; it shows where the reader is rather than moving on its own. */
+  @supports (animation-timeline: scroll()) {
+    .read-progress::before {
+      animation: read linear both !important;
+      animation-timeline: scroll(root) !important;
+    }
   }
 }

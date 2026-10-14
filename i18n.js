@@ -52,12 +52,22 @@
     "fact.local": "Radi na tvom računaru",
     "fact.os": "Windows i Linux",
     "fact.account": "Bez naloga, bez API ključa",
-    "hero.alt": "Piksel-art: robot sa jedne strane stavlja list sa promptom u zajednički folder, a osoba sa druge stavlja gotovu sliku.",
     "hero.gen": "Tvoj generator",
     "hero.gens": "Generatori koje koristiš ručno",
     "hero.anyGen": "bilo koji alat u koji nalepiš prompt",
     "hero.fine":
       "Logotipi i nazivi pripadaju svojim vlasnicima. Asset Prompter je nezavisan projekat: nije povezan ni sa jednim od njih, niti ga iko od njih podržava.",
+
+    "promo.aria": "Pusti promo video, 56 sekundi, sa zvukom",
+    "promo.label": "Promo video",
+    "player.play": "Pusti",
+    "player.pause": "Pauza",
+    "player.mute": "Isključi zvuk",
+    "player.unmute": "Uključi zvuk",
+    "player.full": "Ceo ekran",
+    "player.exitFull": "Izađi iz celog ekrana",
+    "player.seek": "Vreme u klipu",
+    "player.of": "od",
 
     /* ---- the loop ---- */
     "loop.h2": "Jedna slika, šest koraka",
@@ -152,7 +162,7 @@
     "variants.p2": "Stoje na jednom mestu, uz konačnu sliku. U aplikaciji ih otvaraš sa njene pločice i svaku kopiraš jednim klikom.",
     "clip.h": "Proverava klip koji ne može da pusti",
     "clip.p": "Agent ne može da gleda video. Zato aplikacija svaki klip koji ubaciš pretvara u slike i brojeve koje agent može da pročita.",
-    "clip.alt": "Klip sa vrha ove stranice: robot pruža list sa promptom ka zajedničkom folderu, a osoba iz njega vadi sliku.",
+    "clip.alt": "Generisani klip: robot pruža list sa promptom ka zajedničkom folderu, a osoba iz njega vadi sliku.",
     "clip.caption": "<strong>Tvoj klip</strong>Osam sekundi, prevučen na karticu.",
     "frames.alt": "List sa frejmovima: četiri frejma tog klipa iz iste sekunde, u mreži dva puta dva.",
     "frames.caption": "<strong>Listovi sa frejmovima</strong>Po jedan za svaku sekundu, sa po četiri frejma. Agent ih čita redom.",
@@ -219,6 +229,9 @@
       "Na Windowsu dvaput klikni na <code>setup.bat</code>. Na Linuxu u tom folderu pokreni <code>sh setup.sh</code>. Setup instalira Bun, ffmpeg i pakete aplikacije, dodaje ikonu Asset Promptera i otvara aplikaciju.",
     "install.next":
       "<strong>Zatim, u aplikaciji:</strong> otvori projekat, pritisni „Copy agent instructions” i nalepi to u čet sa svojim agentom. Pri prvom pokretanju otvara se dvominutni tutorijal.",
+    "tutorial.h": "Sve funkcije za četiri minuta",
+    "tutorial.lead": "Od prvog projekta do odobrene slike: cela aplikacija, korak po korak.",
+    "tutorial.aria": "Pusti ceo tutorijal, 3 minuta i 49 sekundi: sve funkcije Asset Promptera",
 
     /* ---- questions ---- */
     "faq.h2": "Pre nego što probaš",
@@ -321,7 +334,14 @@
     if (lang === "en") url.searchParams.delete("lang");
     else url.searchParams.set("lang", lang);
     history.replaceState(null, "", url);
-    apply();
+    // The whole page crossfades into the other language instead of every word changing at once.
+    // A page that is not being drawn (a hidden tab) has nothing to fade, so it just changes.
+    if (document.startViewTransition && document.visibilityState === "visible") {
+      const swap = document.startViewTransition(apply);
+      // Skipped (another switch came first, or the tab was hidden): the words still change; nothing to report.
+      swap.ready.catch(() => {});
+      swap.finished.catch(() => {});
+    } else apply();
   }
 
   function menu() {

@@ -37,7 +37,7 @@ Sections alternate between the page colour and the band colour (`band` on the `<
 
 | # | Section | id | Ground |
 | --- | --- | --- | --- |
-| 1 | Hero: the glass cubes and the thread, and the message to paste into an agent | | page |
+| 1 | Hero: the glass cubes and the thread, the message to paste into an agent, and the promo video in the frame where the wires meet | | page |
 | 2 | One picture, six steps | `loop` | band |
 | 3 | To your agent, the same steps as an MCP server | `mcp` | page |
 | 4 | Without it, you are the courier | `why` | band |
@@ -45,12 +45,15 @@ Sections alternate between the page colour and the band colour (`band` on the `<
 | 6 | What it is good for | `uses` | band |
 | 7 | It doesn't generate anything | `tradeoffs` | page |
 | 8 | Two ways to install it: your agent, or by hand | `install` | band |
-| 9 | Before you try it | `questions` | page |
-| 10 | Give your agent a way to ask for pictures | | band |
+| 9 | Every feature in four minutes: the full tutorial | `tutorial` | page |
+| 10 | Before you try it | `questions` | band |
+| 11 | Give your agent a way to ask for pictures | | page |
+
+The promo (`assets/video/promo.mp4`, 56 s) stands in the hero's frame (`a.promo`) as a still, the first frame of the `loop-relay` clip (`assets/art/loop-relay.webp`), with a round Play button in the middle and its length in the corner (`.video-play`, `.video-time`, as on the tutorial). Pressed, main.js (`startPromo()`) plays it there in a player of the page's own (`.player-bar`): the mustard play button, the time in the mono face, a track to seek on (mustard for what has played, grey for what has loaded, a square head), sound and full screen, with the pixel icons `#i-pause`, `#i-sound`, `#i-muted`, `#i-expand`, `#i-shrink`. There is no title, channel or logo on it. A click anywhere on the picture pauses or plays (`.promo-hit`), a double click goes full screen, the round Play button comes back whenever it is paused, and the bar steps away while it plays and the pointer rests. With the player focused: space or K, the arrows (5 s), Home, End, M and F. Seeking needs a server that answers byte ranges: GitHub Pages does, Python's plain `http.server` does not. The full tutorial has its own section after the two ways to install (`#tutorial`): a link to YouTube with the video's still and a Play button (`a.video`); pressed, main.js loads the player from youtube-nocookie.com in the same frame, starts it, and switches its captions off. Nothing from YouTube but the still loads until then.
 
 Each later section makes one point with one picture and little text: a heading, at most two sentences, and a picture or a short list. Longer explanations belong under "Before you try it".
 
-"What it is good for" lays its five uses out as cards in two halves, the picture on one side and the words on the other, the sides swapping from card to card. With motion, the halves come in from opposite sides as the card scrolls up and meet once its top has passed the middle of the window (main.js sets `--p` on each card); without it they stand joined. The last card, films, ads and short scenes, has a project folder drawn like the slot folder of section 2 in place of a picture, beside three numbered lines, because that use is a sequence.
+"What it is good for" lays its five uses out as cards in two halves, the picture on one side and the words on the other, the sides swapping from card to card. With motion, the halves come in from opposite sides as the card scrolls up and meet once its top is 45% of the way up the window: a scroll-driven animation (`animation-timeline`) where the browser has one, otherwise main.js sets `--p` on each half. As they meet they press into each other and a light runs down the seam (`.is-hit`, from an IntersectionObserver on that line). On one column they meet along the seam that runs across. Without motion they stand joined. The last card, films, ads and short scenes, has a project folder drawn like the slot folder of section 2 in place of a picture, beside three numbered lines, because that use is a sequence.
 
 ## How the look is built
 
@@ -72,8 +75,8 @@ li > .cube > .cube-body > i.f.f-back, .f-bottom, .f-left, .f-right, i.cube-glow,
 `main.js` (the last block, "the hub") does the rest:
 
 - It draws the ground in `svg.hub-wires`: each cube's hard shadow, a wire from the middle of each cube to the folder, and the thread. The wire is under the cube, so it is seen through the glass.
-- With motion allowed it makes the cubes bob (wide layout only), turns each cube a little toward the pointer (`face()`; cubes near the pointer answer most; mouse and pen only) and runs one round at a time: a thread goes from an agent through the folder to a generator, then back. On the head of the thread rides a small tile (`.hub-load`) that shows what is carried: a sheet (`#i-sheet`) on the way out, a picture (`#i-image`) on the way back. The agent and the generator of each round are drawn at random (`drawFrom()`): everyone on a side gets a turn before anyone repeats, and nobody goes twice running.
-- The glass answers the thread: a cube whose round it is gets `is-lit` (inner glow, brighter edges, a patch of coloured light in its shadow); when the thread leaves or enters it, `pulse()` makes it swell, flares the glow and sends a sheen across its near face. The glow at the head of the thread (`.hub-spark`) lies under the cubes and shows through them. The folder's frame flashes a ring as the thread passes (`.hero-stage.is-passing`).
+- With motion allowed it makes the cubes bob (wide layout only; a Web Animation on the compositor, pinned to the document clock so the wires follow it exactly), turns each cube a little toward the pointer (`face()`; cubes near the pointer answer most; mouse and pen only) and runs one round at a time: a thread goes from an agent through the folder to a generator, then back. On the head of the thread rides a small tile (`.hub-load`) that shows what is carried: a sheet (`#i-sheet`) on the way out, a picture (`#i-image`) on the way back. The agent and the generator of each round are drawn at random (`drawFrom()`): everyone on a side gets a turn before anyone repeats, and nobody goes twice running.
+- The glass answers the thread: a cube whose round it is gets `is-lit` (inner glow, brighter edges, a patch of coloured light in its shadow); when the thread leaves or enters it, `pulse()` makes it swell and sends a sheen across its near face. The glow at the head of the thread (`.hub-spark`) lies under the cubes and shows through them.
 - The rest angles and the perspective appear twice, in `styles.css` (`--rx`, `--ry`, `--p`) and in `main.js` (`REST`, `PERSPECTIVE`). Change both together.
 
 ### Light under the pointer
@@ -81,7 +84,7 @@ li > .cube > .cube-body > i.f.f-back, .f-bottom, .f-left, .f-right, i.cube-glow,
 - Every framed picture (`.art`, `.appshot`, `.row-pic`, `.pipe-pic`, `.use-pic`) has an outer edge, a lit inner edge (`::after`), the hard shadow and a soft one. Under the pointer an illustration (`.art`) gets a soft glare (`::before`), since it is there for the look. Screenshots, results and the pictures of the clip are left alone, with no glare and no leaning, so what they show stays readable.
 - A surface marked `data-lit` (the paste window `.ask`, the folder box, the MCP figure, the two install cards) has its edge lit near the pointer. Only the edge: the ground holds text and stays as it is. `--lit` sets the colour of that light.
 - `main.js` ("light under the pointer") writes `--mx` and `--my` on the `data-lit` surface or the illustration under the pointer. Without them (keyboard, no script) the light falls from the top edge. A `data-lit` element's `::before` and an illustration's `::before` are taken by this, and a framed picture's `::after` is its inner edge, so do not give them other rules of that kind.
-- All of it is behind `@media (hover: hover)`; on a touch screen nothing depends on it.
+- All of it is behind `@media (hover: hover) and (pointer: fine)`; on a touch screen nothing depends on it.
 
 ### Entrances
 
@@ -96,7 +99,7 @@ li > .cube > .cube-body > i.f.f-back, .f-bottom, .f-left, .f-right, i.cube-glow,
 - The dots of the hero's ground are drawn twice (`.hub::before` and `.hub::after`); the second, brighter layer is seen only in a circle around the pointer. `main.js` writes `--px` and `--py` on `.hub` and sets `is-pointed` while the pointer is over it.
 - A coloured voice (`.who-agent`, `.who-you`) in the headline or in a lead is underlined in its colour; with motion the line is drawn once.
 - Selection is mustard, the scrollbar is in the page's colours, and the focus ring is mustard.
-- Top bar: the language menu (`.lang`, the pixel globe `#i-globe`), then the GitHub button, which asks for a star (the pixel star `#i-star` is in the sprite; on a phone only the star is shown, and under 390px it gives way to the language and Install). The bar's widths are set for Serbian, whose words are longer: check both languages when a link or a button changes. It is clear over the hero, frosted once the page has scrolled (`.is-stuck`); the link of the section in view gets `aria-current`. A thread on the lower edge of the window (`.read-progress`) fills as the page is read, violet at its tail and mustard at its head; `main.js` writes `--read` on `<html>`. The frosted bar is the only `backdrop-filter` on the page.
+- Top bar: the language menu (`.lang`, the pixel globe `#i-globe`), then the GitHub button, which asks for a star (the pixel star `#i-star` is in the sprite; on a phone only the star is shown, and under 390px it gives way to the language and Install). The bar's widths are set for Serbian, whose words are longer: check both languages when a link or a button changes. It is clear over the hero, frosted once the page has scrolled (`.is-stuck`); the link of the section in view gets `aria-current`. A thread on the lower edge of the window (`.read-progress`) fills as the page is read, violet at its tail and mustard at its head; the scroll drives it (`animation-timeline: scroll()`), or `main.js` writes `--read` on it where the browser cannot. The frosted bar is the only `backdrop-filter` on the page.
 - Buttons rise one pixel toward the pointer and are pressed into their shadow; the primary one is crossed by a band of light once.
 - Copy: the button turns green and says Copied, as the app's does, and the message lights up from its first letter to its last (`.ask.is-copied`). One click on the message selects all of it.
 - Questions: an answer opens and closes with an animated height (`.faq-a` is the wrapper that is animated; with reduced motion or no script the native `<details>` behaviour stays).
@@ -105,13 +108,13 @@ li > .cube > .cube-body > i.f.f-back, .f-bottom, .f-left, .f-right, i.cube-glow,
 
 ### Motion rules kept
 
-One thing moves at a time, nothing loops in the corner of the eye, entrances play once. Animations use `transform` and `opacity`; the exceptions are the height of an opening answer, small `box-shadow` and colour transitions on hover, and the SVG wires, which are redrawn each frame while the hub is on screen. `prefers-reduced-motion: reduce` gives a still, complete page: no thread, no bobbing, no clips, and the wires drawn at rest.
+One thing moves at a time, nothing loops in the corner of the eye, entrances play once. Animations use `transform` and `opacity`; the exceptions are the height of an opening answer, small `box-shadow` and colour transitions on hover, and the SVG wires, which are redrawn each frame while the hub is on screen. `prefers-reduced-motion: reduce` gives a still, complete page: no thread, no bobbing, no clips, and the wires drawn at rest. Changes of state still fade in 0.15s, and the reading thread still follows the scroll. Asking for less motion while the page is open stops what is already moving (`calm()` in main.js); asking for motion again takes effect on the next load.
 
 ## The rest
 
 The message for an agent (`.ask`) appears twice, in the hero and under Install; each has its own id for its Copy button, and the text must stay the same in both and match `AGENT-INSTALL.md` in the app's repository.
 
-In "What the folder gives your agent", the clip row shows the clip from the hero with frame sheet 003 and the motion map of `asset-prompter-landing/loop-relay-clip/v2`. The variants picture is the app's variants dialog for `orbital-eats/hero-space-diner`.
+In "What the folder gives your agent", the clip row shows the generated clip `loop-relay` with frame sheet 003 and the motion map of `asset-prompter-landing/loop-relay-clip/v2`. The variants picture is the app's variants dialog for `orbital-eats/hero-space-diner`.
 
 The screenshots, logos and art are used as they are; nothing of the app or of a logo is redrawn in HTML.
 
@@ -124,7 +127,7 @@ The screenshots, logos and art are used as they are; nothing of the app or of a 
   - From the products' own sites: `antigravity.svg` (antigravity.google/favicon.svg, with its dark-mode rule removed so the ground stays white), `luma.svg` (lumalabs.ai/images/brand/luma-ai/logo-black.svg), `google-flow.png` (the Flow favicon on gstatic.com, scaled to 256 px), `midjourney.png` (midjourney.com/public/apple-touch-icon.png, cropped to the boat), `leonardo.png` (the icon of docs.leonardo.ai, scaled to 256 px). Fetched on 6 October 2026: `grok.png` (grok.com/images/android-chrome-512x512.png, the white mark lifted off its black tile and made black, 256 px), `dreamina.png` (the favicon of dreamina.capcut.com, the mark lifted off its black tile, 256 px), `chatgpt.svg` (a copy of `codex.svg`: ChatGPT uses the OpenAI mark).
 - `app/`: the card of `orbital-eats/observation-dining-room` in each state, `<state>.webp` for wide screens (the app at 1000 px, saved 1600 px wide) and `<state>-narrow.webp` up to 640 px (the app at 440 px). `2-copied` is the prompt box alone, after Copy prompt was pressed. `4-notify-narrow` is the filter row with Notify agent while an agent is listening, and is used at every width.
 - `shots/`: `version-results.webp` (a part of the Details of `observation-dining-room`: the results of version 2, the agent's verdict and the note on what changed) and `variants-dialog.webp` (the variants dialog of `hero-space-diner`), used in "What the folder gives your agent".
-- `vendor/`: `lenis.min.js`, Lenis 1.3.26 (MIT, licence beside it), which eases wheel scrolling so that what follows the scroll moves evenly. main.js starts it unless the reader asked for less motion; without the file the page scrolls natively.
+- `video/`: `promo.mp4`, the promo re-encoded for the web from the 1080p master (H.264 CRF 23, AAC 128k, faststart; about 22 MB).
 - `demo/`: the app icon, two results of `orbital-eats`, and frame sheet 003 and the motion map of `asset-prompter-landing/loop-relay-clip/v2`.
 
 The page shows `observation-dining-room` as approved. In the real project it is still waiting for approval; the pictures show a staged copy.
